@@ -12,6 +12,7 @@ interface Item {
     addOns: string[];
     customMsg: string;
     isDone: boolean;
+    isPickedUp: boolean;
 }
 
 interface Order {
@@ -38,7 +39,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
                     omits: ["Petersilie", "Ketchup"],
                     addOns: [],
                     customMsg: "Sehr heiß bitte",
-                    isDone: false
+                    isDone: false,
+                    isPickedUp: false
                 },
                 {
                     id: 2,
@@ -48,7 +50,107 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
                     omits: [],
                     addOns: ["Mehr Eis", "Zitrone extra"],
                     customMsg: "",
-                    isDone: false
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
+                },
+                {
+                    id: 2,
+                    name: "Hausgemachte Limonade",
+                    description: "Frisch, leicht gesüßt",
+                    type: "BEVERAGE",
+                    omits: [],
+                    addOns: ["Mehr Eis", "Zitrone extra"],
+                    customMsg: "",
+                    isDone: false,
+                    isPickedUp: false
                 }
             ]
         },
@@ -67,7 +169,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
                     omits: [],
                     addOns: [],
                     customMsg: "Leicht knusprig",
-                    isDone: false
+                    isDone: false,
+                    isPickedUp: false
                 }
             ]
         },
@@ -86,7 +189,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
                     omits: [],
                     addOns: ["Extra Kakao"],
                     customMsg: "",
-                    isDone: false
+                    isDone: false,
+                    isPickedUp: false
                 }
             ]
         },
@@ -105,7 +209,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
                     omits: [],
                     addOns: ["Hafermilch"],
                     customMsg: "",
-                    isDone: false
+                    isDone: false,
+                    isPickedUp: false
                 }
             ]
         },
@@ -116,15 +221,15 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 5,
             datetime: "2025-12-10T22:55:22",
             items: [
-                { id: 6, name: "Pizza Salami", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 7, name: "Pizza Funghi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 8, name: "Pizza Hawaii", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 9, name: "Pizza Tonno", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 10, name: "Pizza Quattro Formaggi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 11, name: "Pizza Prosciutto", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 12, name: "Pizza Vegetarisch", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 13, name: "Pizza Pepperoni", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 14, name: "Pizza Diavola", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false }
+                { id: 6, name: "Pizza Salami", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 7, name: "Pizza Funghi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 8, name: "Pizza Hawaii", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 9, name: "Pizza Tonno", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 10, name: "Pizza Quattro Formaggi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 11, name: "Pizza Prosciutto", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 12, name: "Pizza Vegetarisch", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 13, name: "Pizza Pepperoni", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 14, name: "Pizza Diavola", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -134,8 +239,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 6,
             datetime: "2025-12-10T22:58:38",
             items: [
-                { id: 15, name: "Espresso", description: "", type: "BEVERAGE", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 16, name: "Latte Macchiato", description: "", type: "BEVERAGE", omits: [], addOns: ["Extra Milch"], customMsg: "", isDone: false }
+                { id: 15, name: "Espresso", description: "", type: "BEVERAGE", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 16, name: "Latte Macchiato", description: "", type: "BEVERAGE", omits: [], addOns: ["Extra Milch"], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -145,8 +250,8 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 7,
             datetime: "2025-12-10T23:02:57",
             items: [
-                { id: 17, name: "Lasagne", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false },
-                { id: 18, name: "Ravioli", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false }
+                { id: 17, name: "Lasagne", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false },
+                { id: 18, name: "Ravioli", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -156,7 +261,7 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 8,
             datetime: "2025-12-10T23:05:51",
             items: [
-                { id: 19, name: "Burger Spezial", description: "", type: "MEAL", omits: ["Salat", "Tomate", "Zwiebeln", "Gurke", "Speck", "Käse", "Jalapenos", "Sauce"], addOns: [], customMsg: "", isDone: false }
+                { id: 19, name: "Burger Spezial", description: "", type: "MEAL", omits: ["Salat", "Tomate", "Zwiebeln", "Gurke", "Speck", "Käse", "Jalapenos", "Sauce"], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -166,7 +271,7 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 9,
             datetime: "2025-12-10T23:10:11",
             items: [
-                { id: 20, name: "Cocktail Special", description: "", type: "BEVERAGE", omits: [], addOns: ["Extra Eis", "Limette", "Zucker", "Sirup", "Minze", "Fruchtmix", "Strohhalm", "Dekoration"], customMsg: "Mit extra Eis", isDone: false }
+                { id: 20, name: "Cocktail Special", description: "", type: "BEVERAGE", omits: [], addOns: ["Extra Eis", "Limette", "Zucker", "Sirup", "Minze", "Fruchtmix", "Strohhalm", "Dekoration"], customMsg: "Mit extra Eis", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -176,7 +281,7 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 10,
             datetime: "2025-12-10T23:13:18",
             items: [
-                { id: 21, name: "Orangensaft", description: "", type: "BEVERAGE", omits: [], addOns: [], customMsg: "", isDone: false }
+                { id: 21, name: "Orangensaft", description: "", type: "BEVERAGE", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -186,7 +291,7 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 11,
             datetime: "2025-12-10T23:16:47",
             items: [
-                { id: 22, name: "Gnocchi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false }
+                { id: 22, name: "Gnocchi", description: "", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         },
 
@@ -196,7 +301,7 @@ export const useRestaurantActiveOrdersStore = defineStore('restaurantActiveOrder
             tableId: 12,
             datetime: "2025-12-10T23:19:04",
             items: [
-                { id: 23, name: "Salat", description: "Frisch", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false }
+                { id: 23, name: "Salat", description: "Frisch", type: "MEAL", omits: [], addOns: [], customMsg: "", isDone: false, isPickedUp: false }
             ]
         }
         ] as Order[],

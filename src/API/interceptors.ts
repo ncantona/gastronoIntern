@@ -20,7 +20,7 @@ api.interceptors.response.use(
         const auth = useAuthStore();
         const originalRequest = error.config;
 
-        if (error.response?.status === 403 && !originalRequest._retry) {
+        if (error && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {

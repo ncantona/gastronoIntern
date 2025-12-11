@@ -34,7 +34,7 @@ const router = createRouter({
 	},
 	{
 		path: '/',
-		component: () => import('@/layouts/KitchenLayout.vue'),
+		component: () => import('@/layouts/InternLayout.vue'),
 		meta: { requiresAuth: true, allowedRoles: ['ROLE_KITCHEN', 'ROLE_HOST']},
 		children: [
 		{
@@ -46,7 +46,7 @@ const router = createRouter({
 	},
 	{
 		path: '/',
-		component: () => import('@/layouts/BarLayout.vue'),
+		component: () => import('@/layouts/InternLayout.vue'),
 		meta: { requiresAuth: true, allowedRoles: ['ROLE_BAR', 'ROLE_HOST']},
 		children: [
 		{

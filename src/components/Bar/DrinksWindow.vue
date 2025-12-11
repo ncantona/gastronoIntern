@@ -101,7 +101,7 @@
     <div
         @click="handleClick"
         :class="[
-            'flex flex-col rounded-2xl p-4 min-w-60 cursor-pointer max-w-55 shadow-xl transition-all duration-2000',
+            'flex flex-col rounded-2xl p-4 min-w-75 cursor-pointer max-w-55 shadow-xl transition-all duration-2000',
             isClicked ? 'border-2 border-green-200 bg-green-100' : 'border-2 bg-[rgba(255,255,255,0.64)] border-[rgba(126,111,90,0.89)]',
             isFading ? 'opacity-0 scale-[0.97]' : 'opacity-100'
         ]">
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <div v-for="item in order?.items" :key="item.id" class="mb-2">
+        <div v-for="item in order?.items" :key="item.id" class="mb-2 pb-2 border-b-2 border-[rgba(167,153,134,0.38)]">
 
             <div class="self-center text-2xl">
                 {{ item.name }}
