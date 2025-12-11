@@ -1,0 +1,80 @@
+
+@import "tailwindcss";
+
+:root {
+    background-image: url('@/assets/images/background.jpg');
+    font-family: 'Inter', sans-serif;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: -1;
+}
+
+:focus-visible {
+    @apply outline-2 outline-stone-500;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('@/assets/fonts/Inter_28pt-Medium.ttf') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.mainHeader {
+    @apply text-3xl self-center font-bold pl-5 pr-5;
+}
+
+.CoButton {
+    @apply text-stone-600 hover:text-stone-500 font-bold cursor-pointer;
+}
+
+/* .SettingSubmitButton {
+    background-color: rgb(163, 144, 115);
+    color: rgb(84, 63, 20);
+    border: none;
+    border-color: rgb(91, 64, 31);
+}
+.SettingSubmitButton:hover {
+    background-color: rgb(102, 80, 54);
+    @apply text-stone-200;
+}
+
+.NormalSubmitButton {
+    background-color: rgb(149, 224, 149);
+    color: rgb(4, 117, 4);
+    @apply border-green-700;
+}
+.NormalSubmitButton:hover {
+    background-color: rgb(39, 147, 39);
+    @apply text-green-200 hover:scale-105 hover:text-xl;
+}
+
+.DeleteButton {
+    background-color: rgb(242, 136, 136);
+    color: rgb(136, 1, 1);
+    @apply border-red-800;
+}
+.DeleteButton:hover {
+    background-color: rgb(205, 75, 75);
+    @apply text-red-200 hover:scale-105 hover:text-xl;
+}
+
+.CancelButton {
+    @apply hover:bg-gray-100 bg-white text-blue-600 hover:scale-105 hover:text-xl;
+}
+
+.CallWaiterButton {
+    background-color: rgb(198, 175, 255);
+    color: rgb(91, 0, 203);
+    @apply border-violet-700;
+}
+.CallWaiterButton:hover {
+    background-color: rgb(119, 70, 178);
+    @apply text-violet-200 hover:scale-105 hover:text-xl;
+} */
