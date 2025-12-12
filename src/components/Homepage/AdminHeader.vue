@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, ref } from 'vue';
     import { useRoute } from 'vue-router';
+    import { computed, ref } from 'vue';
 
     const now = ref(Date.now());
 
@@ -14,11 +14,10 @@
 </script>
 
 <template>
-    <div class="text-white h-28 text-shadow-lg z-50 shadow-xl text-3xl flex justify-between p-5 bg-[rgb(99,88,68)]">
+    <div class="fixed w-full text-white h-28 text-shadow-lg z-50 shadow-xl text-3xl flex justify-between p-5 bg-[rgb(99,88,68)]">
         
         <div class="flex flex-col self-center">
-            <span>Grätzlgarten</span>
-            <span>#132</span>
+            <img src="@/assets/images/Logooo.svg" alt="Gastrono Logo">
         </div>
 
         <div class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center self-center">

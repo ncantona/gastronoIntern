@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
     import DrinksWindow from '@/components/Bar/DrinksWindow.vue';
-    import { computed, ref } from 'vue';
+    import { computed } from 'vue';
 
     const props = defineProps<{
         orderId: number,

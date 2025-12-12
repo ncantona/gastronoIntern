@@ -13,8 +13,7 @@
 
 <template>
     <div class="flex flex-col mt-5">
-        <h1 class="mainHeader">BESTELLUNGEN KÜCHE</h1>
-        <div class="border-2 rounded-2xl p-3 flex flex-col m-5 min-h-[550px] h-[600px] xl:overflow-hidden xl:hover:overflow-y-auto overflow-y-auto">
+        <div class="self-center w-95/100 border-3 border-[rgba(101,90,73,0.89)] rounded-2xl p-3 flex m-5 min-h-[550px] h-[600px] overflow-y-hidden hover:overflow-y-auto">
             <span v-if="!kitchenOrders" class="flex justify-center items-center h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
             <OrderWindow v-for="order in kitchenOrders" :key="order.id" :orderId="order.id"/>
         </div>

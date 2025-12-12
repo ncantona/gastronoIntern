@@ -12,6 +12,7 @@ interface User {
     firstName: string,
     lastName: string,
     roles: string[],
+    restaurantId: number,
 };
 
 export const useAuthStore = defineStore('auth', {

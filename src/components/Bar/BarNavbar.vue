@@ -12,9 +12,10 @@
 
     const handleLogout = async () => {
         try {
-            log.info('Trying to loggout user.')
+            log.info('Trying to loggout user.');
             await authStore.logout();
-            router.push({ name: 'home' })
+            log.info('Successfully logged out.');
+            router.push({ name: 'home' });
         } catch (error) {
             log.error('Logging out user failed.');
         }
