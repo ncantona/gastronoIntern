@@ -11,14 +11,14 @@
     <PopupWindow
       v-if="popupStore.success"
       @close="popupStore.clearSuccess"
-      class="self-center">
+      class="self-center z-100">
       {{ popupStore.success }}
     </PopupWindow>
     <PopupWindow
       v-if="popupStore.error"
       @close="popupStore.clearError"
       type="error"
-      class="self-center">
+      class="self-center z-100">
       {{ popupStore.error }}
     </PopupWindow>
   </div>

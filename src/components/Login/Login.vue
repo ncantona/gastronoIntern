@@ -40,17 +40,17 @@
                 log.debug('Successfully logged in: ', authStore.user);
                 id.value = '';
                 if (authStore.user?.roles.includes('ROLE_KITCHEN'))
-                    router.push({ name: 'dashboardkitchen' });
+                    await router.push({ name: 'dashboardkitchen' });
                 if (authStore.user?.roles.includes('ROLE_BAR'))
-                    router.push({ name: 'dashboardbar' });
+                    await router.push({ name: 'dashboardbar' });
                 if (authStore.user?.roles.includes('ROLE_HOST'))
-                    router.push({ name: 'dashboardhost' });
+                    await router.push({ name: 'dashboardhost' });
                 if (authStore.user?.roles.includes('ROLE_WAITER'))
-                    router.push({ name: 'dashboardwaiter' });
+                    await router.push({ name: 'dashboardwaiter' });
                 if (authStore.user?.roles.includes('ROLE_RESTAURANT'))
-                    router.push({ name: 'dashboardrestaurant' });
+                    await router.push({ name: 'dashboardrestaurant' });
                 if (authStore.user?.roles.includes('ROLE_ADMIN'))
-                    router.push({ name: 'dashboardadmin' });
+                    await router.push({ name: 'dashboardadmin' });
             } catch (error) {
                 popupStore.setError('Logindaten stimmen nicht überein.');
             }

@@ -13,7 +13,7 @@
 
 <template>
     <div class="flex flex-col">
-        <div class="self-center w-95/100 border-3 border-[rgba(101,90,73,0.89)] rounded-2xl p-3 flex m-5 min-h-[550px] h-[600px] overflow-y-hidden hover:overflow-y-auto">
+        <div class="self-center w-95/100 shadow-2xl border-[rgba(101,90,73,0.89)] p-3 rounded-lg flex m-5 min-h-[550px] h-[600px] overflow-y-hidden hover:overflow-y-auto">
             <span v-if="!barOrders" class="flex items-center justify-center w-full h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
             <OrderWindow v-for="order in barOrders" :key="order.id" :orderId="order.id"/>
         </div>

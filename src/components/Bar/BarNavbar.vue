@@ -24,7 +24,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="z-100">
         <button
             @click="toggleSidebar"
             :class="[

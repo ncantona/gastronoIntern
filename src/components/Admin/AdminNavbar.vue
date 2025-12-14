@@ -1,96 +1,97 @@
 <script setup lang="ts">
-    import { useAuthStore } from '@/stores/Auth/useAuthStore';
-    import CustomButton from '../General/CustomButton.vue';
-    import { log } from '@/utils/logger';
-    import router from '@/router';
+  import AdminNavbarSectionHeader from './AdminNavbarSectionHeader.vue';
+  import { useAuthStore } from '@/stores/Auth/useAuthStore';
+  import AdminNavbarButton from './AdminNavbarButton.vue';
+  import CustomButton from '../General/CustomButton.vue';
+  import { log } from '@/utils/logger';
+  import router from '@/router';
+  import { ref } from 'vue';
 
-    const authStore = useAuthStore();
+  type ActiveSection = 'general' | 'restaurant' | 'user' | null;
 
-    const handleLogout = async () => {
-        try {
-            log.info('Trying to loggout user.')
-            await authStore.logout();
-            router.push({ name: 'home' })
-        } catch (error) {
-            log.error('Logging out user failed.');
-        }
-    };
+  const authStore = useAuthStore();
+  const showGeneral = ref<boolean>(false);
+  const showRestaurant = ref<boolean>(false);
+  const showUser = ref<boolean>(false);
+
+  const handleLogout = async () => {
+      try {
+          log.info('Trying to loggout user.')
+          await authStore.logout();
+          router.push({ name: 'home' })
+      } catch (error) {
+          log.error('Logging out user failed.');
+      }
+  };
+  
+  const activeSection = ref<ActiveSection[]>([]);
+
+  const changeSection = (activeSectionI : ActiveSection) => {
+    if (activeSection.value.includes(activeSectionI)) {
+      activeSection.value = activeSection.value.filter(as => as != activeSectionI);
+      if (activeSectionI === 'general')
+        showGeneral.value = false;
+      else if (activeSectionI === 'restaurant')
+        showRestaurant.value = false;
+      else if (activeSectionI === 'user')
+        showUser.value = false;
+    }
+    else {
+      activeSection.value.push(activeSectionI);
+      if (activeSectionI === 'general')
+        showGeneral.value = true;
+      else if (activeSectionI === 'restaurant')
+        showRestaurant.value = true;
+      else if (activeSectionI === 'user')
+        showUser.value = true;
+    }
+  }
 
 </script>
 
 <template>
-  <div class="fixed top-0 bottom-0 w-75 bg-[rgb(184,163,139)] text-white flex flex-col justify-between shadow-lg">
+  <div class="fixed top-0 left-0 bottom-0 w-[19rem] bg-white/80 text-white flex flex-col  z-40">
 
-    <nav class="flex text-xl h-full justify-center flex-col p-6 pr-0 gap-3">
-    
-    
-      <div class="flex flex-col gap-2 mb-2 mt-2">
+    <nav class="flex w-full text-lg h-full flex-col p-6 pr-0 gap-1">
 
-        <div class="flex flex-col gap-2 mb-2 pr-6 mt-2">
-          <span class="font-semibold text-[rgba(74,64,45,0.89)]">Allgemein</span>
-          <div class="h-0.5 w-full bg-[rgba(74,64,45,0.89)] rounded mt-1"></div>
-        </div>
-        <RouterLink
-          :to="{ name: 'statisticsrestaurant' }"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Restaurant Statistiken</span>
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'statisticsuser' }"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Benutzer Statistiken</span>
-        </RouterLink>
-
+      <div class="flex flex-col mb-6 pr-6">
+        <span class="mainHeader text-reallyDarkBrown mb-4">Admin Panel</span>
+        <div class="h-0.5 w-30 self-center bg-reallyDarkBrown rounded mb-4"></div>
       </div>
 
-      <div class="flex flex-col gap-2 mb-2 mt-2">
+      <AdminNavbarSectionHeader @click="changeSection('general')" v-model="showGeneral">Statistiken</AdminNavbarSectionHeader>
 
-        <div class="flex flex-col gap-2 mb-2 pr-6 mt-2">
-          <span class="font-semibold text-[rgba(74,64,45,0.89)]">Restaurants</span>
-          <div class="h-0.5 w-full bg-[rgba(74,64,45,0.89)] rounded mt-1"></div>
-        </div>
-        <RouterLink
-          :to="{ name: 'addrestaurant'}"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Restaurant hinzufügen</span>
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'managerestaurant'}"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Restaurant bearbeiten</span>
-        </RouterLink>
-        <RouterLink
-          :to="{ name: 'managerestaurantaccounts'}"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Accounts verwalten</span>
-        </RouterLink>
-
+      <div
+        class="overflow-hidden transition-all duration-400"
+        :class="activeSection.includes('general') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'">
+        <AdminNavbarButton linkTo="statisticsrestaurant">
+          Restaurant Statistiken
+        </AdminNavbarButton>
+        <AdminNavbarButton linkTo="statisticsuser">
+          Benutzer Statistiken
+        </AdminNavbarButton>
       </div>
 
-      <div class="flex flex-col gap-2 mb-2 mt-2">
+      <AdminNavbarSectionHeader @click="changeSection('restaurant')" v-model="showRestaurant">Restaurants</AdminNavbarSectionHeader>
 
-        <div class="flex flex-col gap-2 mb-2 pr-6 mt-2">
-          <span class="font-semibold text-[rgba(74,64,45,0.89)]">Benutzer</span>
-          <div class="h-0.5 w-full bg-[rgba(74,64,45,0.89)] rounded mt-1"></div>
-        </div>
-        <RouterLink
-          :to="{ name: 'manageuser'}"
-          class="flex items-center gap-3 p-3 rounded-l-lg text-[rgba(74,64,45,0.89)] hover:bg-[rgba(197,184,161,0.8)] transition-colors"
-          active-class="bg-[rgba(197,184,161,0.8)] text-white">
-          <span>Benutzer anzeigen</span>
-        </RouterLink>
-
+      <div
+        class="overflow-hidden transition-all duration-400"
+        :class="activeSection.includes('restaurant') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'">
+        <AdminNavbarButton linkTo="addrestaurant">Restaurant anlegen</AdminNavbarButton>
+        <AdminNavbarButton linkTo="managerestaurant">Restaurant bearbeiten</AdminNavbarButton>
+        <AdminNavbarButton linkTo="managerestaurantaccounts">Accounts verwalten</AdminNavbarButton>
       </div>
-
+      <AdminNavbarSectionHeader @click="changeSection('user')" v-model="showUser">Benutzer</AdminNavbarSectionHeader>
+      
+      <div
+        class="overflow-hidden transition-all duration-400"
+        :class="activeSection.includes('user') ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'">
+        <AdminNavbarButton linkTo="manageuser">Benutzer anzeigen</AdminNavbarButton>
+      </div>
     </nav>
 
-    <div class="p-6 flex flex-col border-[rgba(74,64,45,0.89)]">
-      <div class="h-0.5 w-30 self-center bg-[rgba(74,64,45,0.89)] rounded mb-4"></div>
+    <div class="p-6 flex flex-col border-reallyDarkBrown">
+      <div class="h-0.5 w-30 self-center bg-reallyDarkBrown rounded mb-4"></div>
       <CustomButton
         variant="logout"
         class="w-full"

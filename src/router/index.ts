@@ -93,7 +93,7 @@ const router = createRouter({
 		{
 			path: '/add-restaurant',
 			name: 'addrestaurant',
-			component: () => import('@/components/Admin/RegisterRestaurant.vue'),
+			component: () => import('@/components/Admin/AddRestaurant.vue'),
 		},
 		{
 			path: '/manage-restaurant',
@@ -103,7 +103,7 @@ const router = createRouter({
 		{
 			path: '/manage-restaurant-accounts',
 			name: 'managerestaurantaccounts',
-			component: () => import('@/components/Admin/ManageRestaurant.vue'),
+			component: () => import('@/components/Admin/ManageRestaurantAccounts.vue'),
 		},
 		{
 			path: '/manage-user',

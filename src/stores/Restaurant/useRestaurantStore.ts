@@ -17,7 +17,7 @@ interface Restaurant {
 };
 
 
-export const useRestaurantsStore = defineStore('restaurants', {
+export const useRestaurantStore = defineStore('restaurant', {
     state: () => ({
         restaurants: [] as Restaurant[],
     }),

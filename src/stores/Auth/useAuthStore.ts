@@ -78,9 +78,12 @@ export const useAuthStore = defineStore('auth', {
         
         //------ Sytem-User ------//
 
-        async registerSystemUser(userData :{loginId :string, email :string, firstName :string
-            lastName :string, password :string}) {
+        async registerRestaurantHost(userData :{loginId :string, email :string, firstName :string
+            lastName :string, password :string, restaurantId :number}) {
             await apiAuth.post('/systemRegister', userData);
+        },
+        async registerRestaurantIntern(loginId :string, restaurantId: number) {
+            await apiAuth.post('/systemRegister', loginId);
         },
         async loginSystemUser(userData :{loginId :string, password :string}) {
             const { data } = await apiAuth.post('/systemLogin', userData);

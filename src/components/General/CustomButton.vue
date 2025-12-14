@@ -10,8 +10,15 @@ const variant = props.variant ?? 'main';
 
 const variantClasses: Record<Variant, string> = {
     main: `text-white
-        bg-[rgb(163,144,115)]
-        hover:bg-[rgb(130,115,92)]`,
+        bg-[rgba(141,110,99,0.8)]
+        hover:bg-[rgba(141,110,99,1)]
+        backdrop-blur-md
+        transition-all
+        duration-300
+        ease-in-out
+        hover:backdrop-blur-xl
+        hover:shadow-[0_8px_24px_rgba(141,110,99,0.3)]
+        hover:-translate-y-[2px]`,
 
     setting:
         `bg-[rgb(163,144,115)]
@@ -55,7 +62,7 @@ const variantClasses: Record<Variant, string> = {
 <template>
     <button
     :class="[
-    'font-semibold shadow-lg rounded-3xl p-4 py-3 transition-all duration-200 ease-in-out flex justify-center cursor-pointer items-center',
+    'font-semibold shadow-lg rounded-2xl p-4 py-3 transition-all duration-200 ease-in-out flex justify-center cursor-pointer items-center',
     variantClasses[variant]
     ]">
         <slot>click me</slot>
