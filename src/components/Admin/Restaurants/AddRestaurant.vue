@@ -77,7 +77,7 @@
 
 <template>
     <div class="flex flex-col h-full max-full gap-5 justify-center">
-        <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/80 shadow-xl lg:rounded-lg p-5">
+        <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/90 shadow-xl lg:rounded-lg p-5">
         <form
             @submit.prevent=""
             class="max-w-100 w-full lg:min-w-125 justify-center flex flex-col gap-5 p-5">

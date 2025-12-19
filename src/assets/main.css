@@ -2,25 +2,31 @@
 @import "tailwindcss";
 
 :root {
-    background-image: url('@/assets/images/background.jpg');
+    /*background-image: url('@/assets/images/background.jpg');*/
     font-family: 'Inter', sans-serif;
 }
 
 @theme {
-  --color-reallyDarkBrown: rgba(74,64,45,0.9);
-  --color-brown08: rgba(141,110,99,0.8);
-  --color-brown1: [rgba(141,110,99,1)];
+    --color-main-50: rgb(234,232,228);
+    --color-main-100: rgb(213,209,202);
+    --color-main-200: rgb(192,185,175);
+    --color-main-300: rgb(171,162,148);
+    --color-main-400: rgb(150,139,122);
+    --color-main-500: rgb(126,115,99);
+    --color-main-600: rgb(105,96,82);
+    --color-main-700: rgb(84,77,66);
+    --color-main-800: rgb(63,57,49);
+    --color-main-900: rgb(42,38,33);
 }
 
-
-body::before {
+/* body::before {
     content: "";
     position: fixed;
     inset: 0;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: -1;
-}
+} */
 
 :focus-visible {
     @apply outline-2 outline-stone-500;
@@ -40,48 +46,3 @@ body::before {
 .CoButton {
     @apply text-stone-600 hover:text-stone-500 font-bold cursor-pointer;
 }
-
-/* .SettingSubmitButton {
-    background-color: rgb(163, 144, 115);
-    color: rgb(84, 63, 20);
-    border: none;
-    border-color: rgb(91, 64, 31);
-}
-.SettingSubmitButton:hover {
-    background-color: rgb(102, 80, 54);
-    @apply text-stone-200;
-}
-
-.NormalSubmitButton {
-    background-color: rgb(149, 224, 149);
-    color: rgb(4, 117, 4);
-    @apply border-green-700;
-}
-.NormalSubmitButton:hover {
-    background-color: rgb(39, 147, 39);
-    @apply text-green-200 hover:scale-105 hover:text-xl;
-}
-
-.DeleteButton {
-    background-color: rgb(242, 136, 136);
-    color: rgb(136, 1, 1);
-    @apply border-red-800;
-}
-.DeleteButton:hover {
-    background-color: rgb(205, 75, 75);
-    @apply text-red-200 hover:scale-105 hover:text-xl;
-}
-
-.CancelButton {
-    @apply hover:bg-gray-100 bg-white text-blue-600 hover:scale-105 hover:text-xl;
-}
-
-.CallWaiterButton {
-    background-color: rgb(198, 175, 255);
-    color: rgb(91, 0, 203);
-    @apply border-violet-700;
-}
-.CallWaiterButton:hover {
-    background-color: rgb(119, 70, 178);
-    @apply text-violet-200 hover:scale-105 hover:text-xl;
-} */

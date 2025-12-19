@@ -1,12 +1,11 @@
 <script setup lang="ts">
-    import { mainColor } from '@/assets/mainColors';
     import { RouterLink } from 'vue-router';
     import CustomButton from '../General/CustomButton.vue';
     
 </script>
 
 <template>
-<div class="text-white z-50 shadow-xl flex justify-between pr-5 pl-5 p-1" :style="{backgroundColor: mainColor}" >
+<div class="text-white z-50 shadow-xl flex justify-between pr-5 pl-5 p-1 bg-main-500" >
     <RouterLink :to="{name: 'home'}">
         <img src="@/assets/images/Logo.svg" alt="Logo" class="w-60">
     </RouterLink>

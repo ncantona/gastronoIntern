@@ -6,7 +6,6 @@
 
 <template>
     <div class="flex justify-center w-full relative">
-        <KitchenNavbar/>
-        <Kitchen class="w-97/100"/>
+        <Kitchen class="w-full"/>
     </div>
 </template>

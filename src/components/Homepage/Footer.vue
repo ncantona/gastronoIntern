@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { mainColor, mainColorDark } from '@/assets/mainColors';
-
 
 </script>
 
 <template>
-    <footer class="text-white py-10"
-            :style="{backgroundColor: mainColor}">
+    <footer class="text-white py-10 bg-main-500">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
 
         <div>
@@ -37,8 +34,7 @@ import { mainColor, mainColorDark } from '@/assets/mainColors';
 
         </div>
 
-        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm"
-                    :style="{color: mainColorDark}">
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-main-900">
         © 2025 Gastrono. Alle Rechte vorbehalten.
         </div>
     </footer>

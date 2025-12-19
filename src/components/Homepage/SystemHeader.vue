@@ -14,7 +14,7 @@
 </script>
 
 <template>
-    <div class="text-white h-28 text-shadow-lg z-50 shadow-xl text-3xl flex justify-between p-5 bg-[rgba(141,110,99,1)]">
+    <div class="text-white h-28 text-shadow-lg z-50 shadow-xl text-3xl flex justify-between p-5 bg-main-500">
         
         <div class="flex flex-col self-center">
             <span>Grätzlgarten</span>

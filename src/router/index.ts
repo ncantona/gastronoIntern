@@ -59,16 +59,10 @@ const router = createRouter({
 		]
 	},
 	{
-		path: '/',
-		component: () => import('@/layouts/InternLayout.vue'),
+		path: '/host-dashboard',
+		name: 'dashboardhost',
 		meta: { requiresAuth: true, allowedRoles: ['ROLE_HOST']},
-		children: [
-		{
-			path: '/host-dashboard',
-			name: 'dashboardhost',
-			component: () => import('@/views/HostView.vue'),
-		},
-		]
+		component: () => import('@/views/HostView.vue'),
 	},
 	{
 		path: '/',
@@ -79,36 +73,6 @@ const router = createRouter({
 			path: '/admin-dashboard',
 			name: 'dashboardadmin',
 			component: () => import('@/views/AdminView.vue'),
-		},
-		{
-			path: '/restaurant-statistics',
-			name: 'statisticsrestaurant',
-			component: () => import('@/components/Admin/StatisticsRestaurant.vue'),
-		},
-		{
-			path: '/user-statistics',
-			name: 'statisticsuser',
-			component: () => import('@/components/Admin/StatisticsUser.vue'),
-		},
-		{
-			path: '/add-restaurant',
-			name: 'addrestaurant',
-			component: () => import('@/components/Admin/AddRestaurant.vue'),
-		},
-		{
-			path: '/manage-restaurant',
-			name: 'managerestaurant',
-			component: () => import('@/components/Admin/ManageRestaurant.vue'),
-		},
-		{
-			path: '/manage-restaurant-accounts',
-			name: 'managerestaurantaccounts',
-			component: () => import('@/components/Admin/ManageRestaurantAccounts.vue'),
-		},
-		{
-			path: '/manage-user',
-			name: 'manageuser',
-			component: () => import('@/components/Admin/ManageUser.vue'),
 		},
 		]
 	},

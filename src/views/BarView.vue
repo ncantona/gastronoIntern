@@ -6,7 +6,6 @@
 
 <template>
     <div class="flex justify-center w-full relative">
-        <BarNavbar/>
-        <Bar class="w-97/100"/>
+        <Bar class="w-full"/>
     </div>
 </template>

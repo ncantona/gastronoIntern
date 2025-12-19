@@ -119,7 +119,7 @@
         @click="handleClick"
         :class="[
             'flex flex-col rounded-xl relative overflow-y-auto p-4 min-w-70 cursor-pointer max-w-55 shadow-xl',
-            isClicked ? 'bg-green-100' : 'bg-[rgb(222,210,188)]']">
+            isClicked ? 'bg-green-100' : 'bg-main-50']">
         <div v-show="isMarkedAsDone" class="absolute self-center flex top-0 h-full items-center">
             <img src="@/assets/svgs/checkGreen.svg" alt="table" class="w-25 opacity-60">
         </div>

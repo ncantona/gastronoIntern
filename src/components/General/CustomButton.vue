@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout';
+type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout' | 'editBlue' | 'editGreen';
 
 const props = defineProps<{
   variant?: Variant;
@@ -10,8 +10,8 @@ const variant = props.variant ?? 'main';
 
 const variantClasses: Record<Variant, string> = {
     main: `text-white
-        bg-[rgba(141,110,99,0.8)]
-        hover:bg-[rgba(141,110,99,1)]
+        bg-main-500/80
+        hover:bg-main-500
         backdrop-blur-md
         transition-all
         duration-300
@@ -33,9 +33,9 @@ const variantClasses: Record<Variant, string> = {
         hover:text-white`,
 
     delete:
-        `bg-[rgb(242,136,136)]
+        `bg-red-700
         text-[rgb(136,1,1)]
-        hover:bg-[rgb(205,75,75)]
+        hover:bg-red-600
         hover:text-red-200`,
 
     cancel:
@@ -50,9 +50,23 @@ const variantClasses: Record<Variant, string> = {
         hover:text-violet-200`,
 
     logout:
-        `bg-red-800
+        `bg-red-700
         text-white
-        hover:bg-[rgba(202,61,61,0.71)]
+        hover:bg-red-600
+        hover:text-white
+        shadow-xl`,
+
+    editBlue:
+        `bg-blue-500
+        text-white
+        hover:bg-blue-400
+        hover:text-white
+        shadow-xl`,
+
+    editGreen:
+        `bg-yellow-500
+        text-white
+        hover:bg-yellow-400
         hover:text-white
         shadow-xl`,
 }

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { api } from "@/API/axios";
-import AddRestaurant from "@/components/Admin/AddRestaurant.vue";
+import AddRestaurant from "@/components/Admin/Restaurants/AddRestaurant.vue";
 import { log } from "@/utils/logger";
 
 interface RestaurantAccount {

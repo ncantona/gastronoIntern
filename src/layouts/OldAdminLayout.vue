@@ -1,8 +1,9 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    
-    import LogoHeader from '@/components/General/LogoHeader.vue';
-    import Navbar from '@/components/Navbar/Navbar.vue';
+  import LogoHeader from '@/components/General/LogoHeader.vue';
+  import Navbar from '@/components/Navbar/Navbar.vue';
+  import NavbarV2 from '@/components/Navbar/NavbarV2.vue';
+  import AddRestaurant from '@/components/Admin/Restaurants/AddRestaurant.vue';
+  import { ref } from 'vue';
 
     interface NavbarButton {
         label: string;
@@ -21,38 +22,23 @@
 			title: 'Statistiken',
 			buttons: [
 			{ label: 'Restaurant Statistiken', key: 'statisticsrestaurant' },
+			{ label: 'Benutzer Statistiken', key: 'statisticsuser' },
 			],
 		},
 		{
 			key: 'restaurant',
 			title: 'Restaurant',
 			buttons: [
+			{ label: 'Restaurant anlegen', key: 'addrestaurant' },
 			{ label: 'Restaurant bearbeiten', key: 'managerestaurant' },
-			{ label: 'Konten verwalten', key: 'managerestaurantaccounts' },
-			{ label: 'Kellner verwalten', key: 'managewaiter' },
+			{ label: 'Accounts verwalten', key: 'managerestaurantaccounts' },
 			],
 		},
 		{
 			key: 'user',
-			title: 'Speisekarte',
+			title: 'Benutzer',
 			buttons: [
-			{ label: 'Speisekarte verwalten', key: 'manageuser' },
-			],
-		},
-        {
-			key: 'dashboards',
-			title: 'Dashboards',
-			buttons: [
-			{ label: 'Küche', key: 'kitchen' },
-			{ label: 'Bar', key: 'bar' },
-			],
-		},
-        {
-			key: 'ratings',
-			title: 'Bewertungen',
-			buttons: [
-			{ label: 'Restaurant', key: 'restaurantratings' },
-			{ label: 'Speisen / Getränke', key: 'itemratings' },
+			{ label: 'Benutzer anzeigen', key: 'manageuser' },
 			],
 		},
 	];
@@ -68,11 +54,11 @@
     </header>
 
     <aside class="col-start-1 row-span-2 z-40 w-full">
-      <Navbar v-model="currentButton" :navbar="navbar" header="Host Panel"/>
+      <NavbarV2 v-model="currentButton" :navbar="navbar" header="Admin Panel"/>
     </aside>
 
     <main class="col-start-2 row-start-2 p-6 pr-3">
-        <!-- Komponenten die durch Klicken der Buttons in der Navigation angezeigt werden -->
+      <AddRestaurant v-if="currentButton === 'addrestaurant'"></AddRestaurant>
     </main>
 
   </div>
