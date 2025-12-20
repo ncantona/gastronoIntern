@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { useRestaurantStore } from '@/stores/Admin/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { onMounted, ref } from 'vue';
     import { log } from '@/utils/logger';
+    import { ref } from 'vue';
 
     import RestaurantConfirmation from '@/components/Admin/Restaurants/RestaurantConfirmation.vue';
     import CustomInputField from '@/components/General/CustomInputField.vue';
@@ -19,11 +19,7 @@
         categories: string[],
     }
 
-    const props = defineProps<{
-        restaurant: Restaurant;
-    }>();
-
-    const emits = defineEmits(['editSuccess']);
+    const emits = defineEmits(['createSuccess']);
 
     const restaurantStore = useRestaurantStore();
     const popupStore = usePopupStore();
@@ -43,53 +39,49 @@
     ]);
 
     const handleSubmit = async () => {
+        try {
+            await restaurantStore.createRestaurant(restaurant.value);
+            popupStore.setSuccess('Restaurant erfolgreich angelegt.')
+            log.debug('Successfully created restaurant: ', restaurant.value);
+            emits('createSuccess');
+        } catch (error) {
+            log.error('Failed to create restaurant.')
+            popupStore.setError('Anlegen des Restaurants fehlgeschlagen.');
+        }
+    };
+
+    const handleNext = () => {
         errors.value.fill('');
 
         if (!restaurant.value.name)
-            errors.value[0] = 'Name darf nicht leer sein.';
+            errors.value[0] = 'Bitte einen Namen angeben.';
         if (!restaurant.value.street)
-            errors.value[1] = 'Straße darf nicht leer sein.';
+            errors.value[1] = 'Bitte eine Adresse angeben.';
         if (!restaurant.value.city)
-            errors.value[2] = 'Ort darf nicht leer sein.';
+            errors.value[2] = 'Bitte einen Ort angeben.';
         if (!restaurant.value.zipcode)
-            errors.value[4] = 'Postleitzahl darf nicht leer sein.';
-        if (!(errors.value[0] || errors.value[1] || errors.value[2] || errors.value[3])) {
-            try {
-                await restaurantStore.updateRestaurant(restaurant.value, props.restaurant.id);
-                popupStore.setSuccess('Restaurant erfolgreich aktualisiert.')
-                log.debug('Successfully updated restaurant: ', restaurant.value);
-                emits('editSuccess');
-            } catch (error) {
-                log.error('Failed to update restaurant: ', restaurant.value)
-                popupStore.setError('Akutalisieren des Restaurants fehlgeschlagen.');
-            }
-        }
-    }
-
-    onMounted(() => {
-        restaurant.value.name = props.restaurant.name;
-        restaurant.value.street = props.restaurant.street;
-        restaurant.value.addressAddition = props.restaurant.addressAddition;
-        restaurant.value.city = props.restaurant.city;
-        restaurant.value.zipcode = props.restaurant.zipcode;
-    });
+            errors.value[3] = 'Bitte eine Postleitzahl angeben.';
+        if (!(errors.value[0] || errors.value[1] || errors.value[2] || errors.value[3]))
+            showConfirmation.value = true;
+    };
 
 </script>
 
 <template>
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-sm text-xl" @click="emits('editSuccess')">
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-sm text-xl" @click="emits('createSuccess')">
         <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/90 shadow-xl lg:rounded-lg p-5" @click.stop>
             <form
                 @submit.prevent=""
-                class="max-w-100 w-full lg:min-w-125 justify-center flex flex-col gap-5 p-5">
+                class="max-w-100 w-full min-w-125 justify-center flex flex-col gap-5 p-5">
                 <span class="mainHeader mb-4">
-                    Restaurant aktualisieren
+                    Neues Restaurant anlegen
                 </span>
                 <CustomInputField
                     v-model="restaurant.name"
                     type="text"
                     label="Restaurant Name"
                     name="name"
+                    placeholder="Grätzlgarten"
                     :error="errors[0]"
                 />
                 <div class="flex gap-5 w-full">
@@ -98,6 +90,7 @@
                         type="text"
                         label="Straße"
                         name="street"
+                        placeholder="Welsgasse"
                         :error="errors[1]"
                         class="w-7/10"
                     />
@@ -106,7 +99,7 @@
                         type="text"
                         label="Nr. / Zusatz"
                         name="addressAddition"
-                        :error="errors[2]"
+                        placeholder="18a"
                         class="w-3/10"
                     />
                 </div>
@@ -115,19 +108,22 @@
                     type="text"
                     label="Ort"
                     name="city"
-                    :error="errors[3]"
+                    placeholder="Wien"
+                    :error="errors[2]"
                     />
                 <CustomInputField
                     v-model="restaurant.zipcode"
                     type="text"
                     label="Postleitzahl"
                     name="zipcode"
+                    placeholder="1160"
+                    :error="errors[3]"
                     />
                 <CustomButton
-                    variant="editBlue"
+                    variant="submit"
                     class="mt-4"
-                    @click="showConfirmation = true">
-                    Aktualisieren
+                    @click="handleNext()">
+                    Restaurant anlegen
                 </CustomButton>
             </form>
         </div>
@@ -135,6 +131,6 @@
             v-model="showConfirmation"
             :restaurant="restaurant"
             @canceled="showConfirmation = false"
-            @confirmed="handleSubmit"/>
+            @confirmed="handleSubmit()"/>
     </div>
 </template>

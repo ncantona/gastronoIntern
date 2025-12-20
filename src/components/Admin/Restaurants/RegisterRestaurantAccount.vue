@@ -1,93 +1,54 @@
 <script setup lang="ts">
-    import { isValidEmail, checkPassword } from '@/GeneralTypescript/HelperFunctions';
-    import CustomInputField from '@/components/General/CustomInputField.vue';
-    import CustomButton from '@/components/General/CustomButton.vue';
+    import { isValidEmail } from '@/GeneralTypescript/HelperFunctions';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import { ref } from 'vue';
 
-    const emits = defineEmits(['registerSuccess']);
+    import CustomInputField from '@/components/General/CustomInputField.vue';
+    import CustomButton from '@/components/General/CustomButton.vue';
 
+    const props = defineProps<{
+        restaurantId: number,
+    }>();
+
+    const emits = defineEmits(['registerSuccess']);
+    
     const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const firstName = ref<string>('');
-    const lastName = ref<string>('');
-    const email = ref<string>('');
-    const password = ref<string>('');
-    const retypePassword = ref<string>('');
+    const account = ref({
+        loginId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: 'password123',
+        restaurantId: props.restaurantId,
+    });
 
-    const errorFirstName = ref<string>('');
-    const errorLastName = ref<string>('');
-    const errorEmail = ref<string>('');
-    const loginId = ref<string>('');
-    const errorPassword = ref<string>('');
-    const errorRetypePassword = ref<string>('');
-
-    const clearFields = () => {
-        loginId.value = '',
-        firstName.value = '';
-        lastName.value = '';
-        email.value = '';
-        password.value = '';
-        retypePassword.value = '';
-    }
-
-    const clearErrors = () => {
-        errorFirstName.value = '';
-        errorLastName.value = '';
-        errorEmail.value = '';
-        errorPassword.value = '';
-        errorRetypePassword.value = '';
-    }
+    const errors = ref<[string, string, string, string]>([
+        '', '', '', ''
+    ]);
 
     const handleSubmit = async () => {
-        const userData = {
-            loginId: loginId.value,
-            firstName: firstName.value,
-            lastName: lastName.value,
-            email: email.value,
-            password: password.value,
-        };
+        errors.value.fill('');
 
-        clearErrors();
+        if (!account.value.loginId)
+            errors.value[0] = 'Login-ID darf nicht leer sein.'
+        if (!account.value.firstName)
+            errors.value[1] = 'Vorname darf nicht leer sein.';
+        if (!account.value.lastName)
+            errors.value[2] = 'Nachname darf nicht leer sein.';
+        if (!account.value.email)
+            errors.value[3] = 'Email darf nicht leer sein.';
+        else if (!isValidEmail(account.value.email))
+            errors.value[3] = 'Bitte gib eine gültige E-Mail-Adresse ein.';
 
-        const passwordError = checkPassword(userData.password)
-        if (!userData.firstName)
-            errorFirstName.value = 'Bitte gib deinen Vornamen ein.';
-        if (!userData.lastName)
-            errorLastName.value = 'Bitte gib deinen Nachnamen ein.';
-        if (!userData.email)
-            errorEmail.value = 'Bitte gib deine E-Mail-Adresse ein.';
-        else if (!isValidEmail(userData.email))
-            errorEmail.value = 'Bitte gib eine gültige E-Mail-Adresse ein.';
-        if (!userData.password)
-            errorPassword.value = 'Bitte gib dein Passwort ein.';
-        else if (passwordError > 0) {
-            if (passwordError == 1)
-                errorPassword.value = 'Dein Password muss mindestens 8 Zeichen lang sein.';
-            else if (passwordError == 2)
-                errorPassword.value = 'Dein Password muss mindestens 1 Kleinbuchstaben enthalten.';
-            else if (passwordError == 3)
-                errorPassword.value = 'Dein Password muss mindestens 1 Großbuchstaben enthalten.';
-            else if (passwordError == 4)
-                errorPassword.value = 'Dein Password muss mindestens 1 Ziffer einthalten.';  
-            else if (passwordError == 5)
-                errorPassword.value = 'Dein Password muss mindestens 1 Sonderzeichen enthalten.';  
-        }
-        else if (!retypePassword.value) {
-            errorRetypePassword.value = 'Bitte wiederhole dein Passwort';
-        }
-        else if (retypePassword.value != userData.password)
-            errorRetypePassword.value = 'Passwort stimmt nicht überein.'
-
-        if (!(errorFirstName.value || errorLastName.value || errorEmail.value
-        || errorPassword.value || errorRetypePassword.value)) {
+        if (!(errors.value[0] || errors.value[1] || errors.value[2] || errors.value[3])) {
             try {
-                await authStore.registerSystemUser(userData);
-                clearFields();
+                await authStore.registerRestaurantHost(account.value);
+                popupStore.setSuccess('Anlegen erfolgreich.');
             } catch (error) {
-                popupStore.setError('Registrierung fehlgeschlagen.');
+                popupStore.setError('Anlegen fehlgeschlagen.');
             }
         }
     }
@@ -96,54 +57,45 @@
 
 <template>
     <div class="flex flex-col self-center h-full w-full justify-center">
-        <span class="mainHeader hidden lg:block">Registrieren</span>
-        <div class="w-full h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/50 shadow-xl lg:rounded-lg p-5">
-        <form
-            @submit.prevent=""
-            class="max-w-100 w-full justify-center flex flex-col gap-5 p-5">
-            <span class="mainHeader lg:hidden">Registrieren</span>
-            <CustomInputField
-                v-model="firstName"
-                type="text"
-                label="Vorname"
-                name="firstName"
-                placeholder="Vornamen eingeben"
-                :error="errorFirstName"
-            />
-            <CustomInputField
-                v-model="lastName"
-                type="text"
-                label="Nachname"
-                name="lastName"
-                placeholder="Nachnamen eingeben"
-                :error="errorLastName"
-            />
-            <CustomInputField
-                v-model="email"
-                type="text"
-                label="E-Mail-Adresse"
-                name="email"
-                placeholder="E-Mail-Adresse eingeben"
-                :error="errorEmail"
-            />
-            <CustomInputField
-                v-model="password"
-                type="password"
-                label="Passwort"
-                name="password"
-                placeholder="Passwort eingeben"
-                :error="errorPassword"
+        <div class="w-full h-full items-center justify-center lg:h-auto flex flex-col gap-5 lg:rounded-lg">
+            <form
+                @submit.prevent=""
+                class="max-w-100 w-full justify-center flex flex-col gap-5 p-5">
+                <span class="mainHeader lg:hidden">Registrieren</span>
+                <CustomInputField
+                    v-model="account.loginId"
+                    type="text"
+                    label="Login-ID"
+                    name="loginId"
+                    placeholder="Login-ID eingeben"
+                    :error="errors[0]"
                 />
-            <CustomInputField
-                v-model="retypePassword"
-                type="password"
-                label="Passwort wiederholen"
-                name="retypePassword"
-                placeholder="Passwort erneut eingeben"
-                :error="errorRetypePassword"
-            />
-            <CustomButton class="mt-4" @click="handleSubmit">Registrieren</CustomButton>
-        </form>
+                <CustomInputField
+                    v-model="account.firstName"
+                    type="text"
+                    label="Vorname"
+                    name="firstName"
+                    placeholder="Vornamen eingeben"
+                    :error="errors[1]"
+                />
+                <CustomInputField
+                    v-model="account.lastName"
+                    type="text"
+                    label="Nachname"
+                    name="lastName"
+                    placeholder="Nachnamen eingeben"
+                    :error="errors[2]"
+                />
+                <CustomInputField
+                    v-model="account.email"
+                    type="text"
+                    label="E-Mail-Adresse"
+                    name="email"
+                    placeholder="E-Mail-Adresse eingeben"
+                    :error="errors[3]"
+                />
+                <CustomButton variant="submit" class="mt-4" @click="handleSubmit">Account anlegen</CustomButton>
+            </form>
         </div>
     </div>
 </template>

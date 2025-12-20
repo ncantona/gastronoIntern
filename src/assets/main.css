@@ -19,6 +19,16 @@
     --color-main-900: rgb(42,38,33);
 }
 
+.scrollbar-overlay::-webkit-scrollbar {
+  height: 6px;
+}
+.scrollbar-overlay::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-overlay::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3);
+}
+
 /* body::before {
     content: "";
     position: fixed;

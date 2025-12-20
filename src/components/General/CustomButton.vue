@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout' | 'editBlue' | 'editGreen';
+type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout' | 'editBlue' | 'editYellow';
 
 const props = defineProps<{
   variant?: Variant;
@@ -27,16 +27,15 @@ const variantClasses: Record<Variant, string> = {
         hover:text-stone-200`,
 
     submit:
-        `bg-green-200
-        text-green
+        `bg-green-600
+        text-white
         hover:bg-green-500
         hover:text-white`,
 
     delete:
         `bg-red-700
-        text-[rgb(136,1,1)]
-        hover:bg-red-600
-        hover:text-red-200`,
+        text-white
+        hover:bg-red-600`,
 
     cancel:
         `bg-white
@@ -53,22 +52,19 @@ const variantClasses: Record<Variant, string> = {
         `bg-red-700
         text-white
         hover:bg-red-600
-        hover:text-white
-        shadow-xl`,
+        hover:text-white`,
 
     editBlue:
         `bg-blue-500
         text-white
         hover:bg-blue-400
-        hover:text-white
-        shadow-xl`,
+        hover:text-white`,
 
-    editGreen:
+    editYellow:
         `bg-yellow-500
         text-white
         hover:bg-yellow-400
-        hover:text-white
-        shadow-xl`,
+        hover:text-white`,
 }
 
 </script>
@@ -76,9 +72,8 @@ const variantClasses: Record<Variant, string> = {
 <template>
     <button
     :class="[
-    'font-semibold shadow-lg rounded-2xl p-4 py-3 transition-all duration-200 ease-in-out flex justify-center cursor-pointer items-center',
-    variantClasses[variant]
-    ]">
+    'font-semibold shadow-lg rounded-2xl p-4 py-3 transition-all duration-200 ease-in-out flex justify-center text-lg cursor-pointer items-center',
+    variantClasses[variant]]">
         <slot>click me</slot>
     </button>
 </template>

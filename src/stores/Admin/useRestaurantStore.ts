@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { api } from "@/API/axios";
-import AddRestaurant from "@/components/Admin/Restaurants/AddRestaurant.vue";
-import { log } from "@/utils/logger";
 
 interface RestaurantAccount {
     id: number,
@@ -27,16 +25,29 @@ export const useRestaurantStore = defineStore('restaurant', {
         
     },
     actions: {
-        addRestaurant: async (restaurantData: {restaurantName: string, streetName: string, streetNumber: string, zip: string, city: string}) => {
+        createRestaurant: async (restaurantData: {name: string, street: string, addressAddition: string, zipcode: string, city: string}) => {
             await api.post('/restaurant', restaurantData);
         },
         getRestaurantsByName: async (search: string) => {
-            const response = await api.get('restaurant/search', {params: search});
-            return response.data;
+            const { data } = await api.get('restaurant/search', {params: search});
+            return data;
         },
         getRestaurantById: async (id: number) => {
-            const response = await api.get(`restaurant/${id}`);
-            return response.data;
+            const { data } = await api.get(`restaurant/${id}`);
+            return data;
         },
+        toggleRestaurantStatus: async (id: number) => {
+            await api.patch(`restaurant/${id}`);
+        },
+        updateRestaurant: async (restaurantData: {name: string, street: string, addressAddition: string, zipcode: string, city: string}, id :number) => {
+            await api.put(`/restaurant/${id}`, restaurantData);
+        },
+        getRestaurantAccounts: async (id :number) => {
+            const { data } = await api.get(`restaurant/${id}/accounts`);
+            return data;
+        },
+        deleteRestaurantAccount: async (restaurantId :number, accountId :number) => {
+            await api.delete(`restaurant/${restaurantId}//accounts/${accountId}`);
+        }
     }
 })
