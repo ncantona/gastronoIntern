@@ -69,7 +69,7 @@
 
 <template>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-sm text-xl" @click="emits('createSuccess')">
-        <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/90 shadow-xl lg:rounded-lg p-5" @click.stop>
+        <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/90 shadow-xl rounded-lg p-5" @click.stop>
             <form
                 @submit.prevent=""
                 class="max-w-100 w-full min-w-125 justify-center flex flex-col gap-5 p-5">

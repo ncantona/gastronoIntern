@@ -15,7 +15,7 @@
 </script>
 
 <template>
-    <div class="max-w-100 w-full h-full min-w-125 self-center flex flex-col gap-5 p-5">
+    <div class="max-w-100 w-full h-full min-w-125 self-center flex flex-col gap-5">
         <div class="flex gap-4 flex-col">
             <span class="font-semibold">
                 Login-ID

@@ -77,7 +77,7 @@
 
 <template>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-sm" @click="emits('editSuccess')">
-        <div class="bg-white/90 shadow-xl rounded-lg p-5 flex flex-col gap-3 min-h-180" @click.stop>
+        <div class="bg-white/90 shadow-xl rounded-lg p-10 flex flex-col gap-3 min-h-180" @click.stop>
             <span class="mainHeader self-center">
                 Restaurant-Accounts verwalten
             </span>
@@ -98,7 +98,7 @@
                     Interns
                 </button>
             </div>
-            <div v-show="currentView === 'intern'" class="flex gap-30 p-5 mt-3">
+            <div v-show="currentView === 'intern'" class="flex gap-30 mt-3 min-h-130">
                 <div class="flex flex-col gap-5">
                     <div class="text-xl font-semibold pr-3 pl-3 grid 2xl:grid-cols-[minmax(0,15rem)_minmax(0,15rem)_minmax(0,1fr)]">
                         <span>ID</span>
