@@ -19,7 +19,10 @@ interface Restaurant {
 
 export const useRestaurantStore = defineStore('restaurant', {
     state: () => ({
-        restaurants: [] as Restaurant[],
+        restaurant: {
+            id: 1,
+            name: 'Grätzlgarten',
+        },
     }),
     getters: {
         

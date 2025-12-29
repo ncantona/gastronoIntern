@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-    type Role = 'ROLE_KITCHEN' | 'ROLE_HOST' | 'ROLE_BAR' | 'ROLE_RESTAURANT';
+    type Role = 'ROLE_KITCHEN' | 'ROLE_HOST' | 'ROLE_BAR' | 'ROLE_RESTAURANT' | '';
 
-    const value = defineModel<Role | ''>();
+    const value = defineModel<Role>();
 
 </script>
 

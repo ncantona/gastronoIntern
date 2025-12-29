@@ -7,7 +7,7 @@
 <template>
 <div class="text-white z-50 shadow-xl flex justify-between pr-5 pl-5 p-1 bg-main-500" >
     <RouterLink :to="{name: 'home'}">
-        <img src="@/assets/images/Logo.svg" alt="Logo" class="w-60">
+        <img src="@/assets/images/Logooo.svg" alt="Logo" class="w-60">
     </RouterLink>
     <div class="flex gap-4">
         <div class="lg:flex items-center hidden">

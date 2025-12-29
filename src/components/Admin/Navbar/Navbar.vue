@@ -13,10 +13,11 @@
 
     import NavbarButton from '@/components/Admin/Navbar/NavbarButton.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
+import Window from '@/components/General/Window.vue';
 
     const authStore = useAuthStore();
 
-    const activeButton = ref<string>('');
+    const activeButton = ref<string>('restaurant');
 
     const value = defineModel<string>();
 
@@ -33,24 +34,21 @@
 </script>
 
 <template>
-  <div class="fixed top-0 bottom-0 w-[19rem] bg-white/80 flex flex-col z-40">
+  <Window class="flex flex-col sticky top-5">
 
-    <nav class="flex w-full text-lg h-full flex-col gap-1">
+    <nav class="flex w-full h-full flex-col gap-1">
 
-        <div class="flex flex-col mb-6 p-6">
-            <span class="mainHeader mb-4">Admin Panel</span>
-            <div class="h-0.5 w-30 self-center bg-main-500 rounded mb-4"></div>
-        </div>
+        <span class="subHeader m-4 border-b pb-2 border-main-500/60">Admin Panel</span>
 
-        <div class="flex flex-col justify-center gap-3 p-4">
-            <NavbarButton
+        <div class="flex flex-col justify-center gap-1 p-2">
+<!--             <NavbarButton
                 @click="activeButton = 'statistics'; value = 'statistics'"
                 :isClicked="activeButton === 'statistics'"
                 :imgSrcBlack="imgSrcBlackStatistics"
                 :imgSrcWhite="imgSrcWhiteStatistics"
                 imgSrcDesc="Statistik Icon">
                 Statistiken
-            </NavbarButton>
+            </NavbarButton> -->
             <NavbarButton
                 @click="activeButton = 'restaurant'; value = 'restaurant'"
                 :isClicked="activeButton === 'restaurant'"
@@ -59,14 +57,14 @@
                 imgSrcDesc="Restaurant Icon">
                 Restaurants
             </NavbarButton>
-            <NavbarButton
+<!--             <NavbarButton
                 @click="activeButton = 'user'; value = 'user'"
                 :isClicked="activeButton === 'user'"
                 :imgSrcBlack="imgSrcBlackPerson"
                 :imgSrcWhite="imgSrcWhitePerson"
                 imgSrcDesc="User Icon">
                 Benutzer
-            </NavbarButton>
+            </NavbarButton> -->
         </div>
 
     </nav>
@@ -81,5 +79,5 @@
                 Abmelden
             </CustomButton>
     </div>
-  </div>
+  </Window>
 </template>

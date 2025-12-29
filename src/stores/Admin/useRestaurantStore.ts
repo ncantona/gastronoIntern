@@ -39,8 +39,8 @@ export const useRestaurantStore = defineStore('restaurant', {
         toggleRestaurantStatus: async (id: number) => {
             await api.patch(`restaurant/${id}`);
         },
-        updateRestaurant: async (restaurantData: {name: string, street: string, addressAddition: string, zipcode: string, city: string}, id :number) => {
-            await api.put(`/restaurant/${id}`, restaurantData);
+        updateRestaurant: async (restaurantData: {id: number, name: string, street: string, addressAddition: string, zipcode: string, city: string}) => {
+            await api.put(`/restaurant/${restaurantData.id}`, restaurantData);
         },
         getRestaurantAccounts: async (id :number) => {
             const { data } = await api.get(`restaurant/${id}/accounts`);

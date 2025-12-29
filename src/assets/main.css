@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 :root {
-    /*background-image: url('@/assets/images/background.jpg');*/
-    font-family: 'Inter', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    @apply bg-gray-100;
 }
 
 @theme {
@@ -17,6 +17,23 @@
     --color-main-700: rgb(84,77,66);
     --color-main-800: rgb(63,57,49);
     --color-main-900: rgb(42,38,33);
+
+    --color-main-50:  rgb(225, 228, 243);
+    --color-main-100: rgb(200, 206, 234);
+    --color-main-200: rgb(172, 184, 224);
+    --color-main-300: rgb(145, 160, 214);
+    --color-main-400: rgb(105, 124, 198);
+    --color-main-500: rgb(58, 64, 90);   /* Basisfarbe */
+    --color-main-600: rgb(48, 53, 75);
+    --color-main-700: rgb(38, 42, 60);
+    --color-main-800: rgb(29, 32, 45);
+    --color-main-900: rgb(20, 22, 30);
+}
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
 }
 
 .scrollbar-overlay::-webkit-scrollbar {
@@ -29,17 +46,8 @@
   background: rgba(0,0,0,0.3);
 }
 
-/* body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: -1;
-} */
-
 :focus-visible {
-    @apply outline-2 outline-stone-500;
+    @apply outline-2 outline-main-500;
 }
 
 @font-face {
@@ -51,6 +59,10 @@
 
 .mainHeader {
     @apply text-3xl self-center font-bold pl-5 pr-5;
+}
+
+.subHeader {
+    @apply text-2xl self-center font-semibold; 
 }
 
 .CoButton {

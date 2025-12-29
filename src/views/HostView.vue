@@ -1,79 +1,76 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    
-    import LogoHeader from '@/components/General/LogoHeader.vue';
-    import Navbar from '@/components/Navbar/Navbar.vue';
+import Window from '@/components/General/Window.vue';
+	import OrderStatsDay from '@/components/Host/Dashboard/OrderStatsDay.vue';
+import TischStatsNow from '@/components/Host/Dashboard/TischStatsNow.vue';
 
-    interface NavbarButton {
-        label: string;
-        key: string;
-    }
-
-    interface NavbarSection {
-        title: string;
-        key: string;
-        buttons: NavbarButton[];
-    }
-
-	const navbar :NavbarSection[] = [
-		{
-			key: 'general',
-			title: 'Statistiken',
-			buttons: [
-			{ label: 'Restaurant Statistiken', key: 'statisticsrestaurant' },
-			],
-		},
-		{
-			key: 'restaurant',
-			title: 'Restaurant',
-			buttons: [
-			{ label: 'Restaurant bearbeiten', key: 'managerestaurant' },
-			{ label: 'Konten verwalten', key: 'managerestaurantaccounts' },
-			{ label: 'Kellner verwalten', key: 'managewaiter' },
-			],
-		},
-		{
-			key: 'user',
-			title: 'Speisekarte',
-			buttons: [
-			{ label: 'Speisekarte verwalten', key: 'manageuser' },
-			],
-		},
-        {
-			key: 'dashboards',
-			title: 'Dashboards',
-			buttons: [
-			{ label: 'Küche', key: 'kitchen' },
-			{ label: 'Bar', key: 'bar' },
-			],
-		},
-        {
-			key: 'ratings',
-			title: 'Bewertungen',
-			buttons: [
-			{ label: 'Restaurant', key: 'restaurantratings' },
-			{ label: 'Speisen / Getränke', key: 'itemratings' },
-			],
-		},
-	];
-
-  const currentButton = ref<string>('');
 </script>
 
 <template>
-  <div class="bg-main-500 grid grid-rows-[5rem_1fr] grid-cols-[19rem_1fr] h-screen w-screen max-w-500 overflow-hidden">
-    
-    <header class="col-start-2 row-span-1 z-50 h-full">
-      <LogoHeader/>
-    </header>
+	<div class="">
+		<Window>
+			<div class="flex flex-col">
+				<span class="text-xl font-medium">Schön, dass du wieder da bist!</span>
+				<span>Hier findest du das Wichtigste von heute</span>
+			</div>
+		</Window>
+		<div class="flex gap-2">
 
-    <aside class="col-start-1 row-span-2 z-40 w-full">
-      <Navbar v-model="currentButton" :navbar="navbar" header="Host Panel"/>
-    </aside>
+			<OrderStatsDay/>
+			<TischStatsNow/>
+			<Window class="w-full h-full">
+  <div class="flex flex-col">
+    <!-- Header -->
+    <div class="px-4 py-3 border-b border-gray-100">
+      <span class="text-base font-medium text-gray-900">
+        Service & Küche (Live)
+      </span>
+    </div>
 
-    <main class="col-start-2 row-start-2 p-6 pr-3">
-        <!-- Komponenten die durch Klicken der Buttons in der Navigation angezeigt werden -->
-    </main>
+    <!-- Content -->
+    <div class="grid gap-3 px-4 py-4">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-500">
+          Offene Bestellungen
+        </span>
+        <span class="text-lg font-medium text-gray-900">
+          7
+        </span>
+      </div>
 
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-500">
+          Ø Zubereitungszeit
+        </span>
+        <span class="text-lg font-medium text-gray-900">
+          14 min
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-500">
+          Verzögerte Bestellungen
+        </span>
+        <span class="text-lg font-medium text-red-600">
+          2
+        </span>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-500">
+          Ausverkaufte Gerichte
+        </span>
+        <span class="text-sm font-medium text-gray-900 text-right">
+          1
+        </span>
+      </div>
+    </div>
+
+    <!-- Optional Footer -->
+    <div class="px-4 py-2 border-t border-gray-100 text-xs text-gray-400">
+      Küche aktuell leicht ausgelastet
+    </div>
   </div>
+</Window>
+		</div>
+	</div>
 </template>

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="w-full h-full rounded-xl shadow-xl p-5 bg-white/80">
+    <div class="rounded-md m-3 shadow-lg shadow-gray-200 p-5 bg-white">
         <slot></slot>
     </div>
 </template>

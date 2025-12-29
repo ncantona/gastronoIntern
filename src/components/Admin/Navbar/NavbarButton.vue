@@ -15,17 +15,17 @@
 
 <template>
     <button
-        class="p-4 text-left rounded-lg transition-colors w-full cursor-pointer"
+        class="p-2 text-left rounded-lg transition-colors w-full cursor-pointer"
         :class="isClicked ? 'bg-main-500 hover:bg-main-500 text-white' : 'hover:bg-main-200'"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex justify-between items-center">
             <div class="flex gap-3 items-center">
-                <img v-show="!isClicked" :src="imgSrcBlack" :alt="imgSrcDesc" class="w-6">
-                <img v-show="isClicked" :src="imgSrcWhite" :alt="imgSrcDesc" class="w-6">
+                <img v-show="!isClicked" :src="imgSrcBlack" :alt="imgSrcDesc" class="w-5">
+                <img v-show="isClicked" :src="imgSrcWhite" :alt="imgSrcDesc" class="w-5">
                 <slot>Navbar Button</slot>
             </div>
-            <img v-show="isHovered && !isClicked" src="@/assets/svgs/arrowRightBlack.svg" alt="Arrow right in black" class="w-7">
-            <img v-show="isClicked" src="@/assets/svgs/arrowRightWhite.svg" alt="Arrow right in black" class="w-7">
+            <img v-show="isHovered && !isClicked" src="@/assets/svgs/arrowRightBlack.svg" alt="Arrow right in black" class="w-5">
+            <img v-show="isClicked" src="@/assets/svgs/arrowRightWhite.svg" alt="Arrow right in black" class="w-5">
         </div>
     </button>
 </template>

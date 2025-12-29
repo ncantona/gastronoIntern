@@ -59,10 +59,53 @@ const router = createRouter({
 		]
 	},
 	{
-		path: '/host-dashboard',
-		name: 'dashboardhost',
+		path: '/',
+		component: () => import('@/layouts/HostLayout.vue'),
 		meta: { requiresAuth: true, allowedRoles: ['ROLE_HOST']},
-		component: () => import('@/views/HostView.vue'),
+		children: [
+		{
+			path: '/host-dashboard',
+			name: 'dashboardhost',
+			meta: { sectionName: 'dashboardhost'},
+			component: () => import('@/views/HostView.vue'),
+		},
+		{
+			path: '/bestellungen',
+			name: 'orders',
+			meta: { sectionName: 'restaurant'},
+			component: () => import('@/views/HostView.vue'),
+		},
+		{
+			path: '/speisekarte',
+			name: 'menu',
+			meta: { sectionName: 'restaurant'},
+			component: () => import('@/views/MenuView.vue'),
+		},
+		{
+			path: '/verwaltung',
+			name: 'managerestaurant',
+			meta: { sectionName: 'restaurant'},
+			component: () => import('@/views/HostView.vue'),
+		},
+		{
+			path: 'live-dashboards/empfangs-dashboard',
+			name: 'dashboardwelcomelive',
+			meta: { sectionName: 'livedashboard'},
+			component: () => import('@/views/HostView.vue'),
+		},
+		{
+			path: 'live-dashboards/küchen-dashboard',
+			name: 'dashboardkitchenlive',
+			meta: { sectionName: 'livedashboard'},
+			component: () => import('@/views/HostView.vue'),
+		},
+		{
+			path: 'live-dashboards/bar',
+			name: 'dashboardbarlive',
+			meta: { sectionName: 'livedashboard'},
+			component: () => import('@/views/BarLiveView.vue'),
+		},
+		]
 	},
 	{
 		path: '/',

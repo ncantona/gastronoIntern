@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { useRestaurantStore } from '@/stores/Admin/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { onMounted, ref } from 'vue';
     import { log } from '@/utils/logger';
+    import { ref } from 'vue';
 
-    import RestaurantConfirmation from '@/components/Admin/Restaurants/RestaurantConfirmation.vue';
     import CustomInputField from '@/components/General/CustomInputField.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
+    import Window from '@/components/General/Window.vue';
+import DisplayRestaurant from './DisplayRestaurant.vue';
 
     interface Restaurant {
         id: number,
@@ -20,121 +21,113 @@
     }
 
     const props = defineProps<{
-        restaurant: Restaurant;
+        restaurant: Restaurant | null;
     }>();
 
-    const emits = defineEmits(['editSuccess']);
+    const emits = defineEmits(['goBack']);
 
     const restaurantStore = useRestaurantStore();
     const popupStore = usePopupStore();
 
-    const showConfirmation = ref<boolean>(false);
-
-    const restaurant = ref({
-        name: '',
-        street: '',
-        addressAddition: '',
-        zipcode: '',
-        city: '',
-    } as Restaurant);
+    const restaurant = ref(
+        {...props.restaurant ?? {
+            id: 2,
+            name: '',
+            street: '',
+            addressAddition: '',
+            city: '',
+            zipcode: '',
+            isActive: true,
+            categories: [],
+        }
+    });
 
     const errors = ref<[string, string, string, string, string]>([
         '', '', '', '', ''
     ]);
 
     const handleSubmit = async () => {
-        errors.value.fill('');
-
-        if (!restaurant.value.name)
-            errors.value[0] = 'Name darf nicht leer sein.';
-        if (!restaurant.value.street)
-            errors.value[1] = 'Straße darf nicht leer sein.';
-        if (!restaurant.value.city)
-            errors.value[2] = 'Ort darf nicht leer sein.';
-        if (!restaurant.value.zipcode)
-            errors.value[4] = 'Postleitzahl darf nicht leer sein.';
-        if (!(errors.value[0] || errors.value[1] || errors.value[2] || errors.value[3])) {
-            try {
-                await restaurantStore.updateRestaurant(restaurant.value, props.restaurant.id);
-                popupStore.setSuccess('Restaurant erfolgreich aktualisiert.')
-                log.debug('Successfully updated restaurant: ', restaurant.value);
-                emits('editSuccess');
-            } catch (error) {
-                log.error('Failed to update restaurant: ', restaurant.value)
-                popupStore.setError('Akutalisieren des Restaurants fehlgeschlagen.');
-            }
+        try {
+            await restaurantStore.updateRestaurant(restaurant.value);
+            popupStore.setSuccess('Restaurant erfolgreich angelegt.')
+            log.debug('Successfully created restaurant: ', restaurant.value);
+        } catch (error) {
+            log.error('Failed to create restaurant.')
+            popupStore.setError('Anlegen des Restaurants fehlgeschlagen.');
         }
-    }
-
-    onMounted(() => {
-        restaurant.value.name = props.restaurant.name;
-        restaurant.value.street = props.restaurant.street;
-        restaurant.value.addressAddition = props.restaurant.addressAddition;
-        restaurant.value.city = props.restaurant.city;
-        restaurant.value.zipcode = props.restaurant.zipcode;
-    });
+    };
 
 </script>
 
 <template>
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-sm text-xl" @click="emits('editSuccess')">
-        <div class="self-center h-full items-center justify-center lg:h-auto flex flex-col gap-5 bg-white/90 shadow-xl lg:rounded-lg p-5" @click.stop>
+    <Window class="p-12">
+        <div class="flex justify-between items-center">
+            <div class="flex gap-3 mb-5">
+                <img src="@/assets/svgs/settingsBlack.svg" alt="Plus Icon" class="w-6">
+                <span class="subHeader">Restaurant verwalten</span>
+            </div>
+            <button class="cursor-pointer text-blue-500 hover:text-blue-400" @click="emits('goBack')">
+                abbrechen
+            </button>
+        </div>
+        <div class="flex flex-col w-full">
             <form
                 @submit.prevent=""
-                class="max-w-100 w-full lg:min-w-125 justify-center flex flex-col gap-5 p-5">
-                <span class="mainHeader mb-4">
-                    Restaurant aktualisieren
-                </span>
+                class="flex flex-col gap-3">
                 <CustomInputField
                     v-model="restaurant.name"
                     type="text"
                     label="Restaurant Name"
                     name="name"
+                    placeholder="Grätzlgarten"
                     :error="errors[0]"
                 />
-                <div class="flex gap-5 w-full">
+                <div class="flex gap-10">
                     <CustomInputField
                         v-model="restaurant.street"
                         type="text"
                         label="Straße"
                         name="street"
+                        placeholder="Welsgasse"
                         :error="errors[1]"
-                        class="w-7/10"
+                        class="w-5/10"
                     />
                     <CustomInputField
                         v-model="restaurant.addressAddition"
                         type="text"
                         label="Nr. / Zusatz"
                         name="addressAddition"
-                        :error="errors[2]"
-                        class="w-3/10"
+                        placeholder="18a"
+                        class="w-5/10"
                     />
                 </div>
-                <CustomInputField
-                    v-model="restaurant.city"
-                    type="text"
-                    label="Ort"
-                    name="city"
-                    :error="errors[3]"
-                    />
-                <CustomInputField
-                    v-model="restaurant.zipcode"
-                    type="text"
-                    label="Postleitzahl"
-                    name="zipcode"
-                    />
+                <div class="flex gap-10">
+                    <CustomInputField
+                        v-model="restaurant.city"
+                        type="text"
+                        label="Ort"
+                        name="city"
+                        placeholder="Wien"
+                        :error="errors[2]"
+                        class="w-5/10"
+                        />
+                    <CustomInputField
+                        v-model="restaurant.zipcode"
+                        type="text"
+                        label="Postleitzahl"
+                        name="zipcode"
+                        placeholder="1160"
+                        :error="errors[3]"
+                        class="w-5/10"
+                        />
+                </div>
                 <CustomButton
                     variant="editBlue"
                     class="mt-4"
-                    @click="showConfirmation = true">
-                    Aktualisieren
+                    @click="handleSubmit()">
+                    Restaurant aktualisieren
                 </CustomButton>
             </form>
         </div>
-        <RestaurantConfirmation
-            v-model="showConfirmation"
-            :restaurant="restaurant"
-            @canceled="showConfirmation = false"
-            @confirmed="handleSubmit"/>
-    </div>
+    </Window>
 </template>

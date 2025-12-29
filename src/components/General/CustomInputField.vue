@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import ErrorMsg from '@/components/General/ErrorMsg.vue';
 
-    const value = defineModel<string>();
+    const value = defineModel<string |number>();
 
     const props = defineProps({
         label: String,
@@ -27,8 +27,7 @@
     <div class="flex flex-col gap-2">
         <span v-show="label?.length">
             <label
-                :for="name"
-                class="font-bold">
+                :for="name">
                 {{ label }}
             </label>
         </span>
@@ -38,7 +37,7 @@
             :name="name"
             :placeholder="placeholder"
             :required="required"
-            class="border border-stone-500 rounded-xl p-3 hover:outline-1 hover:outline-stone-500 focus-within:outline-2 focus-within:outline-stone-500 focus-within:hover:outline-2"
+            class="border border-main-500 rounded-lg p-3 hover:outline-1 hover:outline-main-500 focus-within:outline-2 focus-within:outline-main-500 focus-within:hover:outline-2"
             v-model="value"
         />
         <ErrorMsg v-show="error">

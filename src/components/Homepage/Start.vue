@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CustomButton from '../General/CustomButton.vue';
 
 </script>
 
