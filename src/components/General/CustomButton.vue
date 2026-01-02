@@ -55,10 +55,9 @@ const variantClasses: Record<Variant, string> = {
         hover:text-white`,
 
     editBlue:
-        `bg-blue-500
+        `bg-[rgb(37,99,235)]
         text-white
-        hover:bg-blue-400
-        hover:text-white`,
+        hover:bg-blue-500`,
 
     editYellow:
         `bg-yellow-500
@@ -72,7 +71,7 @@ const variantClasses: Record<Variant, string> = {
 <template>
     <button
     :class="[
-    'shadow-lg rounded-2xl p-4 py-3 transition-all duration-200 ease-in-out flex justify-center text-lg cursor-pointer items-center',
+    'shadow-lg font-sans rounded-xl p-3 px-5 transition-all duration-200 ease-in-out flex justify-center text-lg cursor-pointer items-center',
     variantClasses[variant]]">
         <slot>click me</slot>
     </button>

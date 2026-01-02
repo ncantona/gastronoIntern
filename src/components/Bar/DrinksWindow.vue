@@ -115,6 +115,7 @@
 </script>
 
 <template>
+    <div class="flex h-full border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-xl min-h-55 overflow-y-hidden hover:overflow-y-auto">
     <div
         @click="handleClick"
         :class="[
@@ -165,4 +166,5 @@
         </div>
 
     </div>
+</div>
 </template>

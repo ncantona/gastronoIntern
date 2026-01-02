@@ -79,7 +79,7 @@ const router = createRouter({
 			path: '/speisekarte',
 			name: 'menu',
 			meta: { sectionName: 'restaurant'},
-			component: () => import('@/views/MenuView.vue'),
+			component: () => import('@/views/MenuViewv2.vue'),
 		},
 		{
 			path: '/verwaltung',

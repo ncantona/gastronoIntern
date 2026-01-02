@@ -30,17 +30,17 @@ import { useRoute } from 'vue-router';
 </script>
 
 <template>
-    <div @click="activeNavWindow = ''" class="w-full items-center text-white h-22 shadow-lg flex justify-center p-5 mb-2.5 bg-main-500">
+    <div @click="activeNavWindow = ''" class="lg:w-full w-screen items-center text-white lg:h-22 shadow-lg flex justify-center p-5 mb-2.5 bg-main-500">
         <div class="flex justify-between max-w-330 w-full">
-            <div class="flex gap-5">
+            <div class="gap-5 flex">
                 <RouterLink :to="{ name: 'dashboardhost' }" class="z-50" @click="activeLink = 'dashboardhost'">
                     <img src="@/assets/images/Logooo.svg" alt="Gastrono Logo" class="max-w-60 h-15">
                 </RouterLink>
-                <RouterLink :to="{ name: 'dashboardhost'}" @click="activeLink = 'dashboardhost'" :class="activeLink === 'dashboardhost' ? '' : 'text-white/70 hover:text-white/90'" class="z-50 flex flex-col items-center gap-1">
+                <RouterLink :to="{ name: 'dashboardhost'}" @click="activeLink = 'dashboardhost'" :class="activeLink === 'dashboardhost' ? '' : 'text-white/70 hover:text-white/90'" class="z-50 lg:flex hidden flex-col items-center gap-1">
                     <DashboardV1 class="w-8 h-8" :class="activeLink === 'dashboardhost' ? 'text-blue-500' : ''"/>
                     <span>Dashboard</span>
                 </RouterLink>
-                <div class="relative flex justify-center" @click.stop>
+                <div class="relative lg:flex hidden justify-center" @click.stop>
                     <button
                         @click="activeNavWindow = (activeNavWindow === 'restaurant' ? '' : 'restaurant')"
                         :class="activeNavWindow === 'restaurant' ? 'text-white' : 'text-white/70'"
@@ -84,7 +84,7 @@ import { useRoute } from 'vue-router';
                         </RouterLink>
                     </div>
                 </div>
-                <div class="relative flex justify-center" @click.stop>
+                <div class="relative lg:flex hidden justify-center" @click.stop>
                     <button
                         @click="activeNavWindow = (activeNavWindow === 'livedashboard' ? '' : 'livedashboard')"
                         :class="activeNavWindow === 'livedashboard' ? 'text-white hover:text-white' : 'hover:text-white/90 text-white/70'"
@@ -129,7 +129,7 @@ import { useRoute } from 'vue-router';
                     </div>
                 </div>
             </div>
-            <div class="relative flex" @click.stop>
+            <div class="relative flex justify-end w-full lg:w-0" @click.stop>
                 <button
                     @click="activeNavWindow = (activeNavWindow === 'burger' ? '' : 'burger')"
                     :class="activeNavWindow === 'burger' ? 'text-white' : 'text-white/70 hover:text-white/90'"

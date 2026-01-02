@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import Bar from '@/components/Bar/Bar.vue';
-import OrderWindow from '@/components/Bar/OrderWindow.vue';
+    import OrderWindow from '@/components/Bar/OrderWindow.vue';
 
 </script>
 

@@ -84,8 +84,9 @@
 </script>
 
 <template>
-    <div class="flex">
-        <Window class="w-5/20 sticky h-fit top-5">
+    <div class="flex flex-col">
+        <span class="m-5 text-2xl font-medium">Meine Speisekarte</span>
+<!--         <Window class="w-5/20 sticky h-fit top-5">
             <span class="flex justify-center mb-10 text-lg font-medium">Kategorien</span>
             <div class="flex flex-col mb-5">
                 <CustomButton class="mb-10" variant="submit">
@@ -97,7 +98,7 @@
                     {{ category.name }}
                 </button>
             </div>
-        </Window>
+        </Window> -->
         <Window class="w-full p-12">
             <div class="flex w-full justify-end mb-10">
                 <CustomButton variant="submit" @click="showAddItem = true">
@@ -121,7 +122,7 @@
                 drag-class="opacity-90"
                 @update="onDragUpdate">
                 <template #item="{ element }">
-                    <div class="grid mb-2 items-center gap-3 min-h-18 border-b border-gray-200 pb-3
+                    <div class="grid mb-2 items-center gap-3 min-h-32 border-b border-gray-200 pb-3
                                 grid-cols-[2.2rem_3rem_minmax(10rem,30rem)_5rem_5rem_4rem_1fr]">
                         
                         <div class="bg-gray-200 rounded-l-2xl flex items-center px-3 py-3 drag cursor-grab">
