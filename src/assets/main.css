@@ -28,6 +28,8 @@
     --color-main-700: rgb(38, 42, 60);
     --color-main-800: rgb(29, 32, 45);
     --color-main-900: rgb(20, 22, 30);
+
+    --color-ownblue-500: rgb(37,99,235);
 }
 
 @layer base {

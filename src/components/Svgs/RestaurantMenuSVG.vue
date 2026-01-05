@@ -8,7 +8,7 @@
         viewBox="0 0 22 22" 
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5"
+        stroke-width="1"
         stroke-linecap="round"
         stroke-linejoin="round">
         <path d="M16 6V4.28C16 3.51 16 3.13 15.84 2.88C15.69 2.66 15.47 2.51 15.23 2.45C14.93 2.38 14.57 2.51 13.85 2.78L6.58 5.42C6.01 5.63 5.73 5.73 5.51 5.91C5.33 6.07 5.19 6.28 5.09 6.51C5 6.77 5 7.07 5 7.68V12"/>

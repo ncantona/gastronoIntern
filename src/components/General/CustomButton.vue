@@ -70,9 +70,9 @@ const variantClasses: Record<Variant, string> = {
 
 <template>
     <button
-    :class="[
-    'shadow-lg font-sans rounded-xl p-3 px-5 transition-all duration-200 ease-in-out flex justify-center text-lg cursor-pointer items-center',
-    variantClasses[variant]]">
+        :class="[
+        'shadow-lg font-sans rounded-xl p-3 px-5 transition-all duration-200 ease-in-out flex justify-center text-lg cursor-pointer items-center',
+        variantClasses[variant]]">
         <slot>click me</slot>
     </button>
 </template>

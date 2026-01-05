@@ -25,7 +25,7 @@
         <div>
             <div>
                 <span>{{ restaurant.street + " " }}</span>
-                <span>{{ restaurant.addressAddition }}</span>
+                <span>{{ restaurant.addressAddition }},</span>
             </div>
             <div>
                 <span>{{ restaurant.zipcode + " "}}</span>

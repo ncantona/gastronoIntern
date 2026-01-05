@@ -24,6 +24,6 @@
 </script>
 
 <template>
-    <DisplayRestaurant v-if="restaurant && !showCreateRestaurant" :restaurant="restaurant" @editRestaurant="showCreateRestaurant = true"/>
+    <DisplayRestaurant v-if="restaurant && !showCreateRestaurant" :restaurant="restaurant" @edit="showCreateRestaurant = true"/>
     <EditRestaurant v-if="restaurant && showCreateRestaurant" :restaurant="restaurant" @goBack="showCreateRestaurant = false"/>
 </template>

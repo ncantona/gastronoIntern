@@ -2,6 +2,7 @@
     import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
     import OrderWindow from '@/components/Bar/OrderWindow.vue';
     import { computed, ref } from 'vue';
+import Window from '../General/Window.vue';
 
     type ItemType = 'BEVERAGE' | 'MEAL';
 
@@ -38,8 +39,9 @@
 <template>
     <div class="flex flex-col">
         <OrderWindow :orders="barOrders"/>
-        <div class="self-center w-95/100 border-3 border-main-500 rounded-2xl p-3 flex m-5  h-[250px] overflow-y-hidden hover:overflow-y-auto">
-            <span v-if="!barOrders" class="flex items-center justify-center w-full h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
-        </div>
+        <span v-if="!barOrders" class="flex items-center justify-center w-full h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
+        <Window class="w-95/100 self-center min-h-[180px]">
+
+        </Window>
     </div>
 </template>

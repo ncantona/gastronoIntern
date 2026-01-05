@@ -67,14 +67,16 @@
 </script>
 
 <template>
-    <Window class="p-12">
-        <div class="flex justify-between">
-            <div class="flex gap-3 mb-5">
-                <img src="@/assets/svgs/settingsBlack.svg" alt="Plus Icon" class="w-6">
-                <span class="subHeader">Host verwalten</span>
+    <Window class="p-12 border-2 border-blue-500">
+        <div class="flex justify-between items-center mb-5">
+            <div class="flex gap-3 items-center">
+                <img src="@/assets/svgs/settingsBlack.svg" alt="Setting Icon" class="w-6">
+                <h2 class="text-2xl font-semibold">Host bearbeiten</h2>
             </div>
-            <button class="cursor-pointer text-blue-500 hover:text-blue-400" @click="emits('goBack')">
-                abbrechen
+            <button
+                class="cursor-pointer text-blue-500 hover:text-blue-400"
+                @click="emits('goBack')">
+                Abbrechen
             </button>
         </div>
         <div class="flex flex-col w-full">
@@ -122,7 +124,7 @@
                         variant="editBlue"
                         class="mt-4"
                         @click="handleSubmit()">
-                        Host aktualisieren
+                        Änderungen speichern
                     </CustomButton>
                 </div>
             </form>

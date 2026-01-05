@@ -69,8 +69,8 @@
 </script>
 
 <template>
-    <div class="fixed inset-0 z-50 justify-center flex items-center backdrop-blur-sm" @click="emit('cancel')">
-        <Window @click.stop class="p-12 flex flex-col gap-4 w-200">
+    <div class="fixed inset-0 z-50 justify-center flex items-center backdrop-blur-sm bg-gray-500/20" @click="emit('cancel')">
+        <Window @click.stop class="p-12 flex flex-col gap-4 w-200 shadow-none">
             <span class="mainHeader flex mb-10 justify-center">Produkt bearbeiten</span>
             <div class="flex gap-5 justify-between">
                 <CustomInputField

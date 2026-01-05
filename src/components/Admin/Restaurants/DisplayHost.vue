@@ -21,11 +21,8 @@
 
 <template>
     <Window class="p-12">
-        <div class="flex justify-between">
-            <div class="flex gap-3 mb-5">
-                <img src="@/assets/svgs/settingsBlack.svg" alt="Plus Icon" class="w-6">
-                <span class="subHeader">Host verwalten</span>
-            </div>
+        <div class="flex justify-between mb-6">
+            <h2 class="text-2xl font-semibold">Host-Informationen</h2>
             <div class="flex gap-3">
                 <button class="cursor-pointer" @click="emits('editHost')">
                     <img src="@/assets/svgs/editBlue.svg" alt="Plus Icon" class="w-7">
@@ -35,24 +32,21 @@
                 </button>
             </div>
         </div>
-        <div class="flex flex-col gap-5">
-            <div class="flex flex-col gap-2">
-                <span class="font-semibold">Login-ID</span>
-                <span>{{ host.loginId }}</span>
+
+        <div class="space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <label class="text-sm text-slate-500 font-medium">Login-ID</label>
+                <p class="text-lg text-slate-900 mt-1">{{ host.loginId }}</p>
             </div>
-            <div class="flex justify-between gap-10">
-                <div class="flex flex-col gap-2 w-5/10">
-                    <span class="font-semibold">Vorname</span>
-                    <span>{{ host.firstName }}</span>
-                </div>
-                <div class="flex flex-col gap-2 w-5/10">
-                    <span class="font-semibold">Nachname</span>
-                    <span>{{ host.lastName }}</span>
-                </div>
+
+            <div class="border-b border-slate-200 pb-4">
+                <label class="text-sm text-slate-500 font-medium">Name</label>
+                <p class="text-lg text-slate-900 mt-1">{{ host.firstName }} {{ host.lastName }}</p>
             </div>
-            <div class="flex flex-col gap-2 w-5/10">
-                <span class="font-semibold">E-Mail-Adresse</span>
-                <span>{{ host.email }}</span>
+
+            <div>
+                <label class="text-sm text-slate-500 font-medium">E-Mail-Adresse</label>
+                <p class="text-lg text-slate-900 mt-1">{{ host.email }}</p>
             </div>
         </div>
     </Window>

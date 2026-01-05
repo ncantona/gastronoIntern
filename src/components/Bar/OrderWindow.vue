@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import DrinksWindow from '@/components/Bar/DrinksWindow.vue';
+import Window from '../General/Window.vue';
 
     type ItemType = 'BEVERAGE' | 'MEAL';
 
@@ -32,10 +33,10 @@
 </script>
 
 <template>
-    <div class="self-center w-95/100 bg-white/80 gap-4 shadow-2xl border-main-500 p-3 rounded-lg flex m-5 min-h-[550px] h-[600px] overflow-y-hidden hover:overflow-y-auto">
-        <div v-for="order in orders" :key="order.id" class="flex flex-col items-center">
+    <Window class="self-center w-95/100 bg-white/80 gap-4 rounded-md flex min-h-[600px] overflow-y-hidden hover:overflow-y-auto">
+        <div v-for="order in orders" :key="order.id">
             <DrinksWindow :orderId="order.id"/>
         </div>
-    </div>
+    </Window>
 </template>
 

@@ -7,7 +7,7 @@
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
 
         <div>
-            <h2 class="text-xl font-semibold text-white">Restaurant System</h2>
+            <h2 class="text-xl font-semibold text-white">Gastrono</h2>
             <p class="mt-2 text-sm text-gray-400">
             Verwaltung, Reservierungen und Bestellungen – alles an einem Ort.
             </p>
@@ -17,7 +17,6 @@
             <h3 class="text-lg font-semibold text-white mb-3">Navigation</h3>
             <ul class="space-y-2">
                 <li><a href="#" class="hover:text-white">Home</a></li>
-                <li><a href="#" class="hover:text-white">Dashboard</a></li>
                 <li><a href="#" class="hover:text-white">Login</a></li>
                 <li><a href="#" class="hover:text-white">Kontakt</a></li>
             </ul>
@@ -34,7 +33,7 @@
 
         </div>
 
-        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-main-900">
+        <div class="border-t border-gray-700 mt-10 pt-6 text-center text-sm">
         © 2025 Gastrono. Alle Rechte vorbehalten.
         </div>
     </footer>

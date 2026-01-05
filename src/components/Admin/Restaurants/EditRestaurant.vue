@@ -7,7 +7,6 @@
     import CustomInputField from '@/components/General/CustomInputField.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
     import Window from '@/components/General/Window.vue';
-import DisplayRestaurant from './DisplayRestaurant.vue';
 
     interface Restaurant {
         id: number,
@@ -49,25 +48,27 @@ import DisplayRestaurant from './DisplayRestaurant.vue';
     const handleSubmit = async () => {
         try {
             await restaurantStore.updateRestaurant(restaurant.value);
-            popupStore.setSuccess('Restaurant erfolgreich angelegt.')
-            log.debug('Successfully created restaurant: ', restaurant.value);
+            popupStore.setSuccess('Restaurant erfolgreich aktualisiert.')
+            log.debug('Successfully updated restaurant: ', restaurant.value);
         } catch (error) {
-            log.error('Failed to create restaurant.')
-            popupStore.setError('Anlegen des Restaurants fehlgeschlagen.');
+            log.error('Failed to update restaurant.')
+            popupStore.setError('Aktualisieren des Restaurants fehlgeschlagen.');
         }
     };
 
 </script>
 
 <template>
-    <Window class="p-12">
-        <div class="flex justify-between items-center">
-            <div class="flex gap-3 mb-5">
-                <img src="@/assets/svgs/settingsBlack.svg" alt="Plus Icon" class="w-6">
-                <span class="subHeader">Restaurant verwalten</span>
+    <Window class="p-12 border-2 border-blue-500">
+        <div class="flex justify-between items-center mb-5">
+            <div class="flex gap-3 items-center">
+                <img src="@/assets/svgs/settingsBlack.svg" alt="Setting Icon" class="w-6">
+                <h2 class="text-2xl font-semibold">Restaurant bearbeiten</h2>
             </div>
-            <button class="cursor-pointer text-blue-500 hover:text-blue-400" @click="emits('goBack')">
-                abbrechen
+            <button
+                class="cursor-pointer text-blue-500 hover:text-blue-400 "
+                @click="emits('goBack')">
+                Abbrechen
             </button>
         </div>
         <div class="flex flex-col w-full">
@@ -80,8 +81,7 @@ import DisplayRestaurant from './DisplayRestaurant.vue';
                     label="Restaurant Name"
                     name="name"
                     placeholder="Grätzlgarten"
-                    :error="errors[0]"
-                />
+                    :error="errors[0]"/>
                 <div class="flex gap-10">
                     <CustomInputField
                         v-model="restaurant.street"
@@ -90,16 +90,14 @@ import DisplayRestaurant from './DisplayRestaurant.vue';
                         name="street"
                         placeholder="Welsgasse"
                         :error="errors[1]"
-                        class="w-5/10"
-                    />
+                        class="w-5/10"/>
                     <CustomInputField
                         v-model="restaurant.addressAddition"
                         type="text"
                         label="Nr. / Zusatz"
                         name="addressAddition"
                         placeholder="18a"
-                        class="w-5/10"
-                    />
+                        class="w-5/10"/>
                 </div>
                 <div class="flex gap-10">
                     <CustomInputField
@@ -109,8 +107,7 @@ import DisplayRestaurant from './DisplayRestaurant.vue';
                         name="city"
                         placeholder="Wien"
                         :error="errors[2]"
-                        class="w-5/10"
-                        />
+                        class="w-5/10"/>
                     <CustomInputField
                         v-model="restaurant.zipcode"
                         type="text"
@@ -118,14 +115,13 @@ import DisplayRestaurant from './DisplayRestaurant.vue';
                         name="zipcode"
                         placeholder="1160"
                         :error="errors[3]"
-                        class="w-5/10"
-                        />
+                        class="w-5/10"/>
                 </div>
                 <CustomButton
                     variant="editBlue"
                     class="mt-4"
                     @click="handleSubmit()">
-                    Restaurant aktualisieren
+                    Änderungen speichern
                 </CustomButton>
             </form>
         </div>

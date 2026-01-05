@@ -1,24 +1,24 @@
 <script setup lang="ts">
-    import ToggleSwitch from '@/components/General/ToggleSwitch.vue';
     import Window from '@/components/General/Window.vue';
-import { ref } from 'vue';
+    import CustomButton from '@/components/General/CustomButton.vue';
+    import { ref } from 'vue';
 
     interface Restaurant {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        city: string,
-        zipcode: string,
-        isActive: boolean,
-        categories: string[],
+        id: number;
+        name: string;
+        street: string;
+        streetNumber: string;
+        addressAddition?: string;
+        city: string;
+        zipcode: string;
+        isActive: boolean;
     }
 
     const props = defineProps<{
         restaurant: Restaurant;
     }>();
 
-    const emit = defineEmits(['edit', 'delete']);
+    const emit = defineEmits(['edit']);
 
     const addressFirstPart = ref([
             props.restaurant.street,
@@ -33,20 +33,18 @@ import { ref } from 'vue';
         ].join(' ')
     )
 
+
 </script>
 
 <template>
     <Window class="p-12">
-        <div class="flex justify-between items-center mb-5">
-            <h2 class="text-2xl font-semibold">Restaurant-Informationen</h2>
-            <div class="flex gap-3">
-                <button class="cursor-pointer" @click="emit('edit')">
-                    <img src="@/assets/svgs/editBlue.svg" alt="Plus Icon" class="max-w-7">
-                </button>
-                <button class="cursor-pointer" @click="emit('delete')">
-                    <img src="@/assets/svgs/trashRed.svg" alt="Plus Icon" class="max-w-7">
-                </button>
+        <div class="flex justify-between mb-6">
+            <div class="flex gap-3 w-full">
+                <h2 class="text-2xl font-semibold">Restaurant-Informationen</h2>
             </div>
+            <CustomButton variant="editBlue" @click="emit('edit')">
+                Bearbeiten
+            </CustomButton>
         </div>
 
         <div class="space-y-6">

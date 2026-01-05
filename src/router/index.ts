@@ -79,13 +79,13 @@ const router = createRouter({
 			path: '/speisekarte',
 			name: 'menu',
 			meta: { sectionName: 'restaurant'},
-			component: () => import('@/views/MenuViewv2.vue'),
+			component: () => import('@/views/MenuView.vue'),
 		},
 		{
 			path: '/verwaltung',
 			name: 'managerestaurant',
 			meta: { sectionName: 'restaurant'},
-			component: () => import('@/views/HostView.vue'),
+			component: () => import('@/views/ManageRestaurantView.vue'),
 		},
 		{
 			path: 'live-dashboards/empfangs-dashboard',
@@ -153,16 +153,16 @@ router.beforeEach(async (to, from, next) => {
 		}
 	}
 
-	if (authStore.isLoggedIn) {
-		log.debug('Redirecting user to its user dashboard.');
-		if (authStore.user?.roles.includes('ROLE_KITCHEN'))
-			return next({ name: 'dashboardkitchen'});
-		if (authStore.user?.roles.includes('ROLE_BAR'))
-			return next({ name: 'dashboardbar'});
-		if (authStore.user?.roles.includes('ROLE_HOST'))
-			return next({ name: 'dashboardhost'});
+	if (authStore.isLoggedIn && (to.name === 'login' || to.name === 'home')) {
+		log.debug('Redirecting logged-in user to dashboard.');
 		if (authStore.user?.roles.includes('ROLE_ADMIN'))
-			return next( { name: 'dashboardadmin' });
+			return next({ name: 'dashboardadmin' });
+		else if (authStore.user?.roles.includes('ROLE_HOST'))
+			return next({ name: 'dashboardhost'});
+		else if (authStore.user?.roles.includes('ROLE_BAR'))
+			return next({ name: 'dashboardbar'});
+		else if (authStore.user?.roles.includes('ROLE_KITCHEN'))
+			return next({ name: 'dashboardkitchen'});
 	}
 
 	if (to.meta.requiresAuth) {

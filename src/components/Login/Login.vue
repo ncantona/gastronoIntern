@@ -39,18 +39,19 @@
                 await authStore.loginSystemUser(userData);
                 log.debug('Successfully logged in: ', authStore.user);
                 id.value = '';
+
                 if (authStore.user?.roles.includes('ROLE_KITCHEN'))
-                    await router.push({ name: 'dashboardkitchen' });
-                if (authStore.user?.roles.includes('ROLE_BAR'))
-                    await router.push({ name: 'dashboardbar' });
-                if (authStore.user?.roles.includes('ROLE_HOST'))
-                    await router.push({ name: 'dashboardhost' });
-                if (authStore.user?.roles.includes('ROLE_WAITER'))
-                    await router.push({ name: 'dashboardwaiter' });
-                if (authStore.user?.roles.includes('ROLE_RESTAURANT'))
-                    await router.push({ name: 'dashboardrestaurant' });
-                if (authStore.user?.roles.includes('ROLE_ADMIN'))
-                    await router.push({ name: 'dashboardadmin' });
+                    router.push({ name: 'dashboardkitchen' });
+                else if (authStore.user?.roles.includes('ROLE_BAR'))
+                    router.push({ name: 'dashboardbar' });
+                else if (authStore.user?.roles.includes('ROLE_HOST'))
+                    router.push({ name: 'dashboardhost' });
+                else if (authStore.user?.roles.includes('ROLE_WAITER'))
+                    router.push({ name: 'dashboardwaiter' });
+                else if (authStore.user?.roles.includes('ROLE_RESTAURANT'))
+                    router.push({ name: 'dashboardrestaurant' });
+                else if (authStore.user?.roles.includes('ROLE_ADMIN'))
+                    router.push({ name: 'dashboardadmin' });
             } catch (error) {
                 popupStore.setError('Logindaten stimmen nicht überein.');
             }

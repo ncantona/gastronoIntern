@@ -1,13 +1,15 @@
 <script setup lang="ts">
     import { computed, ref } from 'vue';
 
-    import BurgerMenue from '@/components/Svgs/BurgerMenue.vue';
-    import Dashboard from '@/components/Svgs/Dashboard.vue';
-    import DashboardV1 from '@/components/Svgs/DashboardV1.vue';
-    import Restaurant from '@/components/Svgs/Restaurant.vue';
+    import BurgerMenueSVG from '@/components/Svgs/BurgerMenueSVG.vue';
+    import MonitorSVG from '@/components/Svgs/MonitorSVG.vue';
+    import DashboardSVG from '@/components/Svgs/DashboardSVG.vue';
+    import RestaurantSVG from '@/components/Svgs/RestaurantSVG.vue';
     import { useAuthStore } from '@/stores/Auth/useAuthStore';
-import router from '@/router';
-import { useRoute } from 'vue-router';
+    import router from '@/router';
+    import { useRoute } from 'vue-router';
+import RestaurantMenuSVG from '@/components/Svgs/RestaurantMenuSVG.vue';
+import BeerSVG from '@/components/Svgs/BeerSVG.vue';
 
     const authStore = useAuthStore();
 
@@ -37,7 +39,7 @@ import { useRoute } from 'vue-router';
                     <img src="@/assets/images/Logooo.svg" alt="Gastrono Logo" class="max-w-60 h-15">
                 </RouterLink>
                 <RouterLink :to="{ name: 'dashboardhost'}" @click="activeLink = 'dashboardhost'" :class="activeLink === 'dashboardhost' ? '' : 'text-white/70 hover:text-white/90'" class="z-50 lg:flex hidden flex-col items-center gap-1">
-                    <DashboardV1 class="w-8 h-8" :class="activeLink === 'dashboardhost' ? 'text-blue-500' : ''"/>
+                    <DashboardSVG class="w-8 h-8" :class="activeLink === 'dashboardhost' ? 'text-blue-500' : ''"/>
                     <span>Dashboard</span>
                 </RouterLink>
                 <div class="relative lg:flex hidden justify-center" @click.stop>
@@ -45,7 +47,7 @@ import { useRoute } from 'vue-router';
                         @click="activeNavWindow = (activeNavWindow === 'restaurant' ? '' : 'restaurant')"
                         :class="activeNavWindow === 'restaurant' ? 'text-white' : 'text-white/70'"
                         class="z-50 flex flex-col items-center gap-1 hover:text-white/90 ">
-                        <Restaurant class="w-8 h-8" :class="activeLink === 'restaurant' ? 'text-blue-500' : ''"/>
+                        <RestaurantSVG class="w-8 h-8" :class="activeLink === 'restaurant' ? 'text-blue-500' : ''"/>
                         <span>Restaurant</span>
                     </button>
 
@@ -68,7 +70,7 @@ import { useRoute } from 'vue-router';
                             class="block w-full px-3 py-2 hover:bg-main-100/50 rounded"
                             @click="activeNavWindow = ''">
                             <div class="flex gap-2 items-center">
-                                <img src="@/assets/svgs/restaurantmenu.svg" alt="" class="max-w-6">
+                                <RestaurantMenuSVG class="max-w-6"/>
                                 Speisekarte
                             </div>
                         </RouterLink>
@@ -89,7 +91,7 @@ import { useRoute } from 'vue-router';
                         @click="activeNavWindow = (activeNavWindow === 'livedashboard' ? '' : 'livedashboard')"
                         :class="activeNavWindow === 'livedashboard' ? 'text-white hover:text-white' : 'hover:text-white/90 text-white/70'"
                         class="z-50 flex flex-col items-center gap-1">
-                        <Dashboard class="w-8 h-8" :class="activeLink === 'livedashboard' ? 'text-blue-500' : ''"/>
+                        <MonitorSVG class="w-8 h-8" :class="activeLink === 'livedashboard' ? 'text-blue-500' : ''"/>
                         <span>Live Dashboards</span>
                     </button>
 
@@ -122,7 +124,7 @@ import { useRoute } from 'vue-router';
                             class="block w-full px-3 py-2 hover:bg-main-100/50 rounded"
                             @click="activeNavWindow = ''">
                             <div class="flex gap-2 items-center">
-                                <img src="@/assets/svgs/beer.svg" alt="" class="max-w-6">
+                                <BeerSVG class="max-w-6"/>
                                 <span>Bar</span>
                             </div>
                         </RouterLink>
@@ -134,7 +136,7 @@ import { useRoute } from 'vue-router';
                     @click="activeNavWindow = (activeNavWindow === 'burger' ? '' : 'burger')"
                     :class="activeNavWindow === 'burger' ? 'text-white' : 'text-white/70 hover:text-white/90'"
                     class="z-50 flex items-center">
-                    <BurgerMenue class="w-12 h-12"/>
+                    <BurgerMenueSVG class="w-12 h-12"/>
                 </button>
 
                 <div

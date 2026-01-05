@@ -115,7 +115,7 @@
 </script>
 
 <template>
-    <div class="flex h-full border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-xl min-h-55 overflow-y-hidden hover:overflow-y-auto">
+    <div class="flex h-full border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
     <div
         @click="handleClick"
         :class="[
@@ -125,21 +125,21 @@
             <img src="@/assets/svgs/checkGreen.svg" alt="table" class="w-25 opacity-60">
         </div>
 
-        <div class="flex flex-col gap-1 mb-5 border-2 rounded-2xl -m-2 p-1 border-[rgba(126,111,90,0.89)] bg-[rgba(255,255,255,0.64)]">
+        <div class="flex flex-col gap-1 mb-5 border-2 rounded-2xl -m-2 p-1 border-main-500 bg-white/80">
             
-            <div class="flex gap-2 justify-center text-xl font-bold items-center">
+            <div class="flex gap-2 justify-center text-xl font-medium items-center">
                 <img src="@/assets/svgs/table.svg" alt="table" class="w-10">
                 {{ order?.tableId }}
             </div>
 
             <div class="flex justify-between">
                 
-                <div class="flex items-center gap-1.5 border-2 w-25.5 border-[rgba(126,111,90,0.42)] p-1 pl-3 pr-3 rounded-4xl">
+                <div class="flex items-center gap-1.5 border-2 w-25.5 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
                     <img src="@/assets/svgs/order.svg" alt="table" class="w-6">
                     <span class="font-mono">{{ orderTime }}</span>
                 </div>
 
-                <div :class="[timeStatusClass]" class="flex items-center gap-1.5 border-2 border-[rgba(126,111,90,0.42)] p-1 pl-3 pr-3 rounded-4xl">
+                <div :class="[timeStatusClass]" class="flex items-center gap-1.5 border-2 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
                     <img src="@/assets/svgs/timer.svg" alt="table" class="w-6">
                     <span class="font-mono">{{ passedTime.substring(0, 2) == '00' ? passedTime.substring(3) : passedTime }}</span>
                 </div>
@@ -147,9 +147,9 @@
             </div>
         </div>
 
-        <div v-for="item in order?.items" :key="item.id" class="mb-2 pb-2 border-b-2 border-[rgba(167,153,134,0.38)]">
+        <div v-for="item in order?.items" :key="item.id" class="mb-3 pb-2 border-b-2 border-main-500/20">
             <div class="flex gap-3 text-xl">
-                <span class="inline-flex items-center justify-center min-w-7 min-h-7 self-center rounded-full bg-[rgba(183,173,158,0.72)] text-black">
+                <span class="inline-flex items-center justify-center min-w-7 min-h-7 self-center rounded-full bg-gray-400/40 text-black">
                     {{ item.amount }}
                 </span>
                 <div>
