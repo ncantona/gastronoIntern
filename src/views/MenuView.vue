@@ -2,7 +2,7 @@
     import Window from '@/components/General/Window.vue';
     import CreateItemWindowv2 from '@/components/Host/Menu/CreateItemWindowv2.vue';
     import CreateItemWindow from '@/components/Host/Menu/CreateItemWindow.vue';
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed, onMounted, watch, nextTick } from 'vue'
     import draggable from 'vuedraggable'
     import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
     import CustomButton from '@/components/General/CustomButton.vue';
@@ -44,7 +44,7 @@ import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
         .filter(item => item.categoryId === currentCategory.value.id)
         .sort((a, b) => a.position - b.position)
     )
-
+    console.log(displayedItems.value)
     // Drag & Drop innerhalb der Kategorie
     function onDragUpdate({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
         const itemsInCat = restaurantItemsStore.items
@@ -110,18 +110,20 @@ import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
         showRightButton.value = scrollLeftPos < maxScroll;
     }
 
-    onMounted(async () => {
-        const restaurantStore = useRestaurantStore();
-        const restaurant = restaurantStore.restaurant;
-        if (!restaurant)
-            return;
-        try {
-            restaurantItemsStore.loadItems(restaurant.id);
-        } catch {
-            
-        }
-        checkScroll();
+    const restaurantStore = useRestaurantStore();
+    watch(
+        () => restaurantStore.restaurant,
+        async (restaurant) => {
+            if (!restaurant)
+                return;
+            await restaurantItemsStore.loadItems(restaurant.id);
+            await nextTick();
+        },
+        { immediate: true }
+    );
 
+    onMounted(() => {
+        checkScroll();
     })
 
 </script>
@@ -187,7 +189,7 @@ import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
                                 flex items-center justify-center lg:text-lg
                                 whitespace-nowrap"
                             :class="currentCategory.name === category.name
-                            ? 'bg-[rgb(37,99,235)] text-white'
+                            ? 'bg-ownblue-500 text-white'
                             : 'bg-white hover:bg-gray-100'"
                             @click="currentCategory = category">
 
@@ -244,7 +246,7 @@ import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
                                     <div class="flex flex-col h-full p-5 pl-0 gap-2 w-full">
                                         <div class="font-medium text-xl flex justify-between gap-2">
                                             <span class="truncate max-w-200">{{ element.name }}</span>
-                                            <span class="text-[rgb(37,99,235)]">€{{ element.price.toFixed(2) }}</span>
+                                            <span class="text-ownblue-500">€{{ element.price.toFixed(2) }}</span>
                                         </div>
                                         <div class="flex relative justify-between h-10">
                                             <span v-if="element.description" class="max-w-175 text-gray-500 text-sm line-clamp-2">{{ element.description }}</span>

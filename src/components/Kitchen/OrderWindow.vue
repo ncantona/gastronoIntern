@@ -1,27 +1,43 @@
 <script setup lang="ts">
-    import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
-    import MealWindow from './MealWindow.vue';
-    import { computed, ref } from 'vue';
+import MealsWindow from './MealsWindow.vue';
+import Window from '../General/Window.vue';
+
+    type ItemType = 'BEVERAGE' | 'MEAL';
+
+    interface Item {
+        id: number;
+        itemId: number;
+        name: string;
+        description: string;
+        type: ItemType;
+        omits: string[];
+        addOns: string[];
+        customMsg: string;
+        isDone: boolean;
+        isPickedUp: boolean;
+        prepTime: string;
+        amount?: number;
+    }
+
+    interface Order {
+        id: number;
+        tableId: number;
+        datetime: string;
+        items: Item[];
+    };
 
     const props = defineProps<{
-        orderId: number,
+        orders: Order[] | null,
     }>();
-
-    const activeOrdersStore = useRestaurantActiveOrdersStore();
-
-    const order = computed(
-        () => activeOrdersStore.getOrderWithItemsByType(props.orderId, 'MEAL')
-    );
 
 </script>
 
 <template>
-    <div v-if="order" class="flex flex-col items-center mt-5">
-        <div class="p-2 pr-5 text-4xl min-w-20 justify-center flex">
-            {{ order.tableId }}
+    <Window class="self-center w-95/100 bg-white/80 gap-4 rounded-md flex min-h-[600px] overflow-y-hidden hover:overflow-y-auto">
+        <div v-if="orders" class="flex flex-wrap gap-4 w-full">
+            <div v-for="order in orders" :key="order.id">
+                <MealsWindow :orderId="order.id" />
+            </div>
         </div>
-        <div class="flex h-full border-2 rounded-2xl w-full p-2 bg-[rgba(163,144,115,0.31)] border-[rgba(101,90,73,0.89)] shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto"> 
-            <MealWindow v-for="item in order.items" :key="item.id" :orderId="order.id" :item="item"/>
-        </div>
-    </div>
+    </Window>
 </template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import Window from '@/components/General/Window.vue';
 import DashboardAccount from './DashboardAccount.vue';
+import { ref } from 'vue';
+
 
     interface Account {
         id: string;
@@ -14,11 +16,13 @@ import DashboardAccount from './DashboardAccount.vue';
     const props = defineProps<{
         accounts: Account[],
     }>();
+
+    const showEdit = ref<boolean>(false);
 </script>
 
 <template>
     <Window class="p-12 flex flex-col gap-5">
         <h2 class="text-2xl font-bold text-slate-900 mb-6">Dashboard-Accounts</h2>
-        <DashboardAccount v-for="acc in accounts" :account="acc"/>
+        <DashboardAccount v-for="acc in accounts" :account="acc" @edit="showEdit = true"/>
     </Window>
 </template>

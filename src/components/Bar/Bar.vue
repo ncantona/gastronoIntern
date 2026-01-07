@@ -54,7 +54,7 @@ import router from '@/router';
 </script>
 
 <template>
-    <div class="flex flex-col">
+    <div class="flex flex-col mt-5">
         <OrderWindow :orders="barOrders"/>
         <span v-if="!barOrders" class="flex items-center justify-center w-full h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
         <Window class="w-95/100 self-center min-h-[180px]">

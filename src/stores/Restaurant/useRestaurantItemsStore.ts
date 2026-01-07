@@ -41,7 +41,6 @@ export const useRestaurantItemsStore = defineStore('itemsStore', {
     actions: {
         async loadItems(restaurantId :number) {
             const { data } = await api.get(`/restaurant/${restaurantId}/items`);
-            console.log(data);
             this.items = data;
         },
         async updateItem(restaurantId :number, itemId :number, fields: Partial<Item>) {

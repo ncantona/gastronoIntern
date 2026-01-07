@@ -16,6 +16,8 @@
         account: Account;
     }>();
 
+    const emit = defineEmits(['edit']);
+
     const roleMap: Record<string, { label :string, color :string, icon: string }> = {
         ROLE_KITCHEN: { label: 'Küche', color: 'bg-orange-100 text-orange-700', icon: kitchenIcon },
         ROLE_BAR: { label: 'Bar', color: 'bg-blue-100 text-blue-700', icon: barIcon },
@@ -35,11 +37,11 @@
                 <p class="text-lg text-slate-900 mt-1">{{ account.loginId }}</p>
             </div>
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-5 h-full items-center">
             <div class="py-2 px-5 rounded-full h-fit" :class="roleInfo.color">
                 {{ roleInfo.label }}
             </div>
-            <button @click="itemToEdit = element; showEditItem = true">
+            <button @click="emit('edit')" class="h-full items-start flex">
                 <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-6">
             </button>
         </div>

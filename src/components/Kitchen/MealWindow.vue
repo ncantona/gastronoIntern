@@ -1,11 +1,12 @@
 <script setup lang="ts">
     import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
 
     type ItemType = 'BEVERAGE' | 'MEAL';
 
     interface Item {
         id: number;
+        itemId?: number;
         name: string;
         description: string;
         type: ItemType;
@@ -18,31 +19,27 @@
     const props = defineProps<{
         orderId: number,
         item: Item,
+        hideDoneOverlay?: boolean,
     }>();
 
     const activeOrdersStore = useRestaurantActiveOrdersStore();
 
     const isClicked = ref(false);
-    const isFading = ref(false);
+    const isMarkedAsDone = computed(() => props.item.isDone);
 
-    let fadeStartTimeout: ReturnType<typeof setTimeout> | null = null;
-    let removeTimeout: ReturnType<typeof setTimeout> | null = null;
+    let markAsReadyTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const resetAll = () => {
-        if (fadeStartTimeout)
-            clearTimeout(fadeStartTimeout);
-        if (removeTimeout)
-            clearTimeout(removeTimeout);
+        if (markAsReadyTimeout)
+            clearTimeout(markAsReadyTimeout);
 
-        fadeStartTimeout = null;
-        removeTimeout = null;
-
+        markAsReadyTimeout = null;
         isClicked.value = false;
-        isFading.value = false;
     };
 
     const handleClick = () => {
-
+        if (isMarkedAsDone.value)
+            return;
         if (isClicked.value) {
             resetAll();
             return;
@@ -50,14 +47,10 @@
 
         isClicked.value = true;
 
-        fadeStartTimeout = setTimeout(() => {
-            isFading.value = true;
-
-            removeTimeout = setTimeout(() => {
-                activeOrdersStore.markItemAsDone(props.orderId, props.item.id);
-            }, 2000);
-
-        }, 2000);
+        markAsReadyTimeout = setTimeout(() => {
+            const targetId = props.item.itemId ?? props.item.id;
+            activeOrdersStore.markItemAsDone(props.orderId, targetId);
+        }, 2500);
     };
 
 </script>
@@ -65,11 +58,14 @@
 <template>
     <div
         @click="handleClick"
-        v-if="!item.isDone"
         :class="[
-            'flex flex-col rounded-2xl p-4 min-w-60 cursor-pointer shadow-xl transition-all duration-2000',
-            isClicked ? 'border-2 border-green-200 bg-green-100' : 'border-2 bg-[rgba(255,255,255,0.64)] border-[rgba(126,111,90,0.89)]'
+            'flex flex-col rounded-lg relative p-4 min-w-60 cursor-pointer shadow-xl',
+            isClicked ? 'bg-green-100' : 'bg-white/90'
         ]">
+
+        <div v-show="isMarkedAsDone && !props.hideDoneOverlay" class="absolute self-center flex top-0 h-full items-center">
+            <img src="@/assets/svgs/checkGreen.svg" alt="done" class="w-16 opacity-60">
+        </div>
 
         <div class="font-bold self-center mb-2">
             {{ props.item.name }}
@@ -77,13 +73,13 @@
 
         <div class="flex justify-between gap-5">
 
-            <div v-if="props.item.omits" class="mb-2 text-red-800">
+            <div v-if="props.item.omits && props.item.omits.length" class="mb-2 text-red-800">
                 <div v-for="omit in props.item.omits" :key="omit">
                     {{ omit }}
                 </div>
             </div>
 
-            <div v-if="props.item.addOns" class="mb-2 text-green-600">
+            <div v-if="props.item.addOns && props.item.addOns.length" class="mb-2 text-green-600">
                 <div v-for="addOn in props.item.addOns" :key="addOn">
                     {{ addOn }}
                 </div>

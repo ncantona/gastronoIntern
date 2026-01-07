@@ -11,7 +11,6 @@ import { ref } from 'vue';
         city: string,
         zipcode: string,
         isActive: boolean,
-        categories: string[],
     }
 
     const props = defineProps<{
@@ -22,7 +21,6 @@ import { ref } from 'vue';
 
     const addressFirstPart = ref([
             props.restaurant.street,
-            props.restaurant.streetNumber,
             props.restaurant.addressAddition
         ].join(' ') + ','
     );

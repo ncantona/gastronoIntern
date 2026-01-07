@@ -4,18 +4,7 @@
     import RestaurantInfo from '@/components/Host/Manage/RestaurantInfo.vue';
     import ManageDashboardAccounts from '@/components/Host/Manage/ManageDashboardAccounts.vue';
     import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.vue';
-import { onMounted, onUnmounted, ref } from 'vue';
-
-    interface Restaurant {
-        id: number;
-        name: string;
-        street: string;
-        streetNumber: string;
-        addressAddition?: string;
-        city: string;
-        zipcode: string;
-        isActive: boolean;
-    }
+    import { onMounted, onUnmounted, ref } from 'vue';
 
     interface Account {
         id: string;
@@ -60,9 +49,8 @@ import { onMounted, onUnmounted, ref } from 'vue';
             <p class="text-slate-600">Sieh deine Restaurant-Informationen ein und verwalte deine Mitarbeiter-Accounts</p>
         </div>
 
-        <RestaurantInfo 
-            :restaurant="restaurantStore.restaurant"/>
+        <RestaurantInfo :restaurant="restaurantStore.restaurant"/>
         <ManageDashboardAccounts :accounts="dashboardAccounts"/>
-        <ManageWaiterAccounts/>
+        <ManageWaiterAccounts :accounts="waiterAccounts"/>
     </div>
 </template>

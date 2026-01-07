@@ -97,7 +97,7 @@ const router = createRouter({
 			path: 'live-dashboards/küchen-dashboard',
 			name: 'dashboardkitchenlive',
 			meta: { sectionName: 'livedashboard'},
-			component: () => import('@/views/HostView.vue'),
+			component: () => import('@/views/KitchenLiveView.vue'),
 		},
 		{
 			path: 'live-dashboards/bar',
@@ -147,7 +147,7 @@ router.beforeEach(async (to, from, next) => {
 		const allowedRoles :string[] = to.meta.allowedRoles as string[];
 		const userRoles = authStore.user?.roles || [];
 		if (!restaurantStore.isInitialized && (userRoles.includes('ROLE_HOST') || userRoles.includes('ROLE_BAR') || userRoles.includes('ROLE_KITCHEN')))
-			restaurantStore.loadRestaurant(authStore.user?.restaurantId || -1);
+			await restaurantStore.loadRestaurant(authStore.user?.restaurantId || -1);
 		const hasAccess = userRoles.some(role => allowedRoles.includes(role));
 		log.debug('Checking role access for route: ', to.path, userRoles);
 

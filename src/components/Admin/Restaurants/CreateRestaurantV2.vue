@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { useRestaurantStore } from '@/stores/Admin/useRestaurantStore';
+    import { useAdminRestaurantStore } from '@/stores/Admin/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { log } from '@/utils/logger';
     import { ref } from 'vue';
@@ -23,7 +23,7 @@
         (e: 'createSuccess', restaurant: Restaurant): void
     }>();
 
-    const restaurantStore = useRestaurantStore();
+    const restaurantStore = useAdminRestaurantStore();
     const popupStore = usePopupStore();
 
     const restaurant = ref({

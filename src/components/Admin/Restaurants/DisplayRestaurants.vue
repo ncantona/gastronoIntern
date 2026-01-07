@@ -1,9 +1,10 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     
     import RestaurantInfo from '@/components/Admin/Restaurants/RestaurantInfoV2.vue';
     import CustomInputField from '@/components/General/CustomInputField.vue';
     import Window from '@/components/General/Window.vue';
+import { useAdminRestaurantStore } from '@/stores/Admin/useRestaurantStore';
 
     interface Restaurant {
         id: number,
@@ -13,115 +14,19 @@
         city: string,
         zipcode: string,
         isActive: boolean,
-        categories: string[],
+        categories?: string[],
+        accounts?: any[],
     }
 
     const value = defineModel<Restaurant | null>();
-
+    const adminRestaurantStore = useAdminRestaurantStore();
     const searchRestaurant = ref<string>('');
-
-    let restaurants = ref([
-        {
-            id: 1,
-            name: "Grätzlgarten",
-            street: "Welsgasse",
-            addressAddition: "16a",
-            city: "Wien",
-            zipcode: "1160",
-            isActive: true,
-            categories: [
-                "Österreichisch",
-                "Wiener Art",
-            ],
-        },
-        {
-            id: 2,
-            name: "McDonalds",
-            street: "Breitenfurt",
-            addressAddition: "2",
-            city: "Wien",
-            zipcode: "1110",
-            isActive: true,
-            categories: [
-                "Fast Food",
-            ],
-        },
-        {
-            id: 3,
-            name: "Pablos Pizza",
-            street: "Herringstraße",
-            addressAddition: "1",
-            city: "Wien",
-            zipcode: "1230",
-            isActive: true,
-            categories: [
-                "Italienisch",
-                "Pizzeria",
-            ],
-        },
-        {
-            id: 3,
-            name: "Pablos Pizza",
-            street: "Herringstraße",
-            addressAddition: "1",
-            city: "Wien",
-            zipcode: "1230",
-            isActive: true,
-            categories: [
-                "Italienisch",
-                "Pizzeria",
-            ],
-        },
-        {
-            id: 3,
-            name: "Pablos Pizza",
-            street: "Herringstraße",
-            addressAddition: "1",
-            city: "Wien",
-            zipcode: "1230",
-            isActive: true,
-            categories: [
-                "Italienisch",
-                "Pizzeria",
-                "Pizzeria",
-                "Pizzeria",
-            ],
-        },
-        {
-            id: 3,
-            name: "Pablos Pizza",
-            street: "Herringstraße",
-            addressAddition: "1",
-            city: "Wien",
-            zipcode: "1230",
-            isActive: false,
-            categories: [
-                "Italienisch",
-                "Pizzeria",
-            ],
-            restaurantAccounts: [
-                "ID-Küche",
-                "ID-Bar",
-                "ID-Restaurant",
-            ],
-        },
-        {
-            id: 3,
-            name: "Pablos Pizza",
-            street: "Herringstraße",
-            addressAddition: "1",
-            city: "Wien",
-            zipcode: "1230",
-            isActive: true,
-            categories: [
-                "Italienisch",
-                "Pizzeria",
-            ],
-        },
-    ]);
 
     const scrollWindowTop = () => window.scroll(0, 0);
 
+    onMounted(async () => {
+        await adminRestaurantStore.loadNext7Restaurants(0);
+    });
 </script>
 
 <template>
@@ -141,11 +46,11 @@
             <span>Adresse</span>
             <span>Kategorien</span>
         </div>
-        <span v-show="restaurants.length === 0" class="flex text-lg h-8/10 w-full items-center justify-center text-gray-500">
+        <span v-show="!adminRestaurantStore.restaurants" class="flex text-lg h-8/10 w-full items-center justify-center text-gray-500">
             Keine Restaurants gefunden.
         </span>
         <RestaurantInfo
-            v-for="restaurant in restaurants" :restaurant="restaurant"
+            v-for="restaurant in adminRestaurantStore.restaurants" :key="restaurant.id" :restaurant="restaurant"
             @click="value = restaurant; scrollWindowTop()"/>
     </Window>
 </template>

@@ -15,12 +15,12 @@ import { api } from "@/API/axios";
         city: string,
         zipcode: string,
         isActive: boolean,
-        accounts: RestaurantAccount[],
-        /*         categories: string[], */
+        categories?: string[],
+        accounts?: RestaurantAccount[],
     }
 
 
-export const useRestaurantStore = defineStore('restaurant', {
+export const useAdminRestaurantStore = defineStore('adminRestaurant', {
     state: () => ({
         restaurants: [] as Restaurant[],
     }),
@@ -28,28 +28,32 @@ export const useRestaurantStore = defineStore('restaurant', {
         
     },
     actions: {
-        createRestaurant: async (restaurantData: {name: string, street: string, addressAddition: string, zipcode: string, city: string}) => {
+        async createRestaurant(restaurantData: {name: string, street: string, addressAddition: string, zipcode: string, city: string}) {
             await api.post('/restaurant', restaurantData);
         },
-        getRestaurantsByName: async (search: string) => {
+        async loadNext7Restaurants(page: number) {
+            const { data } = await api.get('public/restaurants/newest', { params: { page, size: 7 } });
+            this.restaurants = data;
+        },
+        async getRestaurantsByName(search: string) {
             const { data } = await api.get('restaurant/search', {params: search});
             return data;
         },
-        getRestaurantById: async (id: number) => {
+        async getRestaurantById(id: number) {
             const { data } = await api.get(`restaurant/${id}`);
             return data;
         },
-        toggleRestaurantStatus: async (id: number) => {
+        async toggleRestaurantStatus(id: number) {
             await api.patch(`restaurant/${id}`);
         },
-        updateRestaurant: async (restaurantData: {id: number, name: string, street: string, addressAddition: string, zipcode: string, city: string}) => {
+        async updateRestaurant(restaurantData: {id: number, name: string, street: string, addressAddition: string, zipcode: string, city: string}) {
             await api.put(`/restaurant/${restaurantData.id}`, restaurantData);
         },
-        getRestaurantAccounts: async (id :number) => {
+        async getRestaurantAccounts(id: number) {
             const { data } = await api.get(`restaurant/${id}/accounts`);
             return data;
         },
-        deleteRestaurantAccount: async (restaurantId :number, accountId :number) => {
+        async deleteRestaurantAccount(restaurantId: number, accountId: number) {
             await api.delete(`restaurant/${restaurantId}//accounts/${accountId}`);
         }
     }

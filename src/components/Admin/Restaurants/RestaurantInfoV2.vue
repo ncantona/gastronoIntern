@@ -8,7 +8,6 @@
         city: string,
         zipcode: string,
         isActive: boolean,
-        categories: string[],
     }
 
     const props = defineProps<{
@@ -32,13 +31,13 @@
                 <span>{{ restaurant.city }}</span>
             </div>
         </div>
-        <div class="flex gap-3 overflow-x-hidden hover:overflow-x-auto scrollbar-overlay [@media(hover:none)]:overflow-x-auto [@media(hover:hover)]:overflow-x-hidden">
+<!--         <div class="flex gap-3 overflow-x-hidden hover:overflow-x-auto scrollbar-overlay [@media(hover:none)]:overflow-x-auto [@media(hover:hover)]:overflow-x-hidden">
             <div v-for="category in restaurant.categories" :key="category">
                 <div class="border-2 border-main-800/30 p-2 pr-3 pl-3 rounded-full whitespace-nowrap">
                     {{ category }}
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="flex items-center justify-end ml-8">
             <img v-show="restaurant.isActive" src="@/assets/svgs/activePulseGreen.svg" alt="Active Pulse Icon">
             <img v-show="!restaurant.isActive" src="@/assets/svgs/activePulseRed.svg" alt="Active Pulse Icon">

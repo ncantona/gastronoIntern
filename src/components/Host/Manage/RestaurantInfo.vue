@@ -19,7 +19,7 @@
 
     const emit = defineEmits(['edit']);
 
-    const addressFirstPart = ref(props.restaurant.street + (props.restaurant.addressAddition ? ' ' + props.restaurant.addressAddition : '') + ',');
+    const addressFirstPart = ref(props.restaurant.street || '' + (props.restaurant.addressAddition ? ' ' + props.restaurant.addressAddition : '') + ',');
     const addressSecondPart = ref(props.restaurant.zipcode + ' ' + props.restaurant.city);
 
 </script>
