@@ -126,9 +126,11 @@ export default router
 
 import { useAuthStore } from '@/stores/Auth/useAuthStore'
 import { log } from '@/utils/logger'
+import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore'
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const restaurantStore = useRestaurantStore();
 
 	if (!authStore.isLoggedIn && authStore.accessToken) {
 		log.info('Trying to load user from JWT.')
@@ -144,6 +146,8 @@ router.beforeEach(async (to, from, next) => {
 	if (to.meta.requiresAuth && authStore.isLoggedIn) {
 		const allowedRoles :string[] = to.meta.allowedRoles as string[];
 		const userRoles = authStore.user?.roles || [];
+		if (!restaurantStore.isInitialized && (userRoles.includes('ROLE_HOST') || userRoles.includes('ROLE_BAR') || userRoles.includes('ROLE_KITCHEN')))
+			restaurantStore.loadRestaurant(authStore.user?.restaurantId || -1);
 		const hasAccess = userRoles.some(role => allowedRoles.includes(role));
 		log.debug('Checking role access for route: ', to.path, userRoles);
 

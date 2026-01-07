@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout' | 'editBlue' | 'editYellow';
+type Variant = 'main' | 'delete' | 'setting' | 'cancel' | 'callWaiter' | 'submit' | 'logout' | 'editBlue' | 'editYellow' | 'gray';
 
 const props = defineProps<{
   variant?: Variant;
@@ -63,6 +63,12 @@ const variantClasses: Record<Variant, string> = {
         `bg-yellow-500
         text-white
         hover:bg-yellow-400
+        hover:text-white`,
+
+    gray:
+        `bg-gray-500
+        text-white
+        hover:bg-gray-400
         hover:text-white`,
 }
 

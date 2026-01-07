@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async initialize() {
             if (!this.isInitialized) {
-                await this.loadUser().catch(() => undefined);
+                await this.loadUser();
             }
             this.isInitialized = true;
         },

@@ -9,6 +9,7 @@
     import EditItemWindowv2 from '@/components/Host/Menu/EditItemWindowv2.vue';
     import BeerSVG from '@/components/Svgs/BeerSVG.vue';
     import BurgerSVG from '@/components/Svgs/BurgerSVG.vue';
+import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
 
     type ItemType = 'BEVERAGE' | 'MEAL';
 
@@ -22,8 +23,7 @@
         id: number;
         name: string;
         description: string;
-        categoryName: string;
-        categoryPosition: number;
+        categoryId: number;
         position: number;
         code: string;
         itemType: ItemType;
@@ -35,20 +35,20 @@
 
     const currentCategory = ref<Category>({
         id: 1,
-        name: 'Salate',
+        name: 'Getränke',
         position: 1,
     })
 
     const displayedItems = computed(() =>
     restaurantItemsStore.items
-        .filter(item => item.categoryName === currentCategory.value.name)
+        .filter(item => item.categoryId === currentCategory.value.id)
         .sort((a, b) => a.position - b.position)
     )
 
     // Drag & Drop innerhalb der Kategorie
     function onDragUpdate({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
         const itemsInCat = restaurantItemsStore.items
-            .filter(i => i.categoryName === currentCategory.value.name)
+            .filter(i => i.categoryId === currentCategory.value.id)
             .sort((a, b) => a.position - b.position)
 
         const moved = itemsInCat.splice(oldIndex, 1)[0]
@@ -59,27 +59,14 @@
 
         // Original-Liste updaten
         restaurantItemsStore.items = [
-                ...restaurantItemsStore.items.filter(i => i.categoryName !== currentCategory.value.name),
+                ...restaurantItemsStore.items.filter(i => i.categoryId !== currentCategory.value.id),
                 ...itemsInCat
             ]
     }
 
     const categories = ref<Category[]>([
-        { id: 1, name: 'Salate', position: 1 },
-        { id: 2, name: 'Vorspeisen', position: 2 },
-        { id: 3, name: 'Suppen', position: 3 },
-        { id: 4, name: 'Hauptgerichte', position: 4 },
-        { id: 5, name: 'Vegetarisch', position: 5 },
-        { id: 6, name: 'Fisch & Meeresfrüchte', position: 6 },
-        { id: 7, name: 'Fleischgerichte', position: 7 },
-        { id: 8, name: 'Pasta & Pizza', position: 8 },
-        { id: 9, name: 'Desserts', position: 9 },
-        { id: 10, name: 'Getränke', position: 10 },
-        { id: 11, name: 'Cocktails', position: 11 },
-        { id: 12, name: 'Weine', position: 12 },
-        { id: 13, name: 'Biere', position: 13 },
-        { id: 14, name: 'Softdrinks', position: 14 },
-        { id: 15, name: 'Heißgetränke', position: 15 }
+        { id: 1, name: 'Getränke', position: 1 },
+        { id: 2, name: 'Salate', position: 2 },
     ])
     
     const showAddItem = ref<boolean>(false);
@@ -114,17 +101,27 @@
     const checkScroll = (): void => {
 
         if (!scrollContainer.value)
-            return
+            return;
 
-        const scrollLeftPos = scrollContainer.value.scrollLeft
-        const maxScroll = scrollContainer.value.scrollWidth - scrollContainer.value.clientWidth
+        const scrollLeftPos = scrollContainer.value.scrollLeft;
+        const maxScroll = scrollContainer.value.scrollWidth - scrollContainer.value.clientWidth;
 
-        showLeftButton.value = scrollLeftPos > 0
-        showRightButton.value = scrollLeftPos < maxScroll
+        showLeftButton.value = scrollLeftPos > 0;
+        showRightButton.value = scrollLeftPos < maxScroll;
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+        const restaurantStore = useRestaurantStore();
+        const restaurant = restaurantStore.restaurant;
+        if (!restaurant)
+            return;
+        try {
+            restaurantItemsStore.loadItems(restaurant.id);
+        } catch {
+            
+        }
         checkScroll();
+
     })
 
 </script>
@@ -148,11 +145,11 @@
                 </div>
                 <div class="text-gray-500 lg:flex hidden flex-col">
                     <div class="flex items-center">
-                        <BurgerSVG class="w-6"/>
+                        <img src="@/assets/svgs/hamburgerIcon.svg" alt="" class="max-w-6">
                         <span class="whitespace-break-spaces"> = Gericht</span>
                     </div>
                     <div class="flex items-center">
-                        <BeerSVG class="w-6"/>
+                        <img src="@/assets/svgs/cocktailIcon.svg" alt="" class="max-w-6">
                         <span class="whitespace-break-spaces"> = Getränk</span>
                     </div>
                 </div>
@@ -161,11 +158,9 @@
             <div class="mb-2.5 flex flex-col gap-5">
                 <div class="flex lg:flex-row flex-col gap-2 justify-between lg:items-center">
                     <span class="text-xl font-medium">Kategorien</span>
-                    <CustomButton variant="editBlue" @click="" class="gap-2">
+                    <CustomButton variant="gray" @click="" class="gap-2">
                         <img src="@/assets/svgs/plusWhite.svg" alt="" class="max-w-5">
-                        <span class="lg:text-lg">
-                            Kategorie hinzufügen
-                        </span>
+                        <span class="lg:text-lg">Kategorie hinzufügen</span>
                     </CustomButton>
                 </div>
                 <div class="relative flex items-center">
@@ -219,62 +214,64 @@
                         Neues Gericht / Getränk hinzufügen
                     </CustomButton>
                 </div>
-                <CreateItemWindowv2 v-if="showAddItem" :categoryName="currentCategory.name" :categoryPosition="currentCategory.position" :itemPosition="displayedItems.length" @cancel="showAddItem = false" @success="showAddItem = false"/>
-                <draggable
-                    :list="displayedItems"
-                    item-key="id"
-                    handle=".drag"
-                    ghost-class="opacity-30"
-                    chosen-class="bg-gray-100"
-                    drag-class="opacity-90"
-                    @update="onDragUpdate">
-                    <template #item="{ element }">
-                        <div class="shadow-[0_0_8px_rgba(0,0,0,0.1)] rounded-xl grid mb-2 items-center min-h-32 maax-h-32 border-b border-gray-200
-                                    grid-cols-[2.4rem_minmax(0,1fr)]">
-                            
-                            <div class="bg-gray-200 rounded-l-xl h-full flex items-center px-3 py-3 drag cursor-grab">
-                                ⠿
-                            </div>
-                            <div class="flex h-full">
-                                <div class="w-35">
-                                    <span class="flex justify-center p-5 text-xl">{{ element.code }}</span>
-                                    <div class="flex gap-2 justify-center w-full items-center">
-                                        <img v-show="element.isActive" src="@/assets/svgs/activePulseGreen.svg" alt="Active Pulse Icon" class="max-w-6">
-                                        <img v-show="!element.isActive" src="@/assets/svgs/activePulseRed.svg" alt="Active Pulse Icon" class="max-w-6">
-                                        <img v-show="element.itemType === 'MEAL'" src="@/assets/svgs/burger.svg" alt="" class="max-w-6">
-                                        <img v-show="element.itemType === 'BEVERAGE'" src="@/assets/svgs/beerBlack.svg" alt="" class="max-w-6">
-                                    </div>
+                <CreateItemWindowv2 v-if="showAddItem" :categoryId="currentCategory.id" :categoryName="currentCategory.name" :categoryPosition="currentCategory.position" :itemPosition="displayedItems.length" @cancel="showAddItem = false" @success="showAddItem = false"/>
+                <div class="shadow-lg p-4 rounded-xl overflow-x-auto h-150">
+                    <draggable
+                        :list="displayedItems"
+                        item-key="id"
+                        handle=".drag"
+                        ghost-class="opacity-30"
+                        chosen-class="bg-gray-100"
+                        drag-class="opacity-90"
+                        @update="onDragUpdate">
+                        <template #item="{ element }">
+                            <div class="shadow-[0_0_8px_rgba(0,0,0,0.1)] rounded-xl grid mb-2 items-center min-h-32 maax-h-32 border-b border-gray-200
+                                        grid-cols-[2.4rem_minmax(0,1fr)] hover:bg-gray-50">
+                                
+                                <div class="bg-gray-200 rounded-l-xl h-full flex items-center px-3 py-3 drag cursor-grab">
+                                    ⠿
                                 </div>
-                                <div class="flex flex-col h-full p-5 pl-0 gap-2 w-full">
-                                    <div class="font-medium text-xl flex justify-between gap-2">
-                                        <span class="truncate max-w-200">{{ element.name }}</span>
-                                        <span class="text-[rgb(37,99,235)]">€{{ element.price.toFixed(2) }}</span>
+                                <div class="flex h-full">
+                                    <div class="w-35">
+                                        <span class="flex justify-center p-5 text-xl">{{ element.code }}</span>
+                                        <div class="flex gap-2 justify-center w-full items-center">
+                                            <img v-show="element.isAvailable" src="@/assets/svgs/activePulseGreen.svg" alt="Active Pulse Icon" class="max-w-6">
+                                            <img v-show="!element.isAvailable" src="@/assets/svgs/activePulseRed.svg" alt="Active Pulse Icon" class="max-w-6">
+                                            <img v-show="element.itemType === 'MEAL'" src="@/assets/svgs/hamburgerIcon.svg" alt="" class="max-w-6">
+                                            <img v-show="element.itemType === 'BEVERAGE'" src="@/assets/svgs/cocktailIcon.svg" alt="" class="max-w-6">
+                                        </div>
                                     </div>
-                                    <div class="flex relative justify-between h-10">
-                                        <span v-if="element.description" class="max-w-175 text-gray-500 text-sm line-clamp-2">{{ element.description }}</span>
-                                        <div class="absolute right-0 gap-2 self-end justify-end">
-                                            <button @click="itemToEdit = element; showEditItem = true">
-                                                <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-6">
-                                            </button>
-                                            <button @click="deleteItem(element.restaurantId, element.id)">
-                                                <img src="@/assets/svgs/trashRed.svg" alt="" class="max-w-6">
-                                            </button>
+                                    <div class="flex flex-col h-full p-5 pl-0 gap-2 w-full">
+                                        <div class="font-medium text-xl flex justify-between gap-2">
+                                            <span class="truncate max-w-200">{{ element.name }}</span>
+                                            <span class="text-[rgb(37,99,235)]">€{{ element.price.toFixed(2) }}</span>
+                                        </div>
+                                        <div class="flex relative justify-between h-10">
+                                            <span v-if="element.description" class="max-w-175 text-gray-500 text-sm line-clamp-2">{{ element.description }}</span>
+                                            <div class="absolute right-0 gap-2 self-end justify-end">
+                                                <button @click="itemToEdit = element; showEditItem = true">
+                                                    <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-6">
+                                                </button>
+                                                <button @click="deleteItem(element.restaurantId, element.id)">
+                                                    <img src="@/assets/svgs/trashRed.svg" alt="" class="max-w-6">
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </template>
-                </draggable>
-                <EditItemWindowv2 v-if="showEditItem && itemToEdit" :item="itemToEdit" @cancel="showEditItem = false" @success="showEditItem = false"/>
-            </div>
-            <div v-show="displayedItems.length === 0 && !showAddItem" class="text-gray-500 flex text-center flex-col justify-center items-center h-full">
-                <span class="text-lg lg:block hidden">
-                    Noch keine Gerichte / Getränke vorhanden
-                </span>
-                <span>
-                    Füge dein erstes Gericht oder dein erstes Getränk hinzu!
-                </span>
+                        </template>
+                    </draggable>
+                    <EditItemWindowv2 v-if="showEditItem && itemToEdit" :item="itemToEdit" @cancel="showEditItem = false" @success="showEditItem = false"/>
+                    <div v-show="displayedItems.length === 0 && !showAddItem" class="text-gray-500 flex text-center flex-col justify-center items-center h-full">
+                        <span class="text-lg lg:block hidden">
+                            Noch keine Gerichte / Getränke vorhanden
+                        </span>
+                        <span>
+                            Füge dein erstes Gericht oder dein erstes Getränk hinzu!
+                        </span>
+                    </div>
+                </div>
             </div>
         </Window>
     </div>

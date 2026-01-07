@@ -1,20 +1,23 @@
 import { defineStore } from "pinia";
 import { api } from "@/API/axios";
 
-interface RestaurantAccount {
-    id: number,
-    email: string,
-    roles: string[],
-};
+    interface RestaurantAccount {
+        id: number,
+        email: string,
+        roles: string[],
+    };
 
-interface Restaurant {
-    id: number,
-    name: string,
-    streetName: string,
-    streetNumber: string,
-    zip: string,
-    restaurantAccounts: RestaurantAccount[],
-};
+    interface Restaurant {
+        id: number,
+        name: string,
+        street: string,
+        addressAddition: string,
+        city: string,
+        zipcode: string,
+        isActive: boolean,
+        accounts: RestaurantAccount[],
+        /*         categories: string[], */
+    }
 
 
 export const useRestaurantStore = defineStore('restaurant', {

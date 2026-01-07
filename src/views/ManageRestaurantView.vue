@@ -1,13 +1,10 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
     import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import RestaurantInfo from '@/components/Host/Manage/RestaurantInfo.vue';
-    import EditRestaurantInfo from '@/components/Host/Manage/EditRestaurantInfo.vue';
-    import ManageInternAccounts from '@/components/Host/Manage/ManageInternAccounts.vue';
-import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.vue';
-
-    type ViewMode = 'overview' | 'editRestaurant' | 'manageAccounts' | 'createAccount' | 'editAccount' | 'changePassword' | 'changeLoginId';
+    import ManageDashboardAccounts from '@/components/Host/Manage/ManageDashboardAccounts.vue';
+    import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
     interface Restaurant {
         id: number;
@@ -30,34 +27,29 @@ import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.
     }
 
     const restaurantStore = useRestaurantStore();
+    const allRestaurantAccounts = ref<Account[]>();
+    const dashboardAccounts = ref<Account[]>([]);
+    const waiterAccounts = ref<Account[]>([]);
     const popupStore = usePopupStore();
 
-    const currentView = ref<ViewMode>('overview');
-    const selectedAccount = ref<Account | undefined>(undefined);
+    onMounted(async () => {
+        try {
+            await restaurantStore.loadAccounts(restaurantStore.restaurant?.id);
+            allRestaurantAccounts.value = restaurantStore.accounts;
+            dashboardAccounts.value = allRestaurantAccounts.value.filter(acc => acc.roles.includes('ROLE_KITCHEN') || acc.roles.includes('ROLE_BAR'));
+            waiterAccounts.value = allRestaurantAccounts.value.filter(acc => acc.roles.includes('ROLE_WAITER'));
+        } catch {
 
-    const restaurant = ref<Restaurant>({
-        id: 1,
-        name: 'Grätzlgarten',
-        street: 'Hauptstraße',
-        streetNumber: '42',
-        addressAddition: '2. Stock',
-        city: 'Wien',
-        zipcode: '1010',
-        isActive: true,
-    });
+        }
+    })
 
-    const showEditRestaurant = ref<boolean>(false);
+    onUnmounted(async () => {
+        try {
 
-    const backToOverview = () => {
-        currentView.value = 'overview';
-        selectedAccount.value = undefined;
-    };
+        } catch {
 
-    const handleRestaurantUpdateSuccess = () => {
-        backToOverview();
-        // Refresh restaurant data
-    };
-
+        }
+    })
 </script>
 
 <template>
@@ -65,19 +57,12 @@ import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.
 
         <div class="p-8 px-0">
             <h1 class="text-4xl font-bold text-slate-900 mb-2">Restaurant verwalten</h1>
-            <p class="text-slate-600">Verwalte deine Restaurant-Informationen und Mitarbeiter-Accounts</p>
+            <p class="text-slate-600">Sieh deine Restaurant-Informationen ein und verwalte deine Mitarbeiter-Accounts</p>
         </div>
 
-        <EditRestaurantInfo
-            v-if="showEditRestaurant"
-            :restaurant="restaurant"
-            @cancel="showEditRestaurant = false"
-            @success="showEditRestaurant = false"/>
         <RestaurantInfo 
-            v-if="!showEditRestaurant"
-            :restaurant="restaurant" 
-            @edit="showEditRestaurant = true"/>
-        <ManageInternAccounts/>
+            :restaurant="restaurantStore.restaurant"/>
+        <ManageDashboardAccounts :accounts="dashboardAccounts"/>
         <ManageWaiterAccounts/>
     </div>
 </template>

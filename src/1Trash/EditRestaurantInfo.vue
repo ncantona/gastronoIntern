@@ -10,7 +10,6 @@
         id: number;
         name: string;
         street: string;
-        streetNumber: string;
         addressAddition?: string;
         city: string;
         zipcode: string;
@@ -34,27 +33,22 @@
         errors.value.fill('');
         let isValid = true;
 
-        if (!localRestaurant.value.name.trim()) {
+        if (!localRestaurant.value.name ||!localRestaurant.value.name.trim()) {
             errors.value[0] = 'Bitte gib einen Restaurant-Namen ein.';
             isValid = false;
         }
 
-        if (!localRestaurant.value.street.trim()) {
+        if (!localRestaurant.value.street ||!localRestaurant.value.street.trim()) {
             errors.value[1] = 'Bitte gib eine Straße ein.';
             isValid = false;
         }
 
-        if (!localRestaurant.value.streetNumber.trim()) {
-            errors.value[2] = 'Bitte gib eine Hausnummer ein.';
-            isValid = false;
-        }
-
-        if (!localRestaurant.value.zipcode.trim()) {
+        if (!localRestaurant.value.zipcode ||!localRestaurant.value.zipcode.trim()) {
             errors.value[3] = 'Bitte gib eine Postleitzahl ein.';
             isValid = false;
         }
 
-        if (!localRestaurant.value.city.trim()) {
+        if (!localRestaurant.value.city || !localRestaurant.value.city.trim()) {
             errors.value[4] = 'Bitte gib eine Stadt ein.';
             isValid = false;
         }
@@ -67,8 +61,7 @@
             return;
 
         try {
-            // TODO: API Call to update restaurant
-            // await restaurantStore.updateRestaurant(localRestaurant.value);
+
             popupStore.setSuccess('Restaurant-Informationen erfolgreich aktualisiert.');
             emit('success');
         } catch (error) {
@@ -90,7 +83,7 @@
             </button>
         </div>
 
-        <form @submit.prevent="handleSubmit" class="space-y-4">
+        <form @submit.prevent="" class="space-y-4">
             <CustomInputField
                 v-model="localRestaurant.name"
                 type="text"
@@ -99,24 +92,13 @@
                 placeholder="z.B. Grätzlgarten"
                 :error="errors[0]"/>
 
-            <div class="flex gap-4">
-                <CustomInputField
-                    v-model="localRestaurant.street"
-                    type="text"
-                    label="Straße"
-                    name="street"
-                    placeholder="z.B. Hauptstraße"
-                    :error="errors[1]"
-                    class="flex-1"/>
-                <CustomInputField
-                    v-model="localRestaurant.streetNumber"
-                    type="text"
-                    label="Hausnummer"
-                    name="streetNumber"
-                    placeholder="12"
-                    :error="errors[2]"
-                    class="w-32"/>
-            </div>
+            <CustomInputField
+                v-model="localRestaurant.street"
+                type="text"
+                label="Straße"
+                name="street"
+                placeholder="z.B. Hauptstraße"
+                :error="errors[1]"/>
 
             <CustomInputField
                 v-model="localRestaurant.addressAddition"
@@ -144,7 +126,7 @@
                     class="flex-1"/>
             </div>
 
-            <CustomButton variant="editBlue" class="w-full mt-6" type="submit">
+            <CustomButton variant="editBlue" class="w-full mt-6" @click="handleSubmit()">
                 Änderungen speichern
             </CustomButton>
         </form>

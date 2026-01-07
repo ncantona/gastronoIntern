@@ -7,7 +7,6 @@
         id: number;
         name: string;
         street: string;
-        streetNumber: string;
         addressAddition?: string;
         city: string;
         zipcode: string;
@@ -20,33 +19,14 @@
 
     const emit = defineEmits(['edit']);
 
-    const addressFirstPart = ref([
-            props.restaurant.street,
-            props.restaurant.streetNumber,
-            props.restaurant.addressAddition
-        ].join(' ') + ','
-    );
-
-    const addressSecondPart = ref([
-            props.restaurant.zipcode,
-            props.restaurant.city
-        ].join(' ')
-    )
-
+    const addressFirstPart = ref(props.restaurant.street + (props.restaurant.addressAddition ? ' ' + props.restaurant.addressAddition : '') + ',');
+    const addressSecondPart = ref(props.restaurant.zipcode + ' ' + props.restaurant.city);
 
 </script>
 
 <template>
     <Window class="p-12">
-        <div class="flex justify-between mb-6">
-            <div class="flex gap-3 w-full">
-                <h2 class="text-2xl font-semibold">Restaurant-Informationen</h2>
-            </div>
-            <CustomButton variant="editBlue" @click="emit('edit')">
-                Bearbeiten
-            </CustomButton>
-        </div>
-
+        <h2 class="text-2xl font-semibold mb-6">Restaurant-Informationen</h2>
         <div class="space-y-6">
             <div class="border-b border-slate-200 pb-4">
                 <label class="text-sm text-slate-500 font-medium">Restaurant Name</label>

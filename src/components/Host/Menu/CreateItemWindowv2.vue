@@ -25,6 +25,7 @@
     };
 
     const props = defineProps<{
+        categoryId: number,
         categoryName: string,
         categoryPosition: number,
         itemPosition: number,
@@ -63,13 +64,12 @@
             errorItemCode.value = 'Ein Code muss angegeben werden.';
         if (!itemPrice.value)
             errorItemPrice.value = 'Ein Preis muss angegeben werden.';
-        if (!errorItemName.value && !errorItemPrice.value && !errorItemCode.value)
+        if (!errorItemName.value && !errorItemPrice.value && !errorItemCode.value && restaurantStore.restaurant)
         try {
             const item = {
                 name: itemName.value,
                 description: itemDescription.value,
-                categoryName: props.categoryName,
-                categoryPosition: props.categoryPosition,
+                categoryId: props.categoryId,
                 position: props.itemPosition + 1,
                 code: itemCode.value,
                 itemType: itemType.value,
