@@ -38,7 +38,7 @@
             :placeholder="placeholder"
             :required="required"
             class="border border-main-500 rounded-lg p-3 hover:outline-1 hover:outline-main-500 focus-within:outline-2 focus-within:outline-main-500 focus-within:hover:outline-2"
-            v-model="value"
+            v-model.trim="value"
         />
         <ErrorMsg v-show="error">
             {{ error }}

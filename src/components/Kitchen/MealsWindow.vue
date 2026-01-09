@@ -1,77 +1,73 @@
 <script setup lang="ts">
-import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import MealWindow from './MealWindow.vue';
+  import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
+  import { ref, computed, onMounted, onUnmounted } from 'vue';
+  import MealWindow from './MealWindow.vue';
 
-const props = defineProps<{ orderId: number }>();
+  const props = defineProps<{ orderId: number }>();
 
-const activeOrdersStore = useRestaurantActiveOrdersStore();
+  const activeOrdersStore = useRestaurantActiveOrdersStore();
 
-const order = computed(() => {
-  const o = activeOrdersStore.activeOrders.find(o => o.id === props.orderId);
-  if (!o) return null;
-  const items = o.items.filter(i => i.type === 'MEAL' && !i.isPickedUp);
-  if (items.length === 0) return null;
-  return { ...o, items };
-});
+  const order = computed(() => {
+    return activeOrdersStore.getOrderWithItemsByType(props.orderId, 'MEAL');
+  });
 
-const sortedItems = computed(() => {
-  if (!order.value) return [];
-  return [...order.value.items].sort((a, b) => Number(a.isDone) - Number(b.isDone));
-});
+  const sortedItems = computed(() => {
+    if (!order.value) return [];
+    return [...order.value.items].sort((a, b) => Number(a.isDone) - Number(b.isDone));
+  });
 
-const now = ref(Date.now());
-const orderTime = computed(() => order.value?.datetime.split('T')[1]?.substring(0, 5));
+  const now = ref(Date.now());
+  const orderTime = computed(() => order.value?.datetime.split('T')[1]?.substring(0, 5));
 
-let intervalID: number | undefined;
+  let intervalID: number | undefined;
 
-const isAllDone = computed(() => {
-  if (!order.value) return false;
-  return order.value.items.length > 0 && order.value.items.every(i => i.isDone);
-});
+  const isAllDone = computed(() => {
+    if (!order.value) return false;
+    return order.value.items.length > 0 && order.value.items.every(i => i.isDone);
+  });
 
-const elapsedMinutes = computed(() => {
-  if (!order.value) return 0;
-  const orderDate = new Date(order.value.datetime);
-  const diffMs = now.value - orderDate.getTime();
-  const diffSeconds = Math.floor(diffMs / 1000);
-  return Math.floor(diffSeconds / 60);
-});
+  const elapsedMinutes = computed(() => {
+    if (!order.value) return 0;
+    const orderDate = new Date(order.value.datetime);
+    const diffMs = now.value - orderDate.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    return Math.floor(diffSeconds / 60);
+  });
 
-const timeStatusClass = computed(() => {
-  if (elapsedMinutes.value >= 10) return 'border-red-400 bg-red-100 text-red-700';
-  if (elapsedMinutes.value >= 7) return 'border-orange-400 bg-orange-100 text-orange-700';
-  return '';
-});
+  const timeStatusClass = computed(() => {
+    if (elapsedMinutes.value >= 10) return 'border-red-400 bg-red-100 text-red-700';
+    if (elapsedMinutes.value >= 7) return 'border-orange-400 bg-orange-100 text-orange-700';
+    return '';
+  });
 
-const passedTime = computed(() => {
-  if (!order.value) return '';
-  const orderDate = new Date(order.value.datetime);
-  const diffMs = now.value - orderDate.getTime();
-  const diffSeconds = Math.floor(diffMs / 1000);
-  const hours = Math.floor(diffSeconds / 3600);
-  const minutes = Math.floor((diffSeconds % 3600) / 60);
-  const seconds = diffSeconds % 60;
-  const hh = hours.toString().padStart(2, '0');
-  const mm = minutes.toString().padStart(2, '0');
-  const ss = seconds.toString().padStart(2, '0');
-  return `${hh}:${mm}:${ss}`;
-});
+  const passedTime = computed(() => {
+    if (!order.value) return '';
+    const orderDate = new Date(order.value.datetime);
+    const diffMs = now.value - orderDate.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const hours = Math.floor(diffSeconds / 3600);
+    const minutes = Math.floor((diffSeconds % 3600) / 60);
+    const seconds = diffSeconds % 60;
+    const hh = hours.toString().padStart(2, '0');
+    const mm = minutes.toString().padStart(2, '0');
+    const ss = seconds.toString().padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+  });
 
-onMounted(() => {
-  intervalID = window.setInterval(() => {
-    now.value = Date.now();
-  }, 1000);
-});
+  onMounted(() => {
+    intervalID = window.setInterval(() => {
+      now.value = Date.now();
+    }, 1000);
+  });
 
-onUnmounted(() => {
-  if (intervalID) clearInterval(intervalID);
-});
+  onUnmounted(() => {
+    if (intervalID) clearInterval(intervalID);
+  });
 </script>
 
 <template>
-  <div class="flex h-full border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
-    <div :class="['flex flex-col rounded-lg relative overflow-y-auto p-4 min-w-70 max-w-55 shadow-xl', isAllDone ? 'bg-green-100' : 'bg-white/90']">
+  <div class="flex h-fit border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
+    <div :class="['flex flex-col rounded-lg relative overflow-y-auto p-4 w-full shadow-xl', isAllDone ? 'bg-green-100' : 'bg-white/90']">
       <div v-show="isAllDone" class="absolute top-0 left-0 right-0 h-full flex items-center justify-center z-20 pointer-events-none">
         <img src="@/assets/svgs/checkGreen.svg" alt="done" class="w-25 opacity-60">
       </div>

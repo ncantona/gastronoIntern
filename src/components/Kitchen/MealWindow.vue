@@ -14,6 +14,7 @@
         addOns: string[];
         customMsg: string;
         isDone: boolean;
+        amount?: number;
     }
 
     const props = defineProps<{
@@ -67,11 +68,17 @@
             <img src="@/assets/svgs/checkGreen.svg" alt="done" class="w-16 opacity-60">
         </div>
 
-        <div class="font-bold self-center mb-2">
-            {{ props.item.name }}
+        <div class="flex items-start gap-3 mb-2">
+            <span class="inline-flex items-center justify-center min-w-7 min-h-7 rounded-full bg-gray-400/40 text-black font-semibold">
+                {{ props.item.amount ?? 1 }}
+            </span>
+            <div class="flex flex-col">
+                <span class="font-bold text-left">{{ props.item.name }}</span>
+                <div v-if="props.item.customMsg" class="text-gray-600 text-sm">{{ props.item.customMsg }}</div>
+            </div>
         </div>
 
-        <div class="flex justify-between gap-5">
+        <div class="flex justify-between gap-5 text-left">
 
             <div v-if="props.item.omits && props.item.omits.length" class="mb-2 text-red-800">
                 <div v-for="omit in props.item.omits" :key="omit">
@@ -85,13 +92,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div v-if="props.item.customMsg" class="flex flex-col">
-            <span>Kommentar:</span>
-            <div class="text-gray-600">
-                {{ props.item.customMsg }}
-            </div>
         </div>
 
     </div>

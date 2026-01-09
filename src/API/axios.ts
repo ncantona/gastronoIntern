@@ -5,5 +5,5 @@ export const api = axios.create({
 });
 
 export const apiAuth = axios.create({
-    baseURL: 'http://localhost:8080/api/auth',
+    baseURL: 'http://localhost:8080/api/auth/',
 });

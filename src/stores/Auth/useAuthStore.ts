@@ -8,9 +8,19 @@ interface Token {
 
 interface User {
     id: number,
+    loginId: string,
     email: string,
     firstName: string,
     lastName: string,
+    roles: string[],
+};
+
+interface RestaurantAccountResponse {
+    id: string,
+    loginId: string,
+    firstName: string,
+    lastName: string,
+    email: string,
     roles: string[],
     restaurantId: number,
 };
@@ -41,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
             if (!this.refreshToken)
                 return;
             try {
-                const { data } = await apiAuth.post('/refresh', {refreshToken: this.refreshToken});
+                const { data } = await apiAuth.post('refresh', {refreshToken: this.refreshToken});
                 this.setTokens(data);
             } catch {
                 this.logout();
@@ -61,13 +71,13 @@ export const useAuthStore = defineStore('auth', {
         async loadUser() {
             if (!this.accessToken)
                 return;
-            const { data } = await api.get('/host/me');
+            const { data } = await api.get('host/me');
             this.user = data;
             this.isInitialized = true;
         },
         async logout() {
             if (this.refreshToken)
-                await apiAuth.post('/logout', {refreshToken: this.refreshToken});
+                await apiAuth.post('logout', {refreshToken: this.refreshToken});
             this.user = null;
             this.isInitialized = false;
             this.accessToken = null;
@@ -78,15 +88,15 @@ export const useAuthStore = defineStore('auth', {
         
         //------ Sytem-User ------//
 
-        async registerRestaurantHost(userData :{loginId :string, email :string, firstName :string
-            lastName :string, password :string, restaurantId :number}) {
-            await apiAuth.post('/systemRegister', userData);
+        async registerRestaurantHost(userData : Partial<User> & { password :string }) :Promise<RestaurantAccountResponse> {
+            const { data } = await apiAuth.post('host/register', userData);
+            return data || null;
         },
-        async registerRestaurantIntern(loginId :string, restaurantId: number) {
-            await apiAuth.post('/systemRegister', loginId);
-        },
+/*         async registerRestaurantIntern(userData :Partial<User>) {
+            await apiAuth.post('/host/register', userData);
+        }, */
         async loginSystemUser(userData :{loginId :string, password :string}) {
-            const { data } = await apiAuth.post('/systemLogin', userData);
+            const { data } = await apiAuth.post('systemLogin', userData);
             this.applyAuthentification(data);
         },
     }
