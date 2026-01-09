@@ -2,8 +2,8 @@
     import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
     import { onMounted, ref } from 'vue';
 
-    import CreateDashboardAccount from '@/components/Admin/Restaurants/CreateDashboardAccount.vue';
-    import DashboardAccount from '@/components/Host/Manage/DashboardAccount.vue';
+    import CreateDashboardAccount from '@/components/Admin/DashboardAccounts/CreateDashboardAccount.vue';
+    import DashboardAccounts from '@/components/Admin/DashboardAccounts/DashboardAccounts.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import Window from '@/components/General/Window.vue';
@@ -43,7 +43,7 @@
             <WindowHeader
                 :imgSrc="GearSVG"
                 imgAlt="Ein Zahnrad">
-                Interns verwalten
+                Dashboard-Accounts verwalten
             </WindowHeader>
     
             <CustomButton
@@ -52,7 +52,7 @@
                 class="w-full mb-6 gap-2"
                 @click="showCreateIntern = true">
                 <img src="@/assets/svgs/plusWhite.svg" alt="Weißes Plus in weißem Kreis" class="max-w-5">
-                <span>Intern anlegen</span>
+                <span>Dashboard-Account anlegen</span>
             </CustomButton>
 
             <CreateDashboardAccount
@@ -61,10 +61,8 @@
                 @success="showCreateIntern = false; internAccounts.push($event)"
                 @cancel="showCreateIntern = false"/>
 
-            <DashboardAccount
-                v-for="acc in internAccounts"
-                :key="acc.id"
-                :account="acc"/>
+            <DashboardAccounts
+                :accounts="internAccounts"/>
 
         </div>
     </Window>

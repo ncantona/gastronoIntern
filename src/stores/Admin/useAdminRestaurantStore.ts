@@ -11,6 +11,15 @@ interface RestaurantAccountResponse {
     restaurantId: number,
 };
 
+interface HostAccountRequest {
+    loginId: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    roles: string,
+    restaurantId: number,
+};
+
 interface Restaurant {
     name: string,
     street: string,

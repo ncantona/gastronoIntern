@@ -2,9 +2,9 @@
     import { ref } from 'vue';
 
     import DisplayAndSearchRestaurants from '@/components/Admin/ManageRestaurants/DisplayAndSearchRestaurant.vue';
-    import ManageDashboardAccounts from '@/components/Admin/Restaurants/ManageDashboardAccounts.vue';
-    import ManageRestaurant from '@/components/Admin/General/ManageRestaurant.vue';
-    import ManageHost from '@/components/Admin/General/ManageHost.vue';
+    import ManageDashboardAccounts from '@/components/Admin/DashboardAccounts/ManageDashboardAccounts.vue';
+    import ManageRestaurant from '@/components/Admin/Restaurant/ManageRestaurant.vue';
+    import ManageHost from '@/components/Admin/Host/ManageHost.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
 
     interface RestaurantResponse {

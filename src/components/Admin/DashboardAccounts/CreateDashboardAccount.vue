@@ -96,7 +96,7 @@
         <WindowHeader
             :img-src="PlusInCircleSVG"
             img-alt="Ein Pluszeichen in einem Kreis">
-            Intern anlegen
+            Dashboard-Account anlegen
         </WindowHeader>
 
         <div class="flex flex-col w-full">
@@ -118,7 +118,7 @@
                     <CustomButton
                         variant="editBlue"
                         class="mt-4 w-full">
-                        Intern anlegen
+                        Dashboard-Account anlegen
                     </CustomButton>
                     
                     <CustomButton

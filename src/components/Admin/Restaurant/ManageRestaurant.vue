@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import EditRestaurant from '@/components/Admin/General/EditRestaurant.vue';
-    import RestaurantInfo from '@/components/Admin/General/RestaurantInfo.vue';
+    import EditRestaurant from '@/components/Admin/Restaurant/EditRestaurant.vue';
+    import RestaurantInfo from '@/components/Admin/Restaurant/RestaurantInfo.vue';
 
     interface RestaurantResponse {
         id: number,

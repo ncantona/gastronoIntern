@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import CreateRestaurant from '@/components/Admin/General/CreateRestaurant.vue';
-    import ManageHost from '@/components/Admin/General/ManageHost.vue';
+    import CreateRestaurant from '@/components/Admin/Restaurant/CreateRestaurant.vue';
+    import ManageHost from '@/components/Admin/Host/ManageHost.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
-    import ManageInterns from '@/components/Admin/Restaurants/ManageDashboardAccounts.vue';
-    import ManageRestaurant from '@/components/Admin/General/ManageRestaurant.vue';
+    import ManageInterns from '@/components/Admin/DashboardAccounts/ManageDashboardAccounts.vue';
+    import ManageRestaurant from '@/components/Admin/Restaurant/ManageRestaurant.vue';
 
     interface RestaurantResponse {
         id: number,

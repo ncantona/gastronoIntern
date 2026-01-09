@@ -25,6 +25,15 @@ interface RestaurantAccountResponse {
     restaurantId: number,
 };
 
+interface HostAccountCreateRequest {
+    loginId: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    roles: string,
+    restaurantId: number,
+};
+
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         isInitialized: false as boolean,
@@ -88,7 +97,7 @@ export const useAuthStore = defineStore('auth', {
         
         //------ Sytem-User ------//
 
-        async registerRestaurantHost(userData : Partial<User> & { password :string }) :Promise<RestaurantAccountResponse> {
+        async registerRestaurantHost(userData :HostAccountCreateRequest) :Promise<RestaurantAccountResponse> {
             const { data } = await apiAuth.post('host/register', userData);
             return data || null;
         },

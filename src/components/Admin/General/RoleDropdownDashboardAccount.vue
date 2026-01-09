@@ -1,9 +1,7 @@
 <script setup lang="ts">
     import ErrorMsg from '@/components/General/ErrorMsg.vue';
 
-    type Role = 'ROLE_KITCHEN' | 'ROLE_BAR' | '';
-
-    const value = defineModel<Role>();
+    const value = defineModel<string>();
     const props = defineProps<{
         errorMsg: string,
     }>();

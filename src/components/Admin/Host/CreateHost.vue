@@ -11,13 +11,14 @@
     
     import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg';
     
-    interface RestaurantAccount {
+    interface HostAccountCreateRequest {
         loginId: string,
         firstName: string,
         lastName: string,
         email: string,
-        roles: string[],
+        roles: string,
         restaurantId: number,
+        password: string,
     };
 
     interface RestaurantAccountResponse {
@@ -41,13 +42,14 @@
         restaurantId: number,
     }>();
 
-    const initialRestaurantAccount = <RestaurantAccount>{
+    const initialRestaurantAccount = <HostAccountCreateRequest>{
         loginId: '',
         firstName: '',
         lastName: '',
         email: '',
-        roles: ['ROLE_HOST'],
+        roles: 'ROLE_HOST',
         restaurantId: props.restaurantId,
+        password: 'Password123!',
     };
 
     const emit = defineEmits<{
@@ -57,7 +59,7 @@
     const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const hostAccount = ref<RestaurantAccount>({ ...initialRestaurantAccount });
+    const hostAccount = ref<HostAccountCreateRequest>({ ...initialRestaurantAccount });
 
     const errors = ref<HostErrors>({
         loginId: '',
@@ -85,7 +87,7 @@
             return;
 
         try {
-            const newHost = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value, password: 'Password123!'});
+            const newHost = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value });
             popupStore.setSuccess('Host wurde erfolgreich angelegt.');
             emit('success', newHost );
             resetForm();
