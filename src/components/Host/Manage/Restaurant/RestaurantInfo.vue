@@ -19,8 +19,6 @@
         restaurant: Restaurant;
     }>();
 
-    const emit = defineEmits(['edit']);
-
     const addressFirstPart = ref<string>(props.restaurant.street + (props.restaurant.addressAddition ? ' ' + props.restaurant.addressAddition : '') + ',');
     const addressSecondPart = ref<string>(props.restaurant.zipcode + ' ' + props.restaurant.city)
 
@@ -29,9 +27,7 @@
 <template>
     <Window class="p-12">
 
-        <WindowHeader
-            :show-edit="true"
-            @edit="emit('edit')">
+        <WindowHeader>
             Restaurant-Informationen
         </WindowHeader>
 

@@ -1,36 +1,23 @@
 <script setup lang="ts">
     import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import RestaurantInfo from '@/components/Host/Manage/RestaurantInfo.vue';
-    import ManageDashboardAccounts from '@/components/Host/Manage/ManageDashboardAccounts.vue';
+    import RestaurantInfo from '@/components/Host/Manage/Restaurant/RestaurantInfo.vue';
+    import ManageDashboardAccounts from '@/components/Host/Manage/DashboardAccounts/ManageDashboardAccounts.vue';
     import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.vue';
     import { onMounted, onUnmounted, ref } from 'vue';
 
-    interface Account {
-        id: string;
-        loginId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        roles: string[];
-    }
+    interface RestaurantAccountResponse {
+        id: string,
+        loginId: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        roles: string[],
+        restaurantId: number,
+    };
 
     const restaurantStore = useRestaurantStore();
-    const allRestaurantAccounts = ref<Account[]>();
-    const dashboardAccounts = ref<Account[]>([]);
-    const waiterAccounts = ref<Account[]>([]);
     const popupStore = usePopupStore();
-
-    onMounted(async () => {
-        try {
-            await restaurantStore.loadAccounts(restaurantStore.restaurant?.id);
-            allRestaurantAccounts.value = restaurantStore.accounts;
-            dashboardAccounts.value = allRestaurantAccounts.value.filter(acc => acc.roles.includes('ROLE_KITCHEN') || acc.roles.includes('ROLE_BAR'));
-            waiterAccounts.value = allRestaurantAccounts.value.filter(acc => acc.roles.includes('ROLE_WAITER'));
-        } catch {
-
-        }
-    })
 
     onUnmounted(async () => {
         try {
@@ -50,7 +37,7 @@
         </div>
 
         <RestaurantInfo :restaurant="restaurantStore.restaurant"/>
-        <ManageDashboardAccounts :accounts="dashboardAccounts"/>
+        <ManageDashboardAccounts :restaurantId="restaurantStore.restaurant?.id || -1"/>
         <ManageWaiterAccounts :accounts="waiterAccounts"/>
     </div>
 </template>

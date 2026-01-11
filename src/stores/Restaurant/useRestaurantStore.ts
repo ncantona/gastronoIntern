@@ -2,14 +2,15 @@ import { defineStore } from "pinia";
 import { api } from "@/API/axios";
 import { useAuthStore } from "../Auth/useAuthStore";
 
-    interface Account {
-        id: string;
-        loginId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        roles: string[];
-    }
+    interface RestaurantAccountResponse {
+        id: string,
+        loginId: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        roles: string[],
+        restaurantId: number,
+    };
 
     interface Restaurant {
         id: number,
@@ -23,10 +24,10 @@ import { useAuthStore } from "../Auth/useAuthStore";
 
 
 export const useRestaurantStore = defineStore('restaurant', {
-    state: (): { restaurant :Restaurant | null, isInitialized :boolean, accounts :Account[]} => ({
+    state: (): { restaurant :Restaurant | null, isInitialized :boolean, accounts :RestaurantAccountResponse[]} => ({
         restaurant: null,
         isInitialized: false,
-        accounts: [] as Account[],
+        accounts: [] as RestaurantAccountResponse[],
     }),
     getters: {
         
