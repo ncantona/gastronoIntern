@@ -16,6 +16,8 @@
 
     const props = defineProps<{
         account: Account;
+        showEdit?: boolean,
+        showDelete?: boolean,
     }>();
 
     const emit = defineEmits(['edit', 'delete']);
@@ -49,10 +51,10 @@
             </h3>
 
             <div class="flex gap-3">
-                <button class="cursor-pointer" @click="emit('edit')">
+                <button v-if="showEdit" class="cursor-pointer" @click="emit('edit')">
                     <img src="@/assets/svgs/editBlue.svg" alt="Plus Icon" class="max-w-7">
                 </button>
-                <button class="cursor-pointer" @click="emit('delete', { ...account })">
+                <button v-if="showDelete" class="cursor-pointer" @click="emit('delete', { ...account })">
                     <img src="@/assets/svgs/trashRed.svg" alt="Plus Icon" class="max-w-7">
                 </button>
             </div>

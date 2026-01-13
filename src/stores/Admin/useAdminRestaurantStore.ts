@@ -76,8 +76,9 @@ export const useAdminRestaurantStore = defineStore('adminRestaurant', {
         async deleteRestaurantHost(hostId :string) {
             await api.delete(`host/${hostId}`);
         },
-        async updateRestaurant(restaurantData :Partial<Restaurant>, restaurantId :number) {
-            await api.put(`/restaurant/${restaurantId}`, restaurantData);
+        async updateRestaurant(restaurantData :Restaurant, restaurantId :number) :Promise<RestaurantResponse> {
+            const { data } = await api.put(`/restaurant/${restaurantId}`, restaurantData);
+            return data;
         },
 
 

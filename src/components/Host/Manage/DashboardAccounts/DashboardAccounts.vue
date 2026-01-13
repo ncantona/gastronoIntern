@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import DashboardAccountInfo from '@/components/Host/Manage/DashboardAccounts/DashboardAccountInfo.vue';
+    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import EditDashboardAccount from '@/components/Host/Manage/DashboardAccounts/EditDashboardAccount.vue';
 
     interface RestaurantAccountResponse {
@@ -32,6 +32,7 @@
             <DashboardAccountInfo
                 v-if="showEdit != account.id"
                 :account="account"
+                :showEdit="true"
                 @edit="showEdit = account.id"/>
 
             <EditDashboardAccount

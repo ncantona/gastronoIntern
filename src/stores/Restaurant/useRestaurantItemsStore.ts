@@ -17,6 +17,11 @@ interface Item {
     isAvailable: boolean;
 };
 
+interface CategoryResponse {
+    id: number,
+    name: string,
+    position: number,
+}
 
 export const useRestaurantItemsStore = defineStore('itemsStore', {
     state: () => ({
@@ -74,5 +79,9 @@ export const useRestaurantItemsStore = defineStore('itemsStore', {
             const { data } = await api.post(`/restaurant/${restaurantId}/items`, item);
             this.items.push(data);
         },
+        async loadCategories(restaurantId :number) :Promise<CategoryResponse[]> {
+            const { data } = await api.get(`restaurant/${restaurantId}/categories`);
+            return data;
+        }
     },
 })

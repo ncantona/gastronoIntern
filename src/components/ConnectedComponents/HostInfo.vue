@@ -15,6 +15,8 @@
 
     const props = defineProps<{
         host: RestaurantAccount,
+        showEdit?: boolean,
+        showDelete?: boolean,
     }>();
 
     const emit = defineEmits(['edit', 'delete']);
@@ -27,8 +29,8 @@
     <Window class="p-12">
 
         <WindowHeader
-            :show-edit="true"
-            :show-delete="true"
+            :show-edit="showEdit"
+            :show-delete="showDelete"
             @edit="emit('edit')"
             @delete="emit('delete')">
             Host-Informationen

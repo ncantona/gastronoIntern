@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import RestaurantInfo from '@/components/Host/Manage/Restaurant/RestaurantInfo.vue';
+    import RestaurantInfo from '@/components/ConnectedComponents/RestaurantInfo.vue';
     import ManageDashboardAccounts from '@/components/Host/Manage/DashboardAccounts/ManageDashboardAccounts.vue';
     import ManageWaiterAccounts from '@/components/Host/Manage/ManageWaiterAccounts.vue';
     import { onMounted, onUnmounted, ref } from 'vue';

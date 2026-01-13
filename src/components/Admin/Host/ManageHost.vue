@@ -6,7 +6,7 @@
     import DeleteWindow from '@/components/General/DeleteWindow.vue';
     import CreateHost from '@/components/Admin/Host/CreateHost.vue';
     import EditHost from '@/components/Admin/Host/EditHost.vue';
-    import HostInfo from '@/components/Admin/Host/HostInfo.vue';
+    import HostInfo from '@/components/ConnectedComponents/HostInfo.vue';
 
     const props = defineProps<{
         restaurantId: number;
@@ -54,6 +54,8 @@
     <HostInfo
         v-if="hostAccount && !showEditHost"
         :host="hostAccount"
+        :showEdit="true"
+        :showDelete="true"
         @edit="showEditHost = true"
         @delete="showDeleteWindow = true"/>
 

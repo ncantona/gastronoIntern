@@ -16,8 +16,11 @@
     };
 
     const props = defineProps<{
-        restaurant: Restaurant;
+        restaurant: Restaurant,
+        showEdit?: boolean,
     }>();
+
+    const emit = defineEmits(['edit']);
 
     const addressFirstPart = ref<string>(props.restaurant.street + (props.restaurant.addressAddition ? ' ' + props.restaurant.addressAddition : '') + ',');
     const addressSecondPart = ref<string>(props.restaurant.zipcode + ' ' + props.restaurant.city)
@@ -27,7 +30,9 @@
 <template>
     <Window class="p-12">
 
-        <WindowHeader>
+        <WindowHeader
+            :showEdit="showEdit"
+            @edit="emit('edit')">
             Restaurant-Informationen
         </WindowHeader>
 

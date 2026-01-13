@@ -42,7 +42,7 @@
     }>();
 
     const emit = defineEmits<{
-        (e: 'success', restaurant: Restaurant): void,
+        (e: 'success', restaurant: RestaurantResponse): void,
         (e: 'cancel'): void,
     }>();
 
@@ -80,8 +80,8 @@
         }
 
         try {
-            await restaurantStore.updateRestaurant(restaurant.value, props.restaurant.id);
-            emit('success', { ...restaurant.value });
+            const updatedRestaurant :RestaurantResponse = await restaurantStore.updateRestaurant(restaurant.value, props.restaurant.id);
+            emit('success', updatedRestaurant);
             popupStore.setSuccess('Restaurant erfolgreich aktualisiert.');
         } catch (error) {
             popupStore.setError('Aktualisieren des Restaurants fehlgeschlagen.');

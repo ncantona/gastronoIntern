@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { ref } from 'vue';
 
-    import DashboardAccountInfo from '@/components/Admin/DashboardAccounts/DashboardAccountInfo.vue';
+    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import EditDashboardAccount from '@/components/Admin/DashboardAccounts/EditDashboardAccount.vue';
-import DeleteWindow from '@/components/General/DeleteWindow.vue';
+    import DeleteWindow from '@/components/General/DeleteWindow.vue';
 
     interface RestaurantAccountResponse {
         id: string,
@@ -34,6 +34,8 @@ import DeleteWindow from '@/components/General/DeleteWindow.vue';
             <DashboardAccountInfo
                 v-if="showEdit != account.id"
                 :account="account"
+                :showEdit = true
+                :showDelete = true
                 @edit="showEdit = account.id"
                 @delete="accountToDelete = account"/>
 
