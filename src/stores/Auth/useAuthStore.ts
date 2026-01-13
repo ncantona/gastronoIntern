@@ -15,6 +15,13 @@ interface User {
     roles: string[],
 };
 
+interface InternAccountRequest {
+    loginId: string,
+    roles: string,
+    password: string,
+    restaurantId: number,
+};
+
 interface RestaurantAccountResponse {
     id: string,
     loginId: string,
@@ -30,7 +37,6 @@ interface HostAccountCreateRequest {
     firstName: string,
     lastName: string,
     email: string,
-    roles: string,
     restaurantId: number,
 };
 
@@ -98,12 +104,13 @@ export const useAuthStore = defineStore('auth', {
         //------ Sytem-User ------//
 
         async registerRestaurantHost(userData :HostAccountCreateRequest) :Promise<RestaurantAccountResponse> {
-            const { data } = await apiAuth.post('host/register', userData);
+            const { data } = await api.post('auth/host/register', userData);
             return data || null;
         },
-/*         async registerRestaurantIntern(userData :Partial<User>) {
-            await apiAuth.post('/host/register', userData);
-        }, */
+        async registerRestaurantIntern(userData :InternAccountRequest) :Promise<RestaurantAccountResponse> {
+            const { data } = await api.post('auth/host/registerDashboard', userData);
+            return data || null;
+        },
         async loginSystemUser(userData :{loginId :string, password :string}) {
             const { data } = await apiAuth.post('systemLogin', userData);
             this.applyAuthentification(data);

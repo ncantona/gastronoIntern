@@ -16,7 +16,6 @@ interface HostAccountRequest {
     firstName: string,
     lastName: string,
     email: string,
-    roles: string,
     restaurantId: number,
 };
 

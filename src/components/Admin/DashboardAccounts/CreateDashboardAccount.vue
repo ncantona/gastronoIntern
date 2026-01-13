@@ -26,6 +26,13 @@
         restaurantId: number,
     };
 
+    interface InternAccountRequest {
+        loginId: string,
+        roles: string,
+        restaurantId: number,
+        password: string,
+    };    
+
     interface RestaurantAccountResponse {
         id: string,
         loginId: string,
@@ -40,12 +47,10 @@
         restaurantId: number,
     }>();
 
-    const initialRestaurantAccount = <RestaurantAccount>{
+    const initialRestaurantAccount = <InternAccountRequest>{
         loginId: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        roles: ['' as Role],
+        password: 'Password123!',
+        roles: '' as Role,
         restaurantId: props.restaurantId,
     };
 
@@ -57,7 +62,7 @@
     const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const internAccount = ref<RestaurantAccount>({ ...initialRestaurantAccount });
+    const internAccount = ref<InternAccountRequest>({ ...initialRestaurantAccount });
 
     const errors = ref<InternErrors>({
         loginId: '',
@@ -68,7 +73,7 @@
     const validate = () => {
         errors.value = {
             loginId: internAccount.value.loginId ? '' : 'Ein Login-ID muss angegeben werden.',
-            roles: internAccount.value.roles[0] ? '' : 'Eine Rolle muss angegeben werden.',
+            roles: internAccount.value.roles ? '' : 'Eine Rolle muss angegeben werden.',
         }
 
         return !Object.values(errors.value).some(Boolean);
@@ -79,9 +84,9 @@
             return;
 
         try {
-           /*  const newIntern = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value, password: 'Password123!'}); */
+            const newIntern = <RestaurantAccountResponse> await authStore.registerRestaurantIntern({ ...internAccount.value, password: 'Password123!'});
             popupStore.setSuccess('Intern wurde erfolgreich angelegt.');
-            emit('success', {} as RestaurantAccountResponse ); //UMÄNDERN WENN API DA IST
+            emit('success', newIntern);
             resetForm();
         } catch (error) {
             popupStore.setError('Anlegen von Intern fehlgeschlagen.');
@@ -111,7 +116,7 @@
                     :error="errors.loginId"/>
 
                 <RoleDropdown
-                    v-model="internAccount.roles[0]"
+                    v-model="internAccount.roles"
                     :errorMsg="errors.roles"/>
 
                 <div class="flex gap-5 w-full">

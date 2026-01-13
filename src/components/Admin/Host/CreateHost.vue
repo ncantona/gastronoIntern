@@ -16,7 +16,6 @@
         firstName: string,
         lastName: string,
         email: string,
-        roles: string,
         restaurantId: number,
         password: string,
     };
@@ -47,7 +46,6 @@
         firstName: '',
         lastName: '',
         email: '',
-        roles: 'ROLE_HOST',
         restaurantId: props.restaurantId,
         password: 'Password123!',
     };
