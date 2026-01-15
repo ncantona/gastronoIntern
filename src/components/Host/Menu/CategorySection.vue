@@ -3,6 +3,7 @@
     import { onMounted, ref } from 'vue';
 
     import CustomButton from '@/components/General/CustomButton.vue';
+import CreateCategory from './CreateCategory.vue';
 
     interface CategoryResponse {
         id: number,
@@ -25,6 +26,8 @@
 
     const categories = ref<CategoryResponse[]>([]);
     const currentCategory = ref<CategoryResponse | null>(null);
+
+    const showCreateCategory = ref<boolean>(false);
 
     const scrollContainer = ref<HTMLDivElement | null>(null);
     const scrollAmount :number = 500;
@@ -70,18 +73,24 @@
 
 <template>
     <div class="mb-2.5 flex flex-col gap-5">
+        <div class="flex flex-col gap-5">
+            <div class="flex lg:flex-row flex-col gap-2 justify-between lg:items-center">
 
-        <div class="flex lg:flex-row flex-col gap-2 justify-between lg:items-center">
+                <div class="flex gap-3 items-start">
+                    <h3 class="text-xl font-medium">Kategorien</h3>
+                    <button class="-translate-y-3">
+                        <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-7">
+                    </button>
+                </div>
 
-            <h3 class="text-xl font-medium">Kategorien</h3>
+                <CustomButton variant="gray" @click="showCreateCategory = !showCreateCategory" class="gap-2">
+                    <img src="@/assets/svgs/plusWhite.svg" alt="" class="max-w-5">
+                    <span class="lg:text-lg">Kategorie hinzufügen</span>
+                </CustomButton>
 
-            <CustomButton variant="gray" @click="" class="gap-2">
-                <img src="@/assets/svgs/plusWhite.svg" alt="" class="max-w-5">
-                <span class="lg:text-lg">Kategorie hinzufügen</span>
-            </CustomButton>
-
-        </div>
-
+            </div>
+            <CreateCategory v-if="showCreateCategory" :restaurantId="restaurantId" :lastCategoryPos="categories.length" @cancel="showCreateCategory = false" @success="categories.push($event); showCreateCategory = false"/>
+    </div>
         <div class="relative flex items-center">
 
             <button

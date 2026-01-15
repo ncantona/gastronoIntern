@@ -30,7 +30,7 @@
     }
 
     const props = defineProps<{
-        currentCategory: CategoryResponse,
+        currentCategory: CategoryResponse | null,
     }>()
 
     const restaurantStore = useRestaurantStore();
