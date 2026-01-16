@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import { loadRestaurantsWithQuery, loadRestaurants } from '@/Services/restaurant.service';
+    import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { onMounted, ref, watch } from 'vue';
     
@@ -10,30 +11,11 @@
 
     import GearSVG from '@/assets/svgs/settingsBlack.svg';
 
-    interface Restaurant {
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-    }
-
-    interface RestaurantResponse {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-        createdAt: string,
-    };
-
     const value = defineModel<RestaurantResponse | null>();
 
-    const adminRestaurantStore = useAdminRestaurantStore();
     const popupStore = usePopupStore();
+
+    const restaurants = ref<RestaurantResponse[]>([]);
 
     const searchRestaurant = ref<string>('');
     const reset = ref<boolean>(false);
@@ -41,7 +23,7 @@
 
     watch(searchRestaurant, async (newValue) => {
         if (reset.value === true && !newValue.trim()) {
-            await adminRestaurantStore.loadNext5Restaurants(0);
+            restaurants.value = await loadRestaurants(0, 5);
             reset.value = false;
             oldSearch.value = '';
             return;
@@ -50,7 +32,7 @@
             return;
 
         try {
-            await adminRestaurantStore.load5RestaurantsBySearch(newValue.trim());
+            restaurants.value = await loadRestaurantsWithQuery(newValue.trim(), 0, 5);
             oldSearch.value = newValue.trim();
             reset.value = true;
         } catch {
@@ -61,7 +43,7 @@
     const scrollWindowTop = () => window.scroll(0, 0);
 
     onMounted(async () => {
-        await adminRestaurantStore.loadNext5Restaurants(0);
+        restaurants.value = await loadRestaurants(0, 5);
     });
 
 </script>
@@ -90,7 +72,7 @@
 
             <div class="flex flex-col gap-4">
                 <RestaurantInfoShort
-                    v-for="restaurant in adminRestaurantStore.restaurants"
+                    v-for="restaurant in restaurants"
                     :key="restaurant.id"
                     :restaurant="restaurant"
                     :searchValue="searchRestaurant"
@@ -98,7 +80,7 @@
             </div>
 
             <h4
-                v-show="adminRestaurantStore.restaurants.length === 0"
+                v-show="restaurants.length === 0"
                 class="flex h-100 text-lg w-full items-center justify-center text-gray-500">
                 Keine Restaurants gefunden.
             </h4>

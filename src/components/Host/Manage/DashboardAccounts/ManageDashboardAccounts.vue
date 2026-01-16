@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import { getDashboardAccounts } from '@/Services/restaurantAccounts.service';
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { onMounted, ref } from 'vue';
 
     import DashboardAccounts from '@/components/Host/Manage/DashboardAccounts/DashboardAccounts.vue';
@@ -8,26 +9,14 @@
     
     import GearSVG from '@/assets/svgs/settingsBlack.svg'
 
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
     const props = defineProps<{
         restaurantId: number;
     }>();
 
-    const adminRestaurantStore = useAdminRestaurantStore();
-
-    const internAccounts = ref<RestaurantAccountResponse[]>([]);
+    const dashboardAccounts = ref<RestaurantAccountResponse[]>([]);
 
     onMounted(async () => {
-        internAccounts.value = await adminRestaurantStore.getRestaurantInterns(props.restaurantId);
+        dashboardAccounts.value = await getDashboardAccounts(props.restaurantId);
     });
 
 </script>
@@ -43,7 +32,7 @@
             </WindowHeader>
 
             <DashboardAccounts
-                :accounts="internAccounts"/>
+                :accounts="dashboardAccounts"/>
 
         </div>
     </Window>

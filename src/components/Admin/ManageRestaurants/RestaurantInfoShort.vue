@@ -1,18 +1,9 @@
 <script setup lang="ts">
+    import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { computed, ref } from 'vue';
 
-    interface Restaurant {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        city: string,
-        zipcode: string,
-        isActive: boolean,
-    }
-
     const props = defineProps<{
-        restaurant: Restaurant,
+        restaurant: RestaurantResponse,
         searchValue: string,
     }>();
 

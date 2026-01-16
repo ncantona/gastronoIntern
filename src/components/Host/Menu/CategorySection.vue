@@ -3,7 +3,7 @@
     import { onMounted, ref } from 'vue';
 
     import CustomButton from '@/components/General/CustomButton.vue';
-import CreateCategory from './CreateCategory.vue';
+    import CreateCategory from './CreateCategory.vue';
 
     interface CategoryResponse {
         id: number,

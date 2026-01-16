@@ -32,8 +32,8 @@
                 class="h-4 w-4 rounded-full border-2 flex items-center justify-center"
                 :class="selectedValue === option.value ? 'border-main-500' : 'border-gray-400'">
                 <span
-                v-if="selectedValue === option.value"
-                class="h-2 w-2 rounded-full bg-main-500">
+                    v-if="selectedValue === option.value"
+                    class="h-2 w-2 rounded-full bg-main-500">
                 </span>
             </span>
 

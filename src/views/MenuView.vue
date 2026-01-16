@@ -8,27 +8,14 @@
     import ViewHeader from '@/components/General/ViewHeader.vue';
     import Window from '@/components/General/Window.vue';
 
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
     interface CategoryResponse {
         id: number,
         name: string,
         position: number,
     }
 
-    interface Item {
-        id: number;
-        name: string;
-        description: string;
-        categoryId: number;
-        position: number;
-        code: string;
-        itemType: ItemType;
-        price: number;
-        isAvailable: boolean;
-    }
-
     const restaurantStore = useRestaurantStore();
+    const restaurantId :number = restaurantStore.restaurant?.id ?? -1;
 
     const currentCategory = ref<CategoryResponse | null>(null)
 
@@ -50,7 +37,7 @@
             
             <MenuWindowHeader/>
 
-            <CategorySection :restaurantId="restaurantStore.restaurant?.id ?? -1" @switch="currentCategory = $event" @set="currentCategory = $event"/>
+            <CategorySection :restaurantId="restaurantId" @switch="currentCategory = $event" @set="currentCategory = $event"/>
 
             <ManageItems :currentCategory="currentCategory"/>
 

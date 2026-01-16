@@ -1,19 +1,10 @@
 <script setup lang="ts">
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { ref } from 'vue';
 
     import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import EditDashboardAccount from '@/components/Admin/DashboardAccounts/EditDashboardAccount.vue';
     import DeleteWindow from '@/components/General/DeleteWindow.vue';
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
 
     const props = defineProps<{
         accounts: RestaurantAccountResponse[];

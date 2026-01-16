@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import { getDashboardAccounts } from '@/Services/restaurantAccounts.service';
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { onMounted, ref } from 'vue';
 
     import CreateDashboardAccount from '@/components/Admin/DashboardAccounts/CreateDashboardAccount.vue';
@@ -10,28 +11,16 @@
     
     import GearSVG from '@/assets/svgs/settingsBlack.svg'
 
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
     const props = defineProps<{
         restaurantId: number;
     }>();
 
-    const adminRestaurantStore = useAdminRestaurantStore();
-
-    const internAccounts = ref<RestaurantAccountResponse[]>([]);
+    const dashboardAccounts = ref<RestaurantAccountResponse[]>([]);
 
     const showCreateIntern = ref<boolean>(false);
 
     onMounted(async () => {
-        internAccounts.value = await adminRestaurantStore.getRestaurantInterns(props.restaurantId);
+        dashboardAccounts.value = await getDashboardAccounts(props.restaurantId);
     });
 
 </script>
@@ -58,11 +47,11 @@
             <CreateDashboardAccount
                 v-if="showCreateIntern"
                 :restaurantId="restaurantId"
-                @success="showCreateIntern = false; internAccounts.push($event)"
+                @success="showCreateIntern = false; dashboardAccounts.push($event)"
                 @cancel="showCreateIntern = false"/>
 
             <DashboardAccounts
-                :accounts="internAccounts"/>
+                :accounts="dashboardAccounts"/>
 
         </div>
     </Window>

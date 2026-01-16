@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import type { RestaurantErrors, RestaurantResponse } from '@/Types/restaurant.types';
+    import { updateRestaurant } from '@/Services/restaurant.service';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { computed, ref } from 'vue';
 
@@ -10,33 +11,6 @@
 
     import GearSVG from '@/assets/svgs/settingsBlack.svg';
 
-    interface Restaurant {
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-    };
-
-    interface RestaurantResponse {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-        createdAt: string,
-    };
-
-    type RestaurantErrors = {
-        name: string,
-        street: string,
-        zipcode: string,
-        city: string,
-    };
-
     const props = defineProps<{
         restaurant: RestaurantResponse;
     }>();
@@ -46,10 +20,9 @@
         (e: 'cancel'): void,
     }>();
 
-    const restaurantStore = useAdminRestaurantStore();
     const popupStore = usePopupStore();
 
-    const restaurant = ref<Restaurant>({ ...props.restaurant });
+    const restaurant = ref<RestaurantResponse>({ ...props.restaurant });
     const errors = ref<RestaurantErrors>({
         name: '',
         street: '',
@@ -70,7 +43,7 @@
         return !Object.values(errors.value).some(Boolean);
     };
 
-    const updateRestaurant = async () => {
+    const handleUpdateRestaurant = async () => {
         if (!validate())
             return;
         if (!hasChanges.value) {
@@ -80,10 +53,10 @@
         }
 
         try {
-            const updatedRestaurant :RestaurantResponse = await restaurantStore.updateRestaurant(restaurant.value, props.restaurant.id);
+            const updatedRestaurant :RestaurantResponse = await updateRestaurant(props.restaurant.id, restaurant.value);
             emit('success', updatedRestaurant);
             popupStore.setSuccess('Restaurant erfolgreich aktualisiert.');
-        } catch (error) {
+        } catch {
             popupStore.setError('Aktualisieren des Restaurants fehlgeschlagen.');
         }
     };
@@ -102,7 +75,7 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="updateRestaurant()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleUpdateRestaurant()" class="flex flex-col gap-3">
 
                 <CustomInputField
                     v-model="restaurant.name"

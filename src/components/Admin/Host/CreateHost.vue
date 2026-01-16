@@ -1,7 +1,8 @@
 <script setup lang="ts">
+    import type { HostErrors, RegisterHostAccountRequest, RestaurantAccountResponse } from '@/Types/user.types';
+    import { registerHost } from '@/Services/restaurantAccounts.service';
     import { isValidEmail } from '@/GeneralTypescript/HelperFunctions';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import { ref } from 'vue';
 
     import CustomInputField from '@/components/General/CustomInputField.vue';
@@ -11,37 +12,11 @@
     
     import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg';
     
-    interface HostAccountCreateRequest {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        restaurantId: number,
-        password: string,
-    };
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
-    type HostErrors = {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-    };
-    
     const props = defineProps<{
         restaurantId: number,
     }>();
 
-    const initialRestaurantAccount = <HostAccountCreateRequest>{
+    const initialRestaurantAccount = <RegisterHostAccountRequest>{
         loginId: '',
         firstName: '',
         lastName: '',
@@ -54,10 +29,9 @@
         (e: 'success', hostAccount: RestaurantAccountResponse): void,
     }>();
 
-    const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const hostAccount = ref<HostAccountCreateRequest>({ ...initialRestaurantAccount });
+    const hostAccount = ref<RegisterHostAccountRequest>({ ...initialRestaurantAccount });
 
     const errors = ref<HostErrors>({
         loginId: '',
@@ -80,12 +54,12 @@
         return !Object.values(errors.value).some(Boolean);
     }
 
-    const createHost = async () => {
+    const handleCreateHost = async () => {
         if (!validate())
             return;
 
         try {
-            const newHost = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value });
+            const newHost = await registerHost({ ...hostAccount.value });
             popupStore.setSuccess('Host wurde erfolgreich angelegt.');
             emit('success', newHost );
             resetForm();
@@ -106,7 +80,7 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="createHost()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleCreateHost()" class="flex flex-col gap-3">
 
                 <CustomInputField
                     v-model="hostAccount.loginId"

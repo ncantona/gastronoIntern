@@ -1,22 +1,12 @@
 <script setup lang="ts">
+    import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { ref } from 'vue';
 
-    import CreateRestaurant from '@/components/Admin/Restaurant/CreateRestaurant.vue';
-    import ManageHost from '@/components/Admin/Host/ManageHost.vue';
-    import CustomButton from '@/components/General/CustomButton.vue';
     import ManageInterns from '@/components/Admin/DashboardAccounts/ManageDashboardAccounts.vue';
     import ManageRestaurant from '@/components/Admin/Restaurant/ManageRestaurant.vue';
-
-    interface RestaurantResponse {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-        createdAt: string,
-    };
+    import CreateRestaurant from '@/components/Admin/Restaurant/CreateRestaurant.vue';
+    import CustomButton from '@/components/General/CustomButton.vue';
+    import ManageHost from '@/components/Admin/Host/ManageHost.vue';
 
     const currentRestaurant = ref<RestaurantResponse | null>(null);
 

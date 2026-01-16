@@ -1,6 +1,7 @@
 <script setup lang="ts">
+    import type { DashboardAccountErrors, RegisterDashboardAccountRequest, RestaurantAccountResponse } from '@/Types/user.types';
+    import { registerDashboardAccount } from '@/Services/restaurantAccounts.service';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import { ref } from 'vue';
 
     import RoleDropdown from '@/components/Admin/General/RoleDropdownDashboardAccount.vue';
@@ -10,47 +11,14 @@
     
     import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg';
     
-    type Role = 'ROLE_KITCHEN' | 'ROLE_BAR' | '';
-
-    type InternErrors = {
-        loginId: string,
-        roles: string,
-    };
-
-    interface RestaurantAccount {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: Role[],
-        restaurantId: number,
-    };
-
-    interface InternAccountRequest {
-        loginId: string,
-        roles: string,
-        restaurantId: number,
-        password: string,
-    };    
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-    
     const props = defineProps<{
         restaurantId: number,
     }>();
 
-    const initialRestaurantAccount = <InternAccountRequest>{
+    const initialDashboardAccount = <RegisterDashboardAccountRequest>{
         loginId: '',
         password: 'Password123!',
-        roles: '' as Role,
+        roles: '',
         restaurantId: props.restaurantId,
     };
 
@@ -59,36 +27,35 @@
         (e: 'cancel'): void,
     }>();
 
-    const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const internAccount = ref<InternAccountRequest>({ ...initialRestaurantAccount });
+    const dashboardAccount = ref<RegisterDashboardAccountRequest>({ ...initialDashboardAccount });
 
-    const errors = ref<InternErrors>({
+    const errors = ref<DashboardAccountErrors>({
         loginId: '',
         roles: '',
     });
 
-    const resetForm = () => internAccount.value = { ...initialRestaurantAccount };
+    const resetForm = () => dashboardAccount.value = { ...initialDashboardAccount };
     const validate = () => {
         errors.value = {
-            loginId: internAccount.value.loginId ? '' : 'Ein Login-ID muss angegeben werden.',
-            roles: internAccount.value.roles ? '' : 'Eine Rolle muss angegeben werden.',
+            loginId: dashboardAccount.value.loginId ? '' : 'Ein Login-ID muss angegeben werden.',
+            roles: dashboardAccount.value.roles ? '' : 'Eine Rolle muss angegeben werden.',
         }
 
         return !Object.values(errors.value).some(Boolean);
     }
 
-    const createIntern = async () => {
+    const handleCreateDashboardAccount = async () => {
         if (!validate())
             return;
 
         try {
-            const newIntern = <RestaurantAccountResponse> await authStore.registerRestaurantIntern({ ...internAccount.value, password: 'Password123!'});
+            const newDashboardAccount = await registerDashboardAccount({ ...dashboardAccount.value })
             popupStore.setSuccess('Intern wurde erfolgreich angelegt.');
-            emit('success', newIntern);
+            emit('success', newDashboardAccount);
             resetForm();
-        } catch (error) {
+        } catch {
             popupStore.setError('Anlegen von Intern fehlgeschlagen.');
         }
     };
@@ -105,10 +72,10 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="createIntern()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleCreateDashboardAccount()" class="flex flex-col gap-3">
 
                 <CustomInputField
-                    v-model="internAccount.loginId"
+                    v-model="dashboardAccount.loginId"
                     type="text"
                     label="Login-ID"
                     name="loginId"
@@ -116,7 +83,7 @@
                     :error="errors.loginId"/>
 
                 <RoleDropdown
-                    v-model="internAccount.roles"
+                    v-model="dashboardAccount.roles"
                     :errorMsg="errors.roles"/>
 
                 <div class="flex gap-5 w-full">

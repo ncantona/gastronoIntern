@@ -1,6 +1,7 @@
 <script setup lang="ts">
+    import type { DashboardAccountErrors, RestaurantAccountResponse, UpdateDashboardAccountRequestByAdmin } from '@/Types/user.types';
+    import { updateDashboardAccountByAdmin } from '@/Services/restaurantAccounts.service';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import { computed, ref } from 'vue';
 
     import RoleDropdown from '@/components/Admin/General/RoleDropdownDashboardAccount.vue';
@@ -9,32 +10,6 @@
     import CustomButton from '@/components/General/CustomButton.vue';
     
     import GearSVG from '@/assets/svgs/settingsBlack.svg';
-    
-    type Role = 'ROLE_KITCHEN' | 'ROLE_BAR' | '';
-
-    type InternErrors = {
-        loginId: string,
-        roles: string,
-    };
-
-    interface RestaurantAccount {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
     
     const props = defineProps<{
         dashboardAccount: RestaurantAccountResponse,
@@ -46,12 +21,11 @@
         (e: 'cancel'): void,
     }>();
 
-    const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
-    const dashboardAccount = ref<RestaurantAccountResponse>({ ...props.dashboardAccount });
+    const dashboardAccount = ref<UpdateDashboardAccountRequestByAdmin>({ loginId: props.dashboardAccount.loginId, roles: props.dashboardAccount.roles[0] });
 
-    const errors = ref<InternErrors>({
+    const errors = ref<DashboardAccountErrors>({
         loginId: '',
         roles: '',
     });
@@ -65,7 +39,7 @@
         return !Object.values(errors.value).some(Boolean);
     }
 
-    const updateDashboardAccount = async () => {
+    const handleUpdateDashboardAccount = async () => {
         if (!validate())
             return;
         if (!hasChanges.value) {
@@ -75,9 +49,9 @@
         }
     
         try {
-           /*  const newIntern = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value, password: 'Password123!'}); */
+            const newDashboardAccount = await updateDashboardAccountByAdmin({ ...dashboardAccount.value }, props.dashboardAccount.id);
             popupStore.setSuccess('Dashboard-Account wurde erfolgreich aktualisiert.');
-            emit('success', props.dashboardAccount ); //UMÄNDERN WENN API DA IST
+            emit('success', newDashboardAccount );
         } catch (error) {
             popupStore.setError('Aktualisieren von Dashboard-Account fehlgeschlagen.');
         }
@@ -97,7 +71,7 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="updateDashboardAccount()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleUpdateDashboardAccount()" class="flex flex-col gap-3">
 
                 <CustomInputField
                     v-model="dashboardAccount.loginId"
@@ -117,7 +91,6 @@
                         class="mt-4 w-full">
                         Speichern
                     </CustomButton>
-                    
                 </div>
             </form>
 

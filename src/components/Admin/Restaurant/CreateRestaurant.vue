@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import type { RestaurantErrors, RestaurantRequest, RestaurantResponse } from '@/Types/restaurant.types';
+    import { createRestaurant } from '@/Services/restaurant.service';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { ref } from 'vue';
 
@@ -10,41 +11,13 @@
     
     import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg'
 
-    interface Restaurant {
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-    };
-
-    interface RestaurantResponse {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-        createdAt: string,
-    };
-
-    type RestaurantErrors = {
-        name: string,
-        street: string,
-        zipcode: string,
-        city: string,
-    };
-
     const emit = defineEmits<{
         (e: 'success', restaurant: RestaurantResponse): void,
     }>();
 
-    const restaurantStore = useAdminRestaurantStore();
     const popupStore = usePopupStore();
 
-    const initialRestaurant = <Restaurant>{
+    const initialRestaurant = <RestaurantRequest>{
         name: '',
         street: '',
         addressAddition: '',
@@ -53,7 +26,7 @@
         zipcode: '',
     }
 
-    const restaurant = ref<Restaurant>({ ...initialRestaurant });
+    const restaurant = ref<RestaurantRequest>({ ...initialRestaurant });
     const errors = ref<RestaurantErrors>({
         name: '',
         street: '',
@@ -75,12 +48,12 @@
         return !Object.values(errors.value).some(Boolean);
     };
 
-    const createRestaurant = async () => {
+    const handleCreateRestaurant = async () => {
         if (!validate())
             return;
 
         try {
-            const newRestaurant = <RestaurantResponse> await restaurantStore.createRestaurant(restaurant.value);
+            const newRestaurant = await createRestaurant(restaurant.value);
             popupStore.setSuccess('Restaurant erfolgreich angelegt.')
             emit('success', newRestaurant);
             resetForm();
@@ -103,7 +76,7 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="createRestaurant()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleCreateRestaurant()" class="flex flex-col gap-3">
 
                 <CustomInputField
                     v-model="restaurant.name"
@@ -129,6 +102,7 @@
                     placeholder="z.B. 2. Stock"/>
 
                 <div class="flex gap-10">
+
                     <CustomInputField
                         v-model="restaurant.zipcode"
                         type="text"
@@ -137,6 +111,7 @@
                         placeholder="1160"
                         :error="errors.zipcode"
                         class="w-2/10"/>
+
                     <CustomInputField
                         v-model="restaurant.city"
                         type="text"
@@ -145,6 +120,7 @@
                         placeholder="Wien"
                         :error="errors.city"
                         class="w-full"/>
+                        
                 </div>
 
                 <CustomButton

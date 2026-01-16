@@ -31,20 +31,52 @@
         orders: Order[] | null;
     }>();
 
-    const sortedOrders = computed(() => {
-        if (!props.orders) return null;
-        return [...props.orders].sort((a, b) => 
-            new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-        );
+    const firstColumn = computed(() => {
+        return props.orders?.filter((order, index) => index % 4 === 0) || [];
     });
+
+    const secondColumn = computed(() => {
+        return props.orders?.filter((order, index) => index % 4 === 1) || [];
+    });
+
+    const thirdColumn = computed(() => {
+        return props.orders?.filter((order, index) => index % 4 === 2) || [];
+    });
+
+    const fourthColumn = computed(() => {
+        return props.orders?.filter((order, index) => index % 4 === 3) || [];
+    });
+
 </script>
 
 <template>
     <Window class="self-center w-95/100 bg-white/80 gap-0 rounded-md min-h-[600px] overflow-y-auto">
-        <div v-if="sortedOrders" class="grid grid-cols-4 gap-5 w-full auto-rows-max items-start">
-            <div v-for="order in sortedOrders" :key="order.id">
-                <MealsWindow :orderId="order.id"/>
+        <div v-if="props.orders" class="grid grid-cols-4 gap-5 w-full">
+
+            <div class="flex flex-col gap-5">
+                <div v-for="order in firstColumn" :key="order.id">
+                    <MealsWindow :orderId="order.id"/>
+                </div>
             </div>
+
+            <div class="flex flex-col gap-5">
+                <div v-for="order in secondColumn" :key="order.id">
+                    <MealsWindow :orderId="order.id"/>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-5">
+                <div v-for="order in thirdColumn" :key="order.id">
+                    <MealsWindow :orderId="order.id"/>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-5">
+                <div v-for="order in fourthColumn" :key="order.id">
+                    <MealsWindow :orderId="order.id"/>
+                </div>
+            </div>
+
         </div>
     </Window>
 </template>

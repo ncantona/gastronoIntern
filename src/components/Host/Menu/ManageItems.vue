@@ -3,7 +3,7 @@
     import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
     import { ref, computed, watch, nextTick } from 'vue'
     
-    import CreateItemWindowv2 from '@/components/Host/Menu/CreateItemWindowv2.vue';
+    import CreateItem from '@/components/Host/Menu/CreateItem.vue';
     import draggable from 'vuedraggable'
     import CustomButton from '@/components/General/CustomButton.vue';
     import EditItemWindowv2 from '@/components/Host/Menu/EditItemWindowv2.vue';
@@ -91,7 +91,7 @@
                 Neues Gericht / Getränk hinzufügen
             </CustomButton>
         </div>
-        <CreateItemWindowv2 v-if="showAddItem" :categoryId="currentCategory.id" :categoryName="currentCategory.name" :categoryPosition="currentCategory.position" :itemPosition="displayedItems.length" @cancel="showAddItem = false" @success="showAddItem = false"/>
+        <CreateItem v-if="showAddItem" :categoryId="currentCategory.id" :categoryName="currentCategory.name" :categoryPosition="currentCategory.position" :itemPosition="displayedItems.length" @cancel="showAddItem = false" @success="showAddItem = false"/>
         <div class="shadow-lg p-4 rounded-xl overflow-x-auto h-150">
             <draggable
                 :list="displayedItems"

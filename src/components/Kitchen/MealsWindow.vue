@@ -66,31 +66,40 @@
 </script>
 
 <template>
-  <div class="flex h-fit border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
-    <div :class="['flex flex-col rounded-lg relative overflow-y-auto p-4 w-full shadow-xl', isAllDone ? 'bg-green-100' : 'bg-white/90']">
-      <div v-show="isAllDone" class="absolute top-0 left-0 right-0 h-full flex items-center justify-center z-20 pointer-events-none">
-        <img src="@/assets/svgs/checkGreen.svg" alt="done" class="w-25 opacity-60">
-      </div>
-      <div class="flex flex-col gap-1 mb-5 border-2 rounded-2xl -m-2 p-1 border-main-500 bg-white/80">
-        <div class="flex gap-2 justify-center text-xl font-medium items-center">
-          <img src="@/assets/svgs/table.svg" alt="table" class="w-10">
-          {{ order?.tableId }}
-        </div>
-        <div class="flex justify-between">
-          <div class="flex items-center gap-1.5 border-2 w-25.5 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
-            <img src="@/assets/svgs/order.svg" alt="order time" class="w-6">
-            <span class="font-mono">{{ orderTime }}</span>
-          </div>
-          <div :class="[timeStatusClass]" class="flex items-center gap-1.5 border-2 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
-            <img src="@/assets/svgs/timer.svg" alt="timer" class="w-6">
-            <span class="font-mono">{{ passedTime.substring(0, 2) == '00' ? passedTime.substring(3) : passedTime }}</span>
-          </div>
-        </div>
-      </div>
+    <div class="flex h-fit border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
+        <div :class="['flex flex-col rounded-lg relative overflow-y-auto p-4 w-full shadow-xl', isAllDone ? 'bg-green-100' : 'bg-white/90']">
 
-      <div v-for="item in sortedItems" :key="item.id" class="mb-3">
-        <MealWindow :order-id="props.orderId" :item="item" :hide-done-overlay="isAllDone" />
-      </div>
+            <div v-show="isAllDone" class="absolute top-0 left-0 right-0 h-full flex items-center justify-center z-20 pointer-events-none">
+				<img src="@/assets/svgs/checkGreen.svg" alt="done" class="w-25 opacity-60">
+            </div>
+
+            <div class="flex flex-col gap-1 mb-5 border-2 rounded-2xl -m-2 p-1 border-main-500 bg-white/80">
+
+				<div class="flex gap-2 justify-center text-xl font-medium items-center">
+					<img src="@/assets/svgs/table.svg" alt="table" class="w-10">
+					{{ order?.tableId }}
+				</div>
+
+				<div class="flex justify-between">
+					<div class="flex items-center gap-1.5 border-2 w-25.5 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
+						<img src="@/assets/svgs/order.svg" alt="order time" class="w-6">
+						<span class="font-mono">{{ orderTime }}</span>
+					</div>
+					<div :class="[timeStatusClass]" class="flex items-center gap-1.5 border-2 border-main-500/50 p-1 pl-3 pr-3 rounded-4xl">
+						<img src="@/assets/svgs/timer.svg" alt="timer" class="w-6">
+						<span class="font-mono">{{ passedTime.substring(0, 2) == '00' ? passedTime.substring(3) : passedTime }}</span>
+					</div>
+				</div>
+
+            </div>
+
+		<div v-for="item in sortedItems" :key="item.id" class="mb-3 last:mb-0">
+			<MealWindow
+			:order-id="props.orderId"
+			:item="item"
+			:hide-done-overlay="isAllDone"/>
+		</div>
+
+        </div>
     </div>
-  </div>
 </template>

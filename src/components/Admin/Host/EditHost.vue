@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import { useAdminRestaurantStore } from '@/stores/Admin/useAdminRestaurantStore';
+    import type { HostErrors, RestaurantAccountResponse } from '@/Types/user.types';
+    import { updateHost } from '@/Services/restaurantAccounts.service';
     import { isValidEmail } from '@/GeneralTypescript/HelperFunctions';
     import { usePopupStore } from '@/stores/General/usePopupStore';
     import { computed, ref } from 'vue';
@@ -11,23 +12,6 @@
 
     import GearSVG from '@/assets/svgs/settingsBlack.svg';
 
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
-    type HostErrors = {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-    };
-
     const props = defineProps<{
         hostAccount: RestaurantAccountResponse,
     }>();
@@ -37,7 +21,6 @@
         (e: 'cancel'): void,
     }>();
 
-    const adminRestaurantStore = useAdminRestaurantStore();
     const popupStore = usePopupStore();
 
     const hostAccount = ref<RestaurantAccountResponse>({ ...props.hostAccount });
@@ -64,7 +47,7 @@
         return !Object.values(errors.value).some(Boolean);
     }
 
-    const updateHost = async () => {
+    const handleUpdateHost = async () => {
         if (!validate())
             return;
         if (!hasChanges.value) {
@@ -74,9 +57,9 @@
         }
 
         try {
-            adminRestaurantStore.updateRestaurantHost(hostAccount.value, props.hostAccount.id);
+            const newHost = await updateHost(hostAccount.value, props.hostAccount.id)
             popupStore.setSuccess('Host wurde erfolgreich aktualisiert.');
-            emit('success', { ...hostAccount.value });
+            emit('success', newHost);
         } catch (error) {
             popupStore.setError('Host-Aktualisierung fehlgeschlagen.');
         }
@@ -96,7 +79,7 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="updateHost()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleUpdateHost()" class="flex flex-col gap-3">
 
                 <CustomInputField
                     v-model="hostAccount.loginId"

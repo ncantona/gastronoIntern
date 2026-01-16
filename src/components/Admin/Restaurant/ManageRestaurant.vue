@@ -1,19 +1,9 @@
 <script setup lang="ts">
+    import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { ref } from 'vue';
 
     import EditRestaurant from '@/components/Admin/Restaurant/EditRestaurant.vue';
     import RestaurantInfo from '@/components/ConnectedComponents/RestaurantInfo.vue';
-
-    interface RestaurantResponse {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-        createdAt: string,
-    };
 
     const value = defineModel<RestaurantResponse | null>();
 
