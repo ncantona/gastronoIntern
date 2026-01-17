@@ -1,3 +1,5 @@
+import type { Tokens } from "./security.types";
+
 export interface RestaurantAccountResponse {
     id: string,
     loginId: string,
@@ -6,6 +8,11 @@ export interface RestaurantAccountResponse {
     email: string,
     roles: string[],
     restaurantId: number,
+};
+
+export interface LoginRestaurantAccountResponse {
+    user: RestaurantAccountResponse,
+    jwtToken: Tokens
 };
 
 export interface RegisterHostAccountRequest {
@@ -50,20 +57,6 @@ export interface UpdateDashboardAccountRequestByHost {
 export type DashboardAccountErrors = {
     loginId: string,
     roles: string,
-};
-
-export interface RegisterWaiterAccountRequest {
-    loginId: string,
-    firstName: string,
-    lastName: string,
-    restaurantId: number,
-    password: string,
-};
-
-export interface UpdateWaiterAccountRequest {
-    loginId: string,
-    firstName: string,
-    lastName: string,
 };
 
 export interface LoginRestaurantAccountRequest {

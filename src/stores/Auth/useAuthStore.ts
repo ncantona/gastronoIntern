@@ -1,119 +1,151 @@
-import { api, apiAuth } from "@/API/axios";
+import type { LoginRestaurantAccountRequest, LoginRestaurantAccountResponse, RestaurantAccountResponse } from "@/Types/user.types";
+import { loadRestaurantAccount, loginRestaurantAccount, logoutRestaurantAccount } from "@/Services/restaurantAccounts.service";
+import { refreshTokenJWT } from "@/Services/security.service";
+import type { Tokens } from "@/Types/security.types";
 import { defineStore } from "pinia";
-
-interface Token {
-    accessToken: string,
-    refreshToken: string,
-};
-
-interface User {
-    id: number,
-    loginId: string,
-    email: string,
-    firstName: string,
-    lastName: string,
-    roles: string[],
-};
-
-interface InternAccountRequest {
-    loginId: string,
-    roles: string,
-    password: string,
-    restaurantId: number,
-};
-
-interface RestaurantAccountResponse {
-    id: string,
-    loginId: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    roles: string[],
-    restaurantId: number,
-};
-
-interface HostAccountCreateRequest {
-    loginId: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    restaurantId: number,
-};
+import router from "@/router";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        isInitialized: false as boolean,
-        user: {} as User | null,
+        user: {} as RestaurantAccountResponse | null,
         accessToken: localStorage.getItem('jwt'),
         refreshToken: localStorage.getItem('refreshToken'),
+        isInitialized: false as boolean,
     }),
     getters: {
-        isLoggedIn(): boolean {
+        isLoggedIn(
+        ): boolean {
+
             return this.isInitialized;
+
         },
     },
     actions: {
 
-        //------ General ------//
+        /**
+         * Sets the access and refresh tokens in the store and localStorage
+         * @param tokens - The tokens object containing accessToken and refreshToken
+         * @returns void
+         */
+        setTokens(
+            tokens: Tokens
+        ): void {
 
-        setTokens({ accessToken, refreshToken } :Token) {
-            this.accessToken = accessToken;
-            this.refreshToken = refreshToken;
-            localStorage.setItem('jwt', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
+            this.accessToken = tokens.accessToken;
+            this.refreshToken = tokens.refreshToken;
+
+            localStorage.setItem('jwt', tokens.accessToken);
+            localStorage.setItem('refreshToken', tokens.refreshToken);
+
         },
-        async refreshUserToken() {
+
+        /**
+         * Refreshes the user's JWT token using the refresh token
+         * @returns Promise<void>
+         */
+        async refreshUserToken(
+        ): Promise<void> {
+
             if (!this.refreshToken)
                 return;
-            try {
-                const { data } = await apiAuth.post('refresh', {refreshToken: this.refreshToken});
-                this.setTokens(data);
-            } catch {
-                this.logout();
-            }
+
+            const newTokens = await refreshTokenJWT(this.refreshToken);
+            this.setTokens(newTokens);
+    
         },
-        async initialize() {
-            if (!this.isInitialized) {
+
+        /**
+         * Initializes the auth store by loading the current user
+         * Should be called on app startup
+         * @returns Promise<void>
+         */
+        async initialize(
+        ): Promise<void> {
+
+            if (!this.isInitialized)
                 await this.loadUser();
-            }
-            this.isInitialized = true;
+
         },
-        applyAuthentification({jwtToken, user}: {jwtToken :Token, user :User}) {
+
+        /**
+         * Applies authentication by setting user data and tokens
+         * @param response - Login response containing user and JWT tokens
+         * @returns void
+         */
+        applyAuthentification(
+            { user, jwtToken }: LoginRestaurantAccountResponse
+        ): void {
+
             this.user = user;
             this.setTokens(jwtToken);
             this.isInitialized = true;
+
         },
-        async loadUser() {
+
+        /**
+         * Loads the current user's data from the API
+         * Requires a valid access token
+         * @returns Promise<void>
+         */
+        async loadUser(
+        ): Promise<void> {
+
             if (!this.accessToken)
                 return;
-            const { data } = await api.get('host/me');
-            this.user = data;
+
+            const user = await loadRestaurantAccount();
+            this.user = user;
             this.isInitialized = true;
+
         },
-        async logout() {
+
+        /**
+         * Logs out the current user and clears all authentication data
+         * Removes tokens from localStorage and resets store state
+         * @returns Promise<void>
+         */
+        async logout(
+        ): Promise<void> {
+
             if (this.refreshToken)
-                await apiAuth.post('logout', {refreshToken: this.refreshToken});
+                await logoutRestaurantAccount(this.refreshToken);
+
             this.user = null;
             this.isInitialized = false;
             this.accessToken = null;
             this.refreshToken = null;
+
             localStorage.removeItem('jwt');
             localStorage.removeItem('refreshToken');
-        },
-        
-        //------ Sytem-User ------//
+            router.push({name: 'home'});
 
-/*         async registerRestaurantHost(userData :HostAccountCreateRequest) :Promise<RestaurantAccountResponse> {
-            const { data } = await api.post('auth/host/register', userData);
-            return data || null;
         },
-        async registerRestaurantIntern(userData :InternAccountRequest) :Promise<RestaurantAccountResponse> {
-            const { data } = await api.post('auth/host/registerDashboard', userData);
-            return data || null;
-        }, */
-        async loginSystemUser(userData :{loginId :string, password :string}) {
-            const { data } = await apiAuth.post('systemLogin', userData);
-            this.applyAuthentification(data);
+
+        clearLoginState(
+        ): void {
+
+            this.user = null;
+            this.isInitialized = false;
+            this.accessToken = null;
+            this.refreshToken = null;
+
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('refreshToken');
+
+        },
+
+        /**
+         * Logs in a restaurant system user (ADMIN, HOST, BAR, or KITCHEN)
+         * @param userData - Login credentials (loginId and password)
+         * @returns Promise<void>
+         */
+        async loginSystemUser(
+            userData: LoginRestaurantAccountRequest
+        ): Promise<void> {
+
+            const user = await loginRestaurantAccount(userData);
+            this.applyAuthentification(user);
+    
         },
     }
 })

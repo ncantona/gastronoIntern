@@ -1,50 +1,50 @@
+import type { RestaurantResponse } from "@/Types/restaurant.types";
+import { loadRestaurant } from "@/Services/restaurant.service";
 import { defineStore } from "pinia";
-import { api } from "@/API/axios";
-import { useAuthStore } from "../Auth/useAuthStore";
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
-    interface Restaurant {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        city: string,
-        zipcode: string,
-        isActive: boolean,
-    }
 
 
 export const useRestaurantStore = defineStore('restaurant', {
-    state: (): { restaurant :Restaurant | null, isInitialized :boolean, accounts :RestaurantAccountResponse[]} => ({
-        restaurant: null,
-        isInitialized: false,
-        accounts: [] as RestaurantAccountResponse[],
+    state: () => ({
+        restaurant: {} as RestaurantResponse | null,
+        isInitialized: false as boolean,
     }),
     getters: {
         
     },
     actions: {
-        async loadRestaurant(restaurantId :number) {
-            if (restaurantId === -1)
+
+        /**
+         * Initializes the restaurant store by loading restaurant data
+         * Only loads if not already initialized
+         * @param restaurantId - Restaurant ID to load
+         * @returns Promise<void>
+         */
+        async initialize(
+            restaurantId: number
+        ): Promise<void> {
+
+            if (!this.isInitialized)
+                await this.loadRestaurant(restaurantId);
+
+        },
+
+        /**
+         * Loads restaurant data by ID and updates the store
+         * @param restaurantId - Restaurant ID to load
+         * @returns Promise<void>
+         */
+        async loadRestaurant(
+            restaurantId: number
+        ): Promise<void> {
+
+            if (restaurantId < 0)
                 return;
-            const { data } = await api.get(`/restaurant/${restaurantId}`);
-            this.restaurant = data;
+
+            const restaurant = await loadRestaurant(restaurantId);
+            this.restaurant = restaurant;
             this.isInitialized = true;
-        }, 
-        async loadAccounts(restaurantId :number) {
-            if (restaurantId === -1)
-                return;
-            const { data } = await api.get(`/restaurant/${restaurantId}/accounts`);
-            this.accounts = data;
-        }, 
+
+        },
+
     }
 })

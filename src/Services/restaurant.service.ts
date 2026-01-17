@@ -19,6 +19,22 @@ export const createRestaurant = async (
 };
 
 /**
+ * Loads a restaurant by ID
+ * @param restaurantId - Restaurant ID to load
+ * @returns Promise<RestaurantResponse> - Restaurant data
+ */
+export const loadRestaurant = async (
+    restaurantId: number
+): Promise<RestaurantResponse> => {
+
+    const { data } = await api.get(
+        `restaurant/${restaurantId}`
+    );
+    return data;
+
+}
+
+/**
  * Updates an existing restaurant
  * @param restaurantId - ID of the restaurant to update
  * @param restaurantData - Updated restaurant data
@@ -36,6 +52,28 @@ export const updateRestaurant = async (
     return data;
 
 };
+
+/**
+ * Toggles the active status of a restaurant (enable/disable)
+ * @param restaurantId - ID of the restaurant to toggle
+ * @returns Promise<void>
+ */
+export const toggleRestaurantActiveStatus = async (
+    restaurantId: number,
+    isActive: boolean
+): Promise<void> => {
+
+    await api.patch(
+        `restaurant/${restaurantId}/toggleActive`,
+        null,
+        {
+            params: {
+                isActive
+            }
+        }
+    );
+    
+}
 
 /**
  * Loads next 5 newest restaurants with pagination

@@ -1,6 +1,6 @@
-import type { LoginRestaurantAccountRequest, RegisterDashboardAccountRequest, RegisterHostAccountRequest, RestaurantAccountResponse, UpdateDashboardAccountRequestByAdmin, UpdateDashboardAccountRequestByHost, UpdateHostAccountRequest } from "@/Types/user.types"
-import { api } from "@/API/axios"
+import type { LoginRestaurantAccountRequest, LoginRestaurantAccountResponse, RegisterDashboardAccountRequest, RegisterHostAccountRequest, RestaurantAccountResponse, UpdateDashboardAccountRequestByAdmin, UpdateDashboardAccountRequestByHost, UpdateHostAccountRequest } from "@/Types/user.types"
 import type { RefreshToken } from "@/Types/security.types";
+import { api, apiAuth } from "@/API/axios"
 
 /**
  * Registers a new host account
@@ -99,7 +99,7 @@ export const getDashboardAccounts = async (
     const { data } = await api.get(
         `restaurant/${restaurantId}/accounts`
     );
-    const dashboardAccounts = (data || []).filter((account :RestaurantAccountResponse) => account.roles.includes('ROLE_BAR') || account.roles.includes('ROLE_KITCHEN'));
+    const dashboardAccounts = (data || []).filter((account: RestaurantAccountResponse) => account.roles.includes('ROLE_BAR') || account.roles.includes('ROLE_KITCHEN'));
     return dashboardAccounts;
 
 };
@@ -142,6 +142,10 @@ export const updateDashboardAccountByHost = async (
 
 };
 
+/**
+ * Loads the current restaurant account data
+ * @returns Promise<RestaurantAccountResponse> - Current restaurant account data or null
+ */
 export const loadRestaurantAccount = async (
 ): Promise<RestaurantAccountResponse> => {
 
@@ -152,25 +156,35 @@ export const loadRestaurantAccount = async (
 
 };
 
+/**
+ * Logs in a restaurant account (HOST, BAR, or KITCHEN)
+ * @param userData - Login credentials (loginId and password)
+ * @returns Promise<LoginRestaurantAccountResponse> - Login response with user data and tokens
+ */
 export const loginRestaurantAccount = async (
     userData: LoginRestaurantAccountRequest
-): Promise<RestaurantAccountResponse> => {
+): Promise<LoginRestaurantAccountResponse> => {
 
-    const { data } = await api.post(
-        `auth/systemLogin`,
+    const { data } = await apiAuth.post(
+        `systemLogin`,
         userData
     );
     return data;
 
 }
 
+/**
+ * Logs out a restaurant account
+ * @param refreshToken - The refresh token to invalidate
+ * @returns Promise<void>
+ */
 export const logoutRestaurantAccount = async (
     refreshToken: RefreshToken
 ): Promise<void> => {
 
-    await api.post(
-        `auth/logout`,
-        refreshToken
+    await apiAuth.post(
+        `logout`,
+        { refreshToken }
     );
 
 }
