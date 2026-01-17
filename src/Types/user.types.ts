@@ -65,3 +65,8 @@ export interface UpdateWaiterAccountRequest {
     firstName: string,
     lastName: string,
 };
+
+export interface LoginRestaurantAccountRequest {
+    loginId: string,
+    password: string
+};

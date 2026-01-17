@@ -1,22 +1,13 @@
 <script setup lang="ts">
+    import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { ref } from 'vue';
 
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import InfoPart from '@/components/General/InfoPart.vue';
     import Window from '@/components/General/Window.vue';
 
-    interface Restaurant {
-        id: number,
-        name: string,
-        street: string,
-        addressAddition: string,
-        zipcode: string,
-        city: string,
-        isActive: boolean,
-    };
-
     const props = defineProps<{
-        restaurant: Restaurant,
+        restaurant: RestaurantResponse,
         showEdit?: boolean,
     }>();
 

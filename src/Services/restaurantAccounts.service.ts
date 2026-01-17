@@ -1,5 +1,6 @@
-import type { RegisterDashboardAccountRequest, RegisterHostAccountRequest, RestaurantAccountResponse, UpdateDashboardAccountRequestByAdmin, UpdateDashboardAccountRequestByHost, UpdateHostAccountRequest } from "@/Types/user.types"
+import type { LoginRestaurantAccountRequest, RegisterDashboardAccountRequest, RegisterHostAccountRequest, RestaurantAccountResponse, UpdateDashboardAccountRequestByAdmin, UpdateDashboardAccountRequestByHost, UpdateHostAccountRequest } from "@/Types/user.types"
 import { api } from "@/API/axios"
+import type { RefreshToken } from "@/Types/security.types";
 
 /**
  * Registers a new host account
@@ -140,3 +141,36 @@ export const updateDashboardAccountByHost = async (
     return data;
 
 };
+
+export const loadRestaurantAccount = async (
+): Promise<RestaurantAccountResponse> => {
+
+    const { data } = await api.get(
+        `host/me`
+    );
+    return data || null;
+
+};
+
+export const loginRestaurantAccount = async (
+    userData: LoginRestaurantAccountRequest
+): Promise<RestaurantAccountResponse> => {
+
+    const { data } = await api.post(
+        `auth/systemLogin`,
+        userData
+    );
+    return data;
+
+}
+
+export const logoutRestaurantAccount = async (
+    refreshToken: RefreshToken
+): Promise<void> => {
+
+    await api.post(
+        `auth/logout`,
+        refreshToken
+    );
+
+}

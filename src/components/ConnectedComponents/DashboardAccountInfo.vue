@@ -1,21 +1,13 @@
 <script setup lang="ts">
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import InfoPart from '@/components/General/InfoPart.vue';
     
     import kitchenIcon from '@/assets/svgs/kitchenIcon.svg';
     import welcomeIcon from '@/assets/svgs/welcomeIcon.svg';
     import barIcon from '@/assets/svgs/barIcon.svg';
 
-    interface Account {
-        id: string;
-        loginId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        roles: string[];
-    }
-
     const props = defineProps<{
-        account: Account;
+        account: RestaurantAccountResponse;
         showEdit?: boolean,
         showDelete?: boolean,
     }>();

@@ -1,20 +1,12 @@
 <script setup lang="ts">
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
+    
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import InfoPart from '@/components/General/InfoPart.vue';
     import Window from '@/components/General/Window.vue';
 
-    interface RestaurantAccount {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
     const props = defineProps<{
-        host: RestaurantAccount,
+        host: RestaurantAccountResponse,
         showEdit?: boolean,
         showDelete?: boolean,
     }>();

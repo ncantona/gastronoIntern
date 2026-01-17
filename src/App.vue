@@ -7,13 +7,16 @@
 
 <template>
   <div class="flex justify-center">
+
     <RouterView/>
+
     <PopupWindow
       v-if="popupStore.success"
       @close="popupStore.clearSuccess"
       class="self-center z-100">
       {{ popupStore.success }}
     </PopupWindow>
+
     <PopupWindow
       v-if="popupStore.error"
       @close="popupStore.clearError"
@@ -21,5 +24,6 @@
       class="self-center z-100">
       {{ popupStore.error }}
     </PopupWindow>
+
   </div>
 </template>

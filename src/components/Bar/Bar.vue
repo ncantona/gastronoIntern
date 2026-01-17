@@ -16,12 +16,12 @@ import router from '@/router';
         name: string;
         description: string;
         type: ItemType;
-        omits: string[];
-        addOns: string[];
-        customMsg: string;
-        isDone: boolean;
-        isPickedUp: boolean;
-        prepTime: string;
+        //omits: string[];
+        //addOns: string[];
+        //customMsg: string;
+        //isDone: boolean;
+        //isPickedUp: boolean;
+        //prepTime: string;
         amount?: number;
     }
 
