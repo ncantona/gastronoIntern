@@ -1,35 +1,21 @@
 <script setup lang="ts">
+    import { changeLoginId, changePassword } from '@/Services/security.service';
+    import type { ChangePasswordRequest } from '@/Types/security.types';
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { usePopupStore } from '@/stores/General/usePopupStore';
-    import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import { computed, ref } from 'vue';
+    import { usePasswordStrength } from '@/GeneralTypescript/PasswordValidation';
 
     import CustomInputField from '@/components/General/CustomInputField.vue';
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
     
     import GearSVG from '@/assets/svgs/settingsBlack.svg';
+
     type PasswordErrors = {
         newPassword: string,
-        newPasswordRetry: string,
-    };
-
-    interface RestaurantAccount {
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
+        oldPassword: string,
+        newPasswordRetry: string
     };
     
     const props = defineProps<{
@@ -38,115 +24,120 @@
     }>();
 
     const emit = defineEmits<{
-        (e: 'success', hostAccount: RestaurantAccountResponse): void,
+        (e: 'success', dashboardAccount: RestaurantAccountResponse): void,
         (e: 'cancel'): void,
     }>();
 
-    const authStore = useAuthStore();
     const popupStore = usePopupStore();
 
     const dashboardAccount = ref<RestaurantAccountResponse>({ ...props.dashboardAccount });
 
     const passwordErrors = ref<PasswordErrors>({
         newPassword: '',
-        newPasswordRetry: '',
+        oldPassword: '',
+        newPasswordRetry: ''
     });
 
     const idError = ref<string>('');
 
     const hasChanges = computed(() => JSON.stringify(dashboardAccount.value) !== JSON.stringify(props.dashboardAccount));
-    const validate = () => {
-        if (activeSection.value === 'id') {
-            idError.value = dashboardAccount.value.loginId ? '' : 'Ein Login-ID muss angegeben werden.';
+    const validateLoginId = () => {
+        idError.value = dashboardAccount.value.loginId ? '' : 'Eine Login-ID muss angegeben werden.';
 
-            return (idError.value);
+        return !idError.value;
+    };
+    const validatePassword = () => {
+
+        passwordErrors.value.newPassword = '';
+        passwordErrors.value.oldPassword = '';
+        passwordErrors.value.newPasswordRetry = '';
+
+        if (!passwords.value.newPassword) {
+            passwordErrors.value.newPassword = 'Ein neues Passwort muss angegeben werden.';
+        } else {
+            const unmetRequirements: string[] = [];
+            if (!hasMinLength.value)
+                unmetRequirements.push('mindestens 8 Zeichen');
+            if (!hasLowercase.value)
+                unmetRequirements.push('mindestens 1 Kleinbuchstaben');
+            if (!hasUppercase.value)
+                unmetRequirements.push('mindestens 1 Großbuchstaben');
+            if (!hasSpecialChar.value)
+                unmetRequirements.push('mindestens 1 Sonderzeichen');
+            if (unmetRequirements.length)
+                passwordErrors.value.newPassword = `Passwort muss ${unmetRequirements.join(', ')} enthalten.`;
         }
-        else {
-            passwordErrors.value.newPassword = '';
-            passwordErrors.value.newPasswordRetry = '';
 
-            if (!newPassword.value) {
-                passwordErrors.value.newPassword = 'Ein neues Passwort muss angegeben werden.';
-            } else {
-                const unmetRequirements: string[] = [];
-                if (!hasMinLength.value) unmetRequirements.push('mindestens 8 Zeichen');
-                if (!hasLowercase.value) unmetRequirements.push('mindestens 1 Kleinbuchstaben');
-                if (!hasUppercase.value) unmetRequirements.push('mindestens 1 Großbuchstaben');
-                if (!hasSpecialChar.value) unmetRequirements.push('mindestens 1 Sonderzeichen');
-
-                if (unmetRequirements.length) {
-                    passwordErrors.value.newPassword = `Passwort muss ${unmetRequirements.join(', ')} enthalten.`;
-                }
-            }
-
-            if (!passwordErrors.value.newPassword) {
-                if (!newPasswordRetry.value)
-                    passwordErrors.value.newPasswordRetry = 'Das Passwort muss wiederholt werden.';
-                else if (!passwordsMatch.value)
-                    passwordErrors.value.newPasswordRetry = 'Passwörter stimmen nicht überein.';
-            }
-
-            return !Object.values(passwordErrors.value).some(Boolean);
+        if (!passwordErrors.value.newPassword) {
+            if (!newPasswordRetry.value)
+                passwordErrors.value.newPasswordRetry = 'Das Passwort muss wiederholt werden.';
+            else if (!passwordsMatch.value)
+                passwordErrors.value.newPasswordRetry = 'Passwörter stimmen nicht überein.';
         }
+
+        return !Object.values(passwordErrors.value).some(Boolean);
+
     }
 
-    const updateDashboardAccount = async () => {
-        if (!validate())
-            return;
-        if (!hasChanges.value) {
-            popupStore.setSuccess('Keine Änderungen vorgenommen.');
-            emit('success', { ...props.dashboardAccount });
-            return;
+    const handleUpdateDashboardAccount = async () => {
+
+        if (activeSection.value === 'loginId') {
+            if (!hasChanges.value) {
+                popupStore.setSuccess('Keine Änderungen vorgenommen.');
+                emit('success', { ...props.dashboardAccount });
+                return;
+            }
+            if (!validateLoginId())
+                return;
+            
+            try {
+                /* const updatedDashboardAccount =  */await changeLoginId(dashboardAccount.value.loginId, props.dashboardAccount.id, props.restaurantId);
+                popupStore.setSuccess('Login-ID erfolgreich aktualisiert.')
+                emit('success', { ...dashboardAccount.value });
+            } catch (error) {
+                popupStore.setError('Aktualisieren von Login-ID fehlgeschlagen.')
+            }
         }
-    
-        try {
-           /*  const newIntern = <RestaurantAccountResponse> await authStore.registerRestaurantHost({ ...hostAccount.value, password: 'Password123!'}); */
-            popupStore.setSuccess('Dashboard-Account wurde erfolgreich aktualisiert.');
-            emit('success', props.dashboardAccount ); //UMÄNDERN WENN API DA IST
-        } catch (error) {
-            popupStore.setError('Aktualisieren von Dashboard-Account fehlgeschlagen.');
-        }
+
+        if (activeSection.value === 'password') {
+            if (!validatePassword())
+                return;
+
+            try {
+                await changePassword(passwords.value, dashboardAccount.value.id, props.restaurantId);
+                popupStore.setSuccess('Passwort erfolgreich geändert.');
+                emit('success', { ...dashboardAccount.value });
+            } catch (error) {
+                popupStore.setError('Ändern von Passwort fehlgeschlagen.')
+            }
+        };
     };
 
-    const activeSection = ref<string>('info');
+    const activeSection = ref<string>('loginId');
 
-    const newPassword = ref<string>('');
+    const passwords = ref<ChangePasswordRequest>({
+        oldPassword: '',
+        newPassword: '',
+    });
+
     const newPasswordRetry = ref<string>('');
 
-    const hasMinLength = computed(() => newPassword.value.length >= 8)
-    const hasLowercase = computed(() => /[a-z]/.test(newPassword.value))
-    const hasUppercase = computed(() => /[A-Z]/.test(newPassword.value))
-    const hasSpecialChar = computed(() => /[^A-Za-z0-9]/.test(newPassword.value))
+    const newPasswordRef = computed(() => passwords.value.newPassword);
+    const {
+        hasMinLength,
+        hasLowercase,
+        hasUppercase,
+        hasSpecialChar,
+        passwordStrengthPercent,
+        passwordStrengthLabel,
+        passwordStrengthColor
+    } = usePasswordStrength(newPasswordRef);
+
     const passwordsMatch = computed(
-    () => newPassword.value && newPassword.value === newPasswordRetry.value
-    )
+        () => passwords.value.newPassword && passwords.value.newPassword === newPasswordRetry.value
+    );
+    const dotClass = (valid :boolean) => valid ? 'text-green-600' : 'text-slate-400';
 
-    const passwordScore = computed(() => {
-        let score = 0;
-        if (hasMinLength.value) score++;
-        if (hasLowercase.value) score++;
-        if (hasUppercase.value) score++;
-        if (hasSpecialChar.value) score++;
-        return score;
-    });
-
-    const passwordStrengthPercent = computed(() => `${(passwordScore.value / 4) * 100}%`);
-    const passwordStrengthLabel = computed(() => {
-        if (passwordScore.value <= 1) return 'Sehr schwach';
-        if (passwordScore.value === 2) return 'Schwach';
-        if (passwordScore.value === 3) return 'Okay';
-        if (passwordScore.value === 4) return 'Stark';
-        return 'Sehr stark';
-    });
-    const passwordStrengthColor = computed(() => {
-        if (passwordScore.value <= 1) return '#ef4444';
-        if (passwordScore.value === 2) return '#f97316';
-        if (passwordScore.value === 3) return '#eab308';
-        if (passwordScore.value === 4) return '#22c55e';
-        return '#16a34a';
-    });
-
-    const dotClass = (valid :boolean) => valid ? 'text-green-600' : 'text-slate-400'
 </script>
 
 <template>
@@ -161,14 +152,14 @@
         </WindowHeader>
 
         <div class="flex flex-col w-full">
-            <form @submit.prevent="updateDashboardAccount()" class="flex flex-col gap-3">
+            <form @submit.prevent="handleUpdateDashboardAccount()" class="flex flex-col gap-3">
 
                 <div class="flex justify-center-safe gap-10">
                     <button
                         type="button"
                         class="text-xl font-medium"
-                        :class="activeSection === 'info' ? 'text-ownblue-500' : 'text-slate-900 hover:text-blue-400'"
-                        @click="activeSection = 'info'">
+                        :class="activeSection === 'loginId' ? 'text-ownblue-500' : 'text-slate-900 hover:text-blue-400'"
+                        @click="activeSection = 'loginId'">
                         ID bearbeiten
                     </button>
                     <button
@@ -181,7 +172,7 @@
                 </div>
 
                 <CustomInputField
-                    v-if="activeSection === 'info'"
+                    v-if="activeSection === 'loginId'"
                     v-model="dashboardAccount.loginId"
                     type="text"
                     label="Login-ID"
@@ -191,7 +182,16 @@
 
                 <CustomInputField
                     v-if="activeSection === 'password'"
-                    v-model="newPassword"
+                    v-model="passwords.oldPassword"
+                    type="password"
+                    label="Derzeitiges Passwort"
+                    name="oldPassword"
+                    placeholder="Derzeitiges Passwort eingeben"
+                    :error="passwordErrors.oldPassword"/>
+
+                <CustomInputField
+                    v-if="activeSection === 'password'"
+                    v-model="passwords.newPassword"
                     type="password"
                     label="Neues Passwort"
                     name="newPassword"
@@ -217,34 +217,6 @@
                             class="h-2 rounded-full transition-all duration-200"
                             :style="{ width: passwordStrengthPercent, backgroundColor: passwordStrengthColor }"/>
                     </div>
-                </div>
-
-                <div v-if="activeSection === 'password'" class="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                    <h3 class="text-sm font-medium text-slate-900 mb-2">
-                    Passwort-Anforderungen:
-                    </h3>
-
-                    <ul class="text-sm text-slate-600 space-y-1">
-                        <li class="flex items-center gap-2">
-                            <span :class="dotClass(hasMinLength)">●</span>
-                            Mindestens 8 Zeichen
-                        </li>
-
-                        <li class="flex items-center gap-2">
-                            <span :class="dotClass(hasLowercase)">●</span>
-                            Mindestens 1 Kleinbuchstabe
-                        </li>
-
-                        <li class="flex items-center gap-2">
-                            <span :class="dotClass(hasUppercase)">●</span>
-                            Mindestens 1 Großbuchstabe
-                        </li>
-
-                        <li class="flex items-center gap-2">
-                            <span :class="dotClass(hasSpecialChar)">●</span>
-                            Mindestens 1 Sonderzeichen
-                        </li>
-                    </ul>
                 </div>
 
                 <div class="flex gap-5 w-full">

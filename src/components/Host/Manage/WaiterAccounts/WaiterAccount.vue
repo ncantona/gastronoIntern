@@ -1,24 +1,14 @@
 <script setup lang="ts">
-    import kitchenIcon from '@/assets/svgs/kitchenIcon.svg';
-    import barIcon from '@/assets/svgs/barIcon.svg';
-    import welcomeIcon from '@/assets/svgs/welcomeIcon.svg';
+import type { WaiterResponse } from '@/Types/waiter.types';
 
-    interface Account {
-        id: string;
-        loginId: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        roles: string[];
-    }
 
     const props = defineProps<{
-        account: Account;
+        waiterAccount: WaiterResponse;
     }>();
 
-    const emit = defineEmits(['edit']);
+    const emit = defineEmits(['edit', 'delete']);
 
-    const fullName = props.account.firstName + ' ' + props.account.lastName;
+    const fullName = props.waiterAccount.firstName + ' ' + props.waiterAccount.lastName;
 
 </script>
 
@@ -36,14 +26,19 @@
                 
                 <div>
                     <label class="text-sm text-slate-500 font-medium">Login-ID</label>
-                    <p class="text-lg text-slate-900 mt-1">{{ account.loginId }}</p>
+                    <p class="text-lg text-slate-900 mt-1">{{ waiterAccount.loginId }}</p>
                 </div>
 
             </div>
 
         </div>
-        <button @click="emit('edit')" class="h-full">
-            <img src="@/assets/svgs/editBlue.svg" alt="Icon Bearbeitung" class="max-w-6">
-        </button>
+        <div class="h-full flex gap-3">
+            <button @click="emit('edit')" class="h-full">
+                <img src="@/assets/svgs/editBlue.svg" alt="Icon Bearbeitung" class="max-w-7">
+            </button>
+            <button @click="emit('delete')" class="h-full">
+                <img src="@/assets/svgs/trashRed.svg" alt="Icon Bearbeitung" class="max-w-7">
+            </button>
+        </div>
     </div>
 </template>

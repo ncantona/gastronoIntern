@@ -1,18 +1,9 @@
 <script setup lang="ts">
+    import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { ref } from 'vue';
 
-    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import EditDashboardAccount from '@/components/Host/Manage/DashboardAccounts/EditDashboardAccount.vue';
-
-    interface RestaurantAccountResponse {
-        id: string,
-        loginId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        roles: string[],
-        restaurantId: number,
-    };
+    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
 
     const props = defineProps<{
         accounts: RestaurantAccountResponse[];
@@ -22,7 +13,7 @@
 
     const updateLocalAccount = (account: RestaurantAccountResponse, index :number) => {
         props.accounts[index] = account;
-    }
+    };
 
 </script>
 
@@ -40,7 +31,7 @@
                 :dashboardAccount="account"
                 :restaurant-id="account.restaurantId"
                 @cancel="showEdit = ''"
-                @success="updateLocalAccount($event, index); showEdit = ''"/>
+                @success="updateLocalAccount($event, index); showEdit=''"/>
         </div>
     </div>
 </template>

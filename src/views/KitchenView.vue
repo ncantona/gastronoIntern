@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import Kitchen from '@/components/Kitchen/Kitchen.vue';
-    import KitchenNavbar from '@/components/Kitchen/KitchenNavbar.vue';
 
 </script>
 

@@ -171,7 +171,7 @@ export const loginRestaurantAccount = async (
     );
     return data;
 
-}
+};
 
 /**
  * Logs out a restaurant account
@@ -187,4 +187,4 @@ export const logoutRestaurantAccount = async (
         { refreshToken }
     );
 
-}
+};

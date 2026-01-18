@@ -8,8 +8,8 @@
     import { useAuthStore } from '@/stores/Auth/useAuthStore';
     import router from '@/router';
     import { useRoute } from 'vue-router';
-import RestaurantMenuSVG from '@/components/Svgs/RestaurantMenuSVG.vue';
-import BeerSVG from '@/components/Svgs/BeerSVG.vue';
+    import RestaurantMenuSVG from '@/components/Svgs/RestaurantMenuSVG.vue';
+    import BeerSVG from '@/components/Svgs/BeerSVG.vue';
 
     const authStore = useAuthStore();
 
@@ -36,7 +36,7 @@ import BeerSVG from '@/components/Svgs/BeerSVG.vue';
         <div class="flex justify-between max-w-330 w-full">
             <div class="gap-5 flex">
                 <RouterLink :to="{ name: 'dashboardhost' }" class="z-50" @click="activeLink = 'dashboardhost'">
-                    <img src="@/assets/images/Logooo.svg" alt="Gastrono Logo" class="max-w-60 h-15">
+                    <img src="@/assets/images/Logo.svg" alt="Gastrono Logo" class="max-w-60 h-15">
                 </RouterLink>
                 <RouterLink :to="{ name: 'dashboardhost'}" @click="activeLink = 'dashboardhost'" :class="activeLink === 'dashboardhost' ? '' : 'text-white/70 hover:text-white/90'" class="z-50 lg:flex hidden flex-col items-center gap-1">
                     <DashboardSVG class="w-8 h-8" :class="activeLink === 'dashboardhost' ? 'text-blue-500' : ''"/>

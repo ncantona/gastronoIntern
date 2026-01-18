@@ -19,5 +19,4 @@ export interface WaiterRequest {
 export interface UpdateWaiterRequest {
     firstName: string,
     lastName: string,
-    loginId: string
 };

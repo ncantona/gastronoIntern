@@ -2,8 +2,8 @@
     import type { RestaurantResponse } from '@/Types/restaurant.types';
     import { ref } from 'vue';
 
-    import EditRestaurant from '@/components/Admin/Restaurant/EditRestaurant.vue';
     import RestaurantInfo from '@/components/ConnectedComponents/RestaurantInfo.vue';
+    import EditRestaurant from '@/components/Admin/Restaurant/EditRestaurant.vue';
 
     const value = defineModel<RestaurantResponse | null>();
 

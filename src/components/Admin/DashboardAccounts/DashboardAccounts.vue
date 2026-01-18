@@ -2,8 +2,8 @@
     import type { RestaurantAccountResponse } from '@/Types/user.types';
     import { ref } from 'vue';
 
-    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import EditDashboardAccount from '@/components/Admin/DashboardAccounts/EditDashboardAccount.vue';
+    import DashboardAccountInfo from '@/components/ConnectedComponents/DashboardAccountInfo.vue';
     import DeleteWindow from '@/components/General/DeleteWindow.vue';
 
     const props = defineProps<{
