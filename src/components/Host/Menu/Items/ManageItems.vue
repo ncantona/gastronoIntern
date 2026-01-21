@@ -1,51 +1,33 @@
 <script setup lang="ts">
-    import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
-    import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
-    import { ref, computed, watch, nextTick } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     
-    import CreateItem from '@/components/Host/Menu/CreateItem.vue';
+    import CreateItem from '@/components/Host/Menu/Items/CreateItem.vue';
     import draggable from 'vuedraggable'
     import CustomButton from '@/components/General/CustomButton.vue';
-    import EditItemWindowv2 from '@/components/Host/Menu/EditItemWindowv2.vue';
-
-
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
-    interface CategoryResponse {
-        id: number,
-        name: string,
-        position: number,
-    }
-
-    interface Item {
-        id: number;
-        name: string;
-        description: string;
-        categoryId: number;
-        position: number;
-        code: string;
-        itemType: ItemType;
-        price: number;
-        isAvailable: boolean;
-    }
+import type { CategoryResponse } from '@/Types/category.types';
+import type { ItemResponse } from '@/Types/item.types';
+import EditItem from './EditItem.vue';
+import { deleteItem, getAllItems } from '@/Services/item.service';
 
     const props = defineProps<{
         currentCategory: CategoryResponse | null,
-    }>()
+        restaurantId: number
+    }>();
 
-    const restaurantStore = useRestaurantStore();
-    const restaurantItemsStore = useRestaurantItemsStore();
+    const value = defineModel<{beverage: number, meals: number}>();
+
+    const restaurantItems = ref<ItemResponse[]>([]);
 
     const displayedItems = computed(() =>
-    restaurantItemsStore.items
-        .filter(item => item.categoryId === props.currentCategory.id)
-        .sort((a, b) => a.position - b.position)
+        restaurantItems.value
+            .filter(item => item.categoryId === props.currentCategory?.id)
+            .sort((a, b) => a.position - b.position)
     )
     console.log(displayedItems.value)
     // Drag & Drop innerhalb der Kategorie
     function onDragUpdate({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
-        const itemsInCat = restaurantItemsStore.items
-            .filter(i => i.categoryId === props.currentCategory.id)
+        const itemsInCat = restaurantItems.value
+            .filter(i => i.categoryId === props.currentCategory?.id)
             .sort((a, b) => a.position - b.position)
 
         const moved = itemsInCat.splice(oldIndex, 1)[0]
@@ -55,44 +37,63 @@
         itemsInCat.forEach((item, idx) => (item.position = idx + 1))
 
         // Original-Liste updaten
-        restaurantItemsStore.items = [
-                ...restaurantItemsStore.items.filter(i => i.categoryId !== props.currentCategory.id),
+        restaurantItems.value = [
+                ...restaurantItems.value.filter(i => i.categoryId !== props.currentCategory?.id),
                 ...itemsInCat
             ]
     }
     
     const showAddItem = ref<boolean>(false);
     const showEditItem = ref<boolean>(false);
-    const itemToEdit = ref<Item>();
+    const itemToEdit = ref<ItemResponse>();
 
-    const deleteItem = async (restaurantId :number, itemId :number) => {
-        restaurantItemsStore.deleteItemById(restaurantId, itemId);
+    const handleDeleteItem = async (
+        restaurantId :number,
+        itemId :number
+    ): Promise<void> => {
+        try {
+            await deleteItem(itemId, restaurantId);
+            restaurantItems.value = restaurantItems.value.filter(item => item.id !== itemId);
+        } catch (error) {
+            
+        }
+    };
+
+    const updateLocalItem = (
+        updatedItem: ItemResponse
+    ): void => {
+        const index = restaurantItems.value.findIndex(item => item.id === updatedItem.id);
+        if (index !== -1) {
+            restaurantItems.value[index] = updatedItem;
+        };
     }
 
-    watch(
-        () => restaurantStore.restaurant,
-        async (restaurant) => {
-            if (!restaurant)
-                return;
-            await restaurantItemsStore.loadItems(restaurant.id);
-            await nextTick();
-        },
-        { immediate: true }
-    );
-
+    onMounted(async (
+    ): Promise<void> => {
+        restaurantItems.value = await getAllItems(props.restaurantId);
+        value.value = {
+            beverage: restaurantItems.value.filter(item => item.itemType === 'BEVERAGE').length,
+            meals: restaurantItems.value.filter(item => item.itemType === 'MEAL').length
+        };
+    });
 
 </script>
 
 <template>
     <div class="w-full">
-        <div class="flex w-full justify-end mb-5">
-            <CustomButton v-show="!showAddItem" variant="editBlue" @click="showAddItem = true" class="gap-2 w-full">
+        <div v-if="currentCategory" class="flex w-full justify-end mb-5">
+            <CustomButton v-show="!showAddItem" variant="editBlue" @click="showAddItem = true; showEditItem = false" class="gap-2 w-full">
                 <img src="@/assets/svgs/plusWhite.svg" alt="" class="max-w-5">
                 Neues Gericht / Getränk hinzufügen
             </CustomButton>
         </div>
-        <CreateItem v-if="showAddItem" :categoryId="currentCategory.id" :categoryName="currentCategory.name" :categoryPosition="currentCategory.position" :itemPosition="displayedItems.length" @cancel="showAddItem = false" @success="showAddItem = false"/>
-        <div class="shadow-lg p-4 rounded-xl overflow-x-auto h-150">
+        <CreateItem
+            v-if="showAddItem && currentCategory"
+            :categoryId="currentCategory.id"
+            :itemPosition="displayedItems.length"
+            @cancel="showAddItem = false"
+            @success="showAddItem = false"/>
+        <div v-show="(!showEditItem && !showAddItem)" class="shadow-lg p-4 rounded-xl overflow-x-auto h-150">
             <draggable
                 :list="displayedItems"
                 item-key="id"
@@ -126,10 +127,10 @@
                                 <div class="flex relative justify-between h-10">
                                     <span v-if="element.description" class="max-w-175 text-gray-500 text-sm line-clamp-2">{{ element.description }}</span>
                                     <div class="absolute right-0 gap-2 flex self-end justify-end">
-                                        <button @click="itemToEdit = element; showEditItem = true">
+                                        <button @click="itemToEdit = element; showEditItem = true; showAddItem = false">
                                             <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-6">
                                         </button>
-                                        <button @click="deleteItem(element.restaurantId, element.id)">
+                                        <button @click="handleDeleteItem(element.restaurantId, element.id)">
                                             <img src="@/assets/svgs/trashRed.svg" alt="" class="max-w-6">
                                         </button>
                                     </div>
@@ -139,8 +140,8 @@
                     </div>
                 </template>
             </draggable>
-            <EditItemWindowv2 v-if="showEditItem && itemToEdit" :item="itemToEdit" @cancel="showEditItem = false" @success="showEditItem = false"/>
-            <div v-show="displayedItems.length === 0 && !showAddItem" class="text-gray-500 flex text-center flex-col justify-center items-center h-full">
+
+            <div v-show="currentCategory && displayedItems.length === 0 && !showAddItem" class="text-gray-500 flex text-center flex-col justify-center items-center h-full">
                 <span class="text-lg lg:block hidden">
                     Noch keine Gerichte / Getränke vorhanden
                 </span>
@@ -148,6 +149,20 @@
                     Füge dein erstes Gericht oder dein erstes Getränk hinzu!
                 </span>
             </div>
+
+            <div v-show="!currentCategory" class="text-gray-500 flex text-center flex-col justify-center items-center h-full">
+                <span class="text-lg lg:block hidden">
+                    Noch keine Kategorien vorhanden
+                </span>
+                <span>
+                    Füge deine erste Kategorie hinzu um Gerichte / Getränke anzulegen!
+                </span>
+            </div>
         </div>
+        <EditItem
+                v-if="showEditItem && itemToEdit"
+                :item="itemToEdit"
+                @cancel="showEditItem = false"
+                @success="showEditItem = false; updateLocalItem($event)"/>
     </div>
 </template>

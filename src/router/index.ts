@@ -8,16 +8,23 @@ const router = createRouter({
 		path: '/',
 		redirect: '/home',
 	},
+			{
+			path: '/bestellung/tisch/:tableId',
+			name: 'order',
+			props: true,
+			meta: { sectionName: 'restaurant'},
+			component: () => import('@/views/OrderView.vue'),
+		},
 	{
 		path: '/',
 		component: () => import('@/layouts/LoggedOutLayout.vue'),
 		meta: { requiredAuth: false },
 		children: [
-		{
-			path: '/home',
-			name: 'home',
-			component: HomeView,
-		},
+			{
+				path: '/home',
+				name: 'home',
+				component: HomeView,
+			},
 		]
 	},
 	{

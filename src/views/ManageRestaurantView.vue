@@ -30,6 +30,6 @@
 
         <ManageWaiterAccounts
         :restaurantId="restaurantStore.restaurant?.id || -1"/>
-
+        <div class="h-150"></div>
     </div>
 </template>

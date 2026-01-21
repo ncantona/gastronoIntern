@@ -1,13 +1,11 @@
 <script setup lang="ts">
-    import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
-    import { computed } from 'vue';
-    
     import WindowHeader from '@/components/General/WindowHeader.vue';
 
-    const restaurantItemsStore = useRestaurantItemsStore();
+    const props = defineProps<{
+        amountBeverage: number,
+        amountMeals: number
+    }>();
 
-    const totalMealItems = computed(() => restaurantItemsStore.items.filter(item => item.itemType === 'MEAL').length);
-    const totalBeverageItems = computed(() => restaurantItemsStore.items.filter(item => item.itemType === 'BEVERAGE').length);
 </script>
 
 <template>
@@ -16,9 +14,9 @@
         <WindowHeader>
             Meine Speisekarte
             <div class="flex text-gray-500 text-base font-normal mt-2">
-                <p>{{ totalMealItems }} {{ totalMealItems !== 1 ? 'Gerichte' : 'Gericht' }}</p>
+                <p>{{ amountMeals }} {{ amountMeals !== 1 ? 'Gerichte' : 'Gericht' }}</p>
                 <span class="whitespace-break-spaces"> / </span>
-                <p>{{ totalBeverageItems }} {{ totalBeverageItems !== 1 ? 'Getränke' : 'Getränk' }}</p>
+                <p>{{ amountBeverage }} {{ amountBeverage !== 1 ? 'Getränke' : 'Getränk' }}</p>
             </div>
         </WindowHeader>
 

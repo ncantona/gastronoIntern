@@ -1,12 +1,12 @@
 <script setup lang="ts">
-    import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
+    import { usePopupStore } from '@/stores/General/usePopupStore';
     import { ref } from 'vue';
 
     import CustomInputField from '@/components/General/CustomInputField.vue';
     import CustomButton from '@/components/General/CustomButton.vue';
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg';
-import { usePopupStore } from '@/stores/General/usePopupStore';
+import { createCategory } from '@/Services/category.service';
 
     interface CategoryRequest {
         name: string,
@@ -29,19 +29,18 @@ import { usePopupStore } from '@/stores/General/usePopupStore';
         (e: 'cancel'): void,
     }>();
 
-    const restaurantItemsStore = useRestaurantItemsStore();
     const popupStore = usePopupStore();
 
     const categoryName = ref<string>('');
     const categoryError = ref<string>('');
 
-    const createCategory = async () => {
+    const handleCreateCategory = async () => {
         const categoryRequest = <CategoryRequest> {
             name: categoryName.value,
             position: props.lastCategoryPos + 1,
         }
         try {
-            const newCategory = <CategoryResponse> await restaurantItemsStore.createCategory(props.restaurantId, categoryRequest);
+            const newCategory = await createCategory(categoryRequest, props.restaurantId);
             emit('success', newCategory);
             popupStore.setSuccess('Kategorie erfolgreich angelegt.')
         } catch {
@@ -59,30 +58,32 @@ import { usePopupStore } from '@/stores/General/usePopupStore';
             Kategorie anlegen
         </WindowHeader>
 
-        <CustomInputField
-                    v-model="categoryName"
-                    type="text"
-                    label="Bezeichnung"
-                    name="categoryName"
-                    placeholder="z.B. Vorspeisen"
-                    :error="categoryError"/>
+        <form @submit.prevent="handleCreateCategory()">
+            <CustomInputField
+                        v-model="categoryName"
+                        type="text"
+                        label="Bezeichnung"
+                        name="categoryName"
+                        placeholder="z.B. Vorspeisen"
+                        :error="categoryError"/>
 
-        <div class="flex gap-5">
+            <div class="flex gap-5">
 
-            <CustomButton
-                @click="createCategory()"
-                variant="editBlue"
-                class="mt-4 w-full">
-                Speichern
-            </CustomButton>
+                <CustomButton
+                    variant="editBlue"
+                    class="mt-4 w-full">
+                    Speichern
+                </CustomButton>
 
-            <CustomButton
-                @click="emit('cancel')"
-                variant="cancel"
-                class="mt-4 w-full">
-                Abbrechen
-            </CustomButton>
+                <CustomButton
+                    type="button"
+                    @click="emit('cancel')"
+                    variant="cancel"
+                    class="mt-4 w-full">
+                    Abbrechen
+                </CustomButton>
 
-        </div>
+            </div>
+        </form>
     </div>
 </template>

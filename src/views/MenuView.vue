@@ -3,19 +3,16 @@
     import { ref } from 'vue'
     
     import MenuWindowHeader from '@/components/Host/Menu/MenuWindowHeader.vue';
-    import CategorySection from '@/components/Host/Menu/CategorySection.vue';
-    import ManageItems from '@/components/Host/Menu/ManageItems.vue';
+    import CategorySection from '@/components/Host/Menu/Category/CategorySection.vue';
+    import ManageItems from '@/components/Host/Menu/Items/ManageItems.vue';
     import ViewHeader from '@/components/General/ViewHeader.vue';
     import Window from '@/components/General/Window.vue';
-
-    interface CategoryResponse {
-        id: number,
-        name: string,
-        position: number,
-    }
+import type { CategoryResponse } from '@/Types/category.types';
 
     const restaurantStore = useRestaurantStore();
     const restaurantId :number = restaurantStore.restaurant?.id ?? -1;
+
+    const amounts = ref<{beverage: number, meals: number}>({beverage: 0, meals: 0});
 
     const currentCategory = ref<CategoryResponse | null>(null)
 
@@ -35,11 +32,19 @@
 
         <Window class="flex flex-col p-12 gap-5 min-h-175">
             
-            <MenuWindowHeader/>
+            <MenuWindowHeader
+                :amountBeverage="amounts.beverage"
+                :amountMeals="amounts.meals"/>
 
-            <CategorySection :restaurantId="restaurantId" @switch="currentCategory = $event" @set="currentCategory = $event"/>
+            <CategorySection
+                :restaurantId="restaurantId"
+                @switch="currentCategory = $event"
+                @set="currentCategory = $event"/>
 
-            <ManageItems :currentCategory="currentCategory"/>
+            <ManageItems
+                v-model="amounts"
+                :currentCategory="currentCategory"
+                :restaurantId="restaurantId"/>
 
         </Window>
     </div>

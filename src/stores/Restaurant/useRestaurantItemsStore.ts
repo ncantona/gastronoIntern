@@ -53,17 +53,6 @@ export const useRestaurantItemsStore = defineStore('itemsStore', {
             const { data } = await api.get(`/restaurant/${restaurantId}/items`);
             this.items = data;
         },
-        async updateItem(restaurantId :number, itemId :number, fields: Partial<Item>) {
-            const { data } = await api.put(`/restaurant/${restaurantId}/items/${itemId}`, fields);
-            const index = this.items.findIndex(item => item.id == itemId);
-            if (index !== -1) {
-                this.items[index] = data;
-            }
-        },
-        async deleteItemById(restaurantId: number, itemId :number) {
-            await api.delete(`/restaurant/${restaurantId}/items/${itemId}`);
-            this.items = this.items.filter(item => item.id !== itemId);
-        },
         async setItemAvailability(restaurantId: number, itemId :number, isAvailable: boolean) {
             const { data } = await api.put(
                 `/restaurant/${restaurantId}/items/${itemId}/availability`,
@@ -79,18 +68,6 @@ export const useRestaurantItemsStore = defineStore('itemsStore', {
             if (index !== -1) {
                 this.items[index] = data;
             }
-        },
-        async createItem(restaurantId :number, item: Partial<Item>) {
-            const { data } = await api.post(`/restaurant/${restaurantId}/items`, item);
-            this.items.push(data);
-        },
-        async loadCategories(restaurantId :number) :Promise<CategoryResponse[]> {
-            const { data } = await api.get(`restaurant/${restaurantId}/categories`);
-            return data;
-        },
-        async createCategory(restaurantId :number, category :CategoryRequest) :Promise<CategoryResponse> {
-            const { data } = await api.post(`restaurant/${restaurantId}/categories`, category);
-            return data;
         },
     },
 })

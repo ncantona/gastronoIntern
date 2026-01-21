@@ -1,41 +1,24 @@
 <script setup lang="ts">
-    import CustomButton from '@/components/General/CustomButton.vue';
-    import CustomInputField from '@/components/General/CustomInputField.vue';
-    import TypeDropDown from './TypeDropDown.vue';
-    import { ref } from 'vue';
-    import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
     import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
-import WindowHeader from '@/components/General/WindowHeader.vue';
+    import type { ItemRequest, ItemType } from '@/Types/item.types';
+    import { ref } from 'vue';
 
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
-    interface Item {
-        id: number;
-        name: string;
-        description: string;
-        categoryName: string;
-        categoryPosition: number;
-        position: number;
-        code: string;
-        itemType: ItemType;
-        price: number;
-        rating: number;
-        prepTime: string;
-        isAvailable: boolean;
-    };
+    import CustomInputField from '@/components/General/CustomInputField.vue';
+    import CustomButton from '@/components/General/CustomButton.vue';
+    import WindowHeader from '@/components/General/WindowHeader.vue';
+    import PlusInCircleSVG from '@/assets/svgs/plusBlack.svg'
+    import TypeDropDown from './TypeDropDown.vue';
+import { createItem } from '@/Services/item.service';
 
     const props = defineProps<{
         categoryId: number,
-        categoryName: string,
-        categoryPosition: number,
-        itemPosition: number,
+        itemPosition: number
     }>();
 
     const emit = defineEmits(['cancel', 'success']);
 
     const itemType = ref<ItemType>('MEAL');
 
-    const restaurantItemsStore = useRestaurantItemsStore();
     const restaurantStore = useRestaurantStore();
 
     const options = [
@@ -52,7 +35,7 @@ import WindowHeader from '@/components/General/WindowHeader.vue';
     const errorItemPrice = ref<string>('');
     const errorItemCode = ref<string>('');
 
-    const createItem = async () => {
+    const handleCreateItem = async () => {
 
         errorItemName.value = '';
         errorItemCode.value = '';
@@ -76,10 +59,10 @@ import WindowHeader from '@/components/General/WindowHeader.vue';
                 price: itemPrice.value,
                 isAvailable: false,
                 restaurantId: restaurantStore.restaurant.id,
-            } as Partial<Item>;
+            } as ItemRequest;
 
-            restaurantItemsStore.createItem(restaurantStore.restaurant.id, item);
-            emit('success');
+            const newItem = await createItem(item, restaurantStore.restaurant.id);
+            emit('success', newItem);
         } catch {
             
         }
@@ -88,8 +71,12 @@ import WindowHeader from '@/components/General/WindowHeader.vue';
 </script>
 
 <template>
-    <div @click.stop class="absolute bg-white justify-center inset-0 z-50 h-full lg:bg-transparent lg:relative lg:h-auto p-7 mb-5 flex flex-col lg:gap-4 gap-2 lg:border-2 rounded-xl border-[rgb(37,99,235)]">
-        <WindowHeader>Neues Gericht / Getränk hinzufügen</WindowHeader>
+    <div @click.stop class="min-h-150 bg-white justify-center h-full lg:bg-transparent lg:relative lg:h-auto p-7 flex flex-col lg:gap-4 gap-2 lg:border-2 rounded-xl border-ownblue-500">
+        <WindowHeader
+        :imgSrc="PlusInCircleSVG"
+        imgAlt="Ein Plus in einem Kreis">
+            Neues Gericht / Getränk hinzufügen
+        </WindowHeader>
         <div class="flex lg:flex-row flex-col lg:gap-5 gap-2 lg:justify-between">
 
             <CustomInputField
@@ -128,7 +115,13 @@ import WindowHeader from '@/components/General/WindowHeader.vue';
         <div class="flex flex-col gap-2">
 
             <label for="itemDescription">Beschreibung</label>
-            <textarea name="itemDescription" id="itemDescription" v-model="itemDescription" placeholder="Beschreibe das Gericht oder das Getränk ..." class="border border-main-500 h-30 rounded-lg p-3 hover:outline-1 hover:outline-main-500 focus-within:outline-2 focus-within:outline-main-500 focus-within:hover:outline-2"></textarea>
+            <textarea
+                name="itemDescription"
+                id="itemDescription"
+                v-model="itemDescription"
+                placeholder="Beschreibe das Gericht oder das Getränk ..."
+                class="border border-main-500 h-30 rounded-lg p-3 hover:outline-1 hover:outline-main-500 focus-within:outline-2 focus-within:outline-main-500 focus-within:hover:outline-2">
+            </textarea>
         
         </div>
         <div class="flex lg:flex-row flex-col lg:gap-5 w-full">
@@ -136,7 +129,7 @@ import WindowHeader from '@/components/General/WindowHeader.vue';
             <CustomButton
                 variant="editBlue"
                 class="mt-5 w-full"
-                @click="createItem()">
+                @click="handleCreateItem()">
                 Speichern
             </CustomButton>
 

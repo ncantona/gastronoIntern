@@ -136,7 +136,6 @@
     const passwordsMatch = computed(
         () => passwords.value.newPassword && passwords.value.newPassword === newPasswordRetry.value
     );
-    const dotClass = (valid :boolean) => valid ? 'text-green-600' : 'text-slate-400';
 
 </script>
 

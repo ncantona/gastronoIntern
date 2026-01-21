@@ -1,15 +1,13 @@
 <script setup lang="ts">
-    import { useRestaurantItemsStore } from '@/stores/Restaurant/useRestaurantItemsStore';
     import { onMounted, ref } from 'vue';
 
     import CustomButton from '@/components/General/CustomButton.vue';
     import CreateCategory from './CreateCategory.vue';
-
-    interface CategoryResponse {
-        id: number,
-        name: string,
-        position: number,
-    }
+    import EditCategory from '@/components/Host/Menu/Category/EditCategory.vue';
+    import { deleteCategory, getCategories } from '@/Services/category.service';
+    import DeleteWindow from '@/components/General/DeleteWindow.vue';
+    import { usePopupStore } from '@/stores/General/usePopupStore';
+    import type { CategoryResponse } from '@/Types/category.types';
 
     const value = defineModel<number>();
 
@@ -19,15 +17,16 @@
 
     const emit = defineEmits<{
         (e: 'switch', category: CategoryResponse): void,
-        (e: 'set', category: CategoryResponse): void,
+        (e: 'set', category: CategoryResponse | null): void,
     }>();
     
-    const restaurantItemStore = useRestaurantItemsStore();
+    const popupStore = usePopupStore();
 
     const categories = ref<CategoryResponse[]>([]);
     const currentCategory = ref<CategoryResponse | null>(null);
 
-    const showCreateCategory = ref<boolean>(false);
+    const activeButton = ref<string>('');
+    const showDelete = ref<string>('');
 
     const scrollContainer = ref<HTMLDivElement | null>(null);
     const scrollAmount :number = 500;
@@ -60,10 +59,48 @@
         showRightButton.value = scrollLeftPos < maxScroll;
     }
 
+    const updateLocalCategory = (
+        updatedCategory: CategoryResponse,
+        categoryId: number
+    ): void => {
+        const index = categories.value.findIndex(category => category.id === categoryId);
+        if (index !== -1) {
+            categories.value[index] = updatedCategory;
+            currentCategory.value = updatedCategory;
+        };
+    };
+
+    const handleDeleteCategory = async (
+        categoryId: number
+    ): Promise<void> => {
+        try {
+            await deleteCategory(categoryId, props.restaurantId);
+            popupStore.setSuccess('Kategorie wurde erfolgreich gelöscht.');
+            categories.value = categories.value.filter(category => category.id !== categoryId);
+            if (currentCategory.value && categories.value.length > 0 && currentCategory.value.id === categoryId)
+                currentCategory.value = categories.value[0];
+            else if(categories.value.length <= 0) {
+                emit('set', null)
+                activeButton.value = '';
+                currentCategory.value = null;
+            }
+        } catch (error) {
+            popupStore.setError('Löschung der Kategorie fehlgeschlagen.')
+        }
+    };
+
+    const handleCreateCategory = (newCategory: CategoryResponse): void => {
+        categories.value.push(newCategory);
+        currentCategory.value = newCategory;
+        value.value = newCategory.id;
+        activeButton.value = '';
+        emit('set', newCategory);
+    };
+
     onMounted(async () => {
         if (props.restaurantId === -1)
             return;
-        categories.value = await restaurantItemStore.loadCategories(props.restaurantId);
+        categories.value = await getCategories(props.restaurantId);
         currentCategory.value = categories.value[0] ?? null;
         value.value = currentCategory.value.id;
         emit('set', currentCategory.value);
@@ -74,24 +111,32 @@
 <template>
     <div class="mb-2.5 flex flex-col gap-5">
         <div class="flex flex-col gap-5">
+
             <div class="flex lg:flex-row flex-col gap-2 justify-between lg:items-center">
 
                 <div class="flex gap-3 items-start">
                     <h3 class="text-xl font-medium">Kategorien</h3>
-                    <button class="-translate-y-3">
+                    <button v-show="currentCategory" class="-translate-y-3" @click="activeButton = activeButton === 'edit' ? '' : 'edit'">
                         <img src="@/assets/svgs/editBlue.svg" alt="" class="max-w-7">
                     </button>
                 </div>
 
-                <CustomButton variant="gray" @click="showCreateCategory = !showCreateCategory" class="gap-2">
+                <CustomButton variant="gray" @click="activeButton = activeButton === 'create' ? '' : 'create'" class="gap-2">
                     <img src="@/assets/svgs/plusWhite.svg" alt="" class="max-w-5">
                     <span class="lg:text-lg">Kategorie hinzufügen</span>
                 </CustomButton>
 
             </div>
-            <CreateCategory v-if="showCreateCategory" :restaurantId="restaurantId" :lastCategoryPos="categories.length" @cancel="showCreateCategory = false" @success="categories.push($event); showCreateCategory = false"/>
-    </div>
-        <div class="relative flex items-center">
+
+            <CreateCategory
+                v-if="activeButton === 'create'"
+                :restaurantId="restaurantId"
+                :lastCategoryPos="categories.length"
+                @cancel="activeButton = ''"
+                @success="handleCreateCategory($event)"/>
+        </div>
+
+        <div v-show="currentCategory" class="relative flex items-center">
 
             <button
                 v-if="showLeftButton"
@@ -132,6 +177,26 @@
             </button>
 
         </div>
+
+        <EditCategory
+            v-if="activeButton === 'edit' && currentCategory"
+            :category="currentCategory"
+            :restaurantId="restaurantId"
+            @success="updateLocalCategory($event, currentCategory.id)"
+            @cancel="activeButton = ''"
+            @delete="showDelete = currentCategory.name"/>
+
+        <DeleteWindow
+            v-if="showDelete && currentCategory"
+            @cancel="showDelete = ''"
+            @delete="handleDeleteCategory(currentCategory.id); showDelete = ''">
+            <div class="flex flex-col gap-4 justify-center items-center">
+                <span>Möchtest du die Kategorie:</span>
+                <span class="flex w-full justify-center text-xl font-medium">{{ currentCategory.name }}</span>
+                <span>mit samt allen Items wirklich löschen?</span>
+                <span class="text-gray-400">Dies kann nicht rückgängig gemacht werden.</span>
+            </div>
+        </DeleteWindow>
 
     </div>
 </template>
