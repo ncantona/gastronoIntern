@@ -8,13 +8,22 @@ const router = createRouter({
 		path: '/',
 		redirect: '/home',
 	},
-			{
-			path: '/bestellung/tisch/:tableId',
-			name: 'order',
-			props: true,
-			meta: { sectionName: 'restaurant'},
-			component: () => import('@/views/OrderView.vue'),
+	{
+		path: '/bestellung/tisch/:tableId',
+		name: 'order',
+		props: true,
+		meta: { sectionName: 'restaurant'},
+		component: () => import('@/views/OrderView.vue'),
+		beforeEnter: (to, from, next) => {
+			const id = Number(to.params.id);
+
+			if (Number.isInteger(id) && id > 0) {
+				next();
+			} else {
+				next('/404'); // oder next(false)
+			};
 		},
+	},
 	{
 		path: '/',
 		component: () => import('@/layouts/LoggedOutLayout.vue'),
