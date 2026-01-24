@@ -13,8 +13,8 @@ const router = createRouter({
 		name: 'order',
 		props: true,
 		meta: { sectionName: 'restaurant'},
-		component: () => import('@/views/OrderView.vue'),
-		beforeEnter: (to, from, next) => {
+		component: () => import('@/views/OrderMenuView.vue'),
+		/* beforeEnter: (to, from, next) => {
 			const id = Number(to.params.id);
 
 			if (Number.isInteger(id) && id > 0) {
@@ -22,7 +22,7 @@ const router = createRouter({
 			} else {
 				next('/404'); // oder next(false)
 			};
-		},
+		}, */
 	},
 	{
 		path: '/',

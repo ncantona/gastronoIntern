@@ -1,13 +1,14 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed, onMounted, watch } from 'vue'
     
     import CreateItem from '@/components/Host/Menu/Items/CreateItem.vue';
     import draggable from 'vuedraggable'
     import CustomButton from '@/components/General/CustomButton.vue';
-import type { CategoryResponse } from '@/Types/category.types';
-import type { ItemResponse } from '@/Types/item.types';
-import EditItem from './EditItem.vue';
-import { deleteItem, getAllItems } from '@/Services/item.service';
+    import type { CategoryResponse } from '@/Types/category.types';
+    import type { ItemResponse } from '@/Types/item.types';
+    import EditItem from './EditItem.vue';
+    import { deleteItem, getAllItems, updateItem } from '@/Services/item.service';
+import { usePopupStore } from '@/stores/General/usePopupStore';
 
     const props = defineProps<{
         currentCategory: CategoryResponse | null,
@@ -16,6 +17,7 @@ import { deleteItem, getAllItems } from '@/Services/item.service';
 
     const value = defineModel<{beverage: number, meals: number}>();
 
+    const popupStore = usePopupStore();
     const restaurantItems = ref<ItemResponse[]>([]);
 
     const displayedItems = computed(() =>
@@ -23,24 +25,46 @@ import { deleteItem, getAllItems } from '@/Services/item.service';
             .filter(item => item.categoryId === props.currentCategory?.id)
             .sort((a, b) => a.position - b.position)
     )
-    console.log(displayedItems.value)
-    // Drag & Drop innerhalb der Kategorie
-    function onDragUpdate({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
+
+    watch(restaurantItems, (newItems) => {
+        value.value = {
+            beverage: newItems.filter(item => item.itemType === 'BEVERAGE').length,
+            meals: newItems.filter(item => item.itemType === 'MEAL').length
+        };
+    }, { deep: true });
+
+    async function onDragUpdate({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) {
         const itemsInCat = restaurantItems.value
             .filter(i => i.categoryId === props.currentCategory?.id)
-            .sort((a, b) => a.position - b.position)
+            .sort((a, b) => a.position - b.position);
+        const moved = itemsInCat.splice(oldIndex, 1)[0];
 
-        const moved = itemsInCat.splice(oldIndex, 1)[0]
-        itemsInCat.splice(newIndex, 0, moved)
+        itemsInCat.splice(newIndex, 0, moved);
+        itemsInCat.forEach((item, idx) => (item.position = idx + 1));
+        restaurantItems.value = [...restaurantItems.value.filter(i => i.categoryId !== props.currentCategory?.id), ...itemsInCat];
 
-        // Positionen aktualisieren
-        itemsInCat.forEach((item, idx) => (item.position = idx + 1))
-
-        // Original-Liste updaten
-        restaurantItems.value = [
-                ...restaurantItems.value.filter(i => i.categoryId !== props.currentCategory?.id),
-                ...itemsInCat
-            ]
+        try {
+            await Promise.all(
+                itemsInCat.map(item => 
+                    updateItem(
+                        {
+                            code: item.code,
+                            name: item.name,
+                            itemType: item.itemType,
+                            position: item.position,
+                            categoryId: item.categoryId,
+                            description: item.description,
+                            price: item.price,
+                            isAvailable: item.isAvailable
+                        },
+                        item.id,
+                        props.restaurantId
+                    )
+                )
+            )
+        } catch (error) {
+            popupStore.setError('Fehler beim Aktualisieren der Position.');
+        }
     }
     
     const showAddItem = ref<boolean>(false);
@@ -71,10 +95,6 @@ import { deleteItem, getAllItems } from '@/Services/item.service';
     onMounted(async (
     ): Promise<void> => {
         restaurantItems.value = await getAllItems(props.restaurantId);
-        value.value = {
-            beverage: restaurantItems.value.filter(item => item.itemType === 'BEVERAGE').length,
-            meals: restaurantItems.value.filter(item => item.itemType === 'MEAL').length
-        };
     });
 
 </script>
@@ -92,7 +112,7 @@ import { deleteItem, getAllItems } from '@/Services/item.service';
             :categoryId="currentCategory.id"
             :itemPosition="displayedItems.length"
             @cancel="showAddItem = false"
-            @success="showAddItem = false"/>
+            @success="showAddItem = false; restaurantItems.push($event)"/>
         <div v-show="(!showEditItem && !showAddItem)" class="shadow-lg p-4 rounded-xl overflow-x-auto h-150">
             <draggable
                 :list="displayedItems"
@@ -160,9 +180,9 @@ import { deleteItem, getAllItems } from '@/Services/item.service';
             </div>
         </div>
         <EditItem
-                v-if="showEditItem && itemToEdit"
-                :item="itemToEdit"
-                @cancel="showEditItem = false"
-                @success="showEditItem = false; updateLocalItem($event)"/>
+            v-if="showEditItem && itemToEdit"
+            :item="itemToEdit"
+            @cancel="showEditItem = false"
+            @success="showEditItem = false; updateLocalItem($event)"/>
     </div>
 </template>

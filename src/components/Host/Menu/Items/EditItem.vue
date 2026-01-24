@@ -9,6 +9,7 @@
     import WindowHeader from '@/components/General/WindowHeader.vue';
     import TypeDropDown from './TypeDropDown.vue';
 import { updateItem } from '@/Services/item.service';
+import { usePopupStore } from '@/stores/General/usePopupStore';
 
     const props = defineProps<{
         item: ItemResponse,
@@ -22,6 +23,7 @@ import { updateItem } from '@/Services/item.service';
     const itemType = ref<ItemType>(props.item.itemType);
 
     const restaurantStore = useRestaurantStore();
+    const popupStore = usePopupStore();
 
     const options = [
         { label: 'Gericht', value: 'MEAL' },
@@ -63,9 +65,10 @@ import { updateItem } from '@/Services/item.service';
                 restaurantId: restaurantStore.restaurant.id,
             } as ItemRequest;
             const updatedItem = await updateItem(item, props.item.id, props.item.restaurantId);
+            popupStore.setSuccess('Erfolgreich aktualisiert.')
             emit('success', updatedItem);
         } catch {
-            
+            popupStore.setError('Aktualisierung fehlgeschlagen.')
         }
     }
 
@@ -73,13 +76,11 @@ import { updateItem } from '@/Services/item.service';
 
 <template>
     <div @click.stop class="min-h-150 bg-white justify-center h-full lg:bg-transparent lg:relative lg:h-auto p-7 flex flex-col lg:gap-4 gap-2 lg:border-2 rounded-xl border-ownblue-500">
-        <div>
-            <WindowHeader
-            :imgSrc="GearSVG"
-            imgAlt="Ein Zahnrad">
-                Gericht / Getränk bearbeiten
-            </WindowHeader>
-        </div>
+        <WindowHeader
+        :imgSrc="GearSVG"
+        imgAlt="Ein Zahnrad">
+            Gericht / Getränk bearbeiten
+        </WindowHeader>
         <form @submit.prevent="handleUpdateItem()">
             <div class="flex lg:flex-row flex-col lg:gap-5 gap-2 lg:justify-between">
 
@@ -99,6 +100,8 @@ import { updateItem } from '@/Services/item.service';
                 name="itemPrice"
                 placeholder="15.80"
                 :error="errorItemPrice"
+                step="0.01"
+                :maxDecimals="2"
                 class="lg:w-3/10"/>
 
             </div>
