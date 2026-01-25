@@ -151,7 +151,7 @@
                         <Category :category="category">
                             <div class="grid grid-cols-1 gap-2 ">
                                 <Item
-                                    v-for="item in category.items"
+                                    v-for="item in [...category.items].sort((a, b) => (a.position ?? 0) - (b.position ?? 0))"
                                     :key="item.id"
                                     :item="item"
                                     :cart-items="cartItems"

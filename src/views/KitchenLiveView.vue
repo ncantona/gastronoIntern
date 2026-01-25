@@ -42,9 +42,9 @@
             <h1 class="text-4xl font-bold text-slate-900 mb-2">Küchen Dashboard</h1>
             <p class="text-slate-600">Wirf einen Blick auf die derzeitigen Bestellungen deiner Küche</p>
         </div>
-        <Window>
+<!--         <Window>
             
-        </Window>
+        </Window> -->
         <div class="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-white my-5 px-25">
             <OrderWindow :orders="kitchenOrders" class="shadow-none"/>
         </div>
