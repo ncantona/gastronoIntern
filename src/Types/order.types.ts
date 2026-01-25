@@ -35,6 +35,6 @@ export interface OrderItemResponse {
 };
 
 export interface OrderItemRequest {
-    id: number,
+    itemId: number,
     quantity: number,
 };

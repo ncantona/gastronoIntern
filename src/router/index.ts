@@ -9,7 +9,7 @@ const router = createRouter({
 		redirect: '/home',
 	},
 	{
-		path: '/bestellung/tisch/:tableId',
+		path: '/bestellung/tisch/:restaurantId/:tableId',
 		name: 'order',
 		props: true,
 		meta: { sectionName: 'restaurant'},

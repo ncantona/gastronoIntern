@@ -61,7 +61,7 @@
                             @click="activeNavWindow = ''">
                             <div class="flex gap-2 items-center">
                                 <img src="@/assets/svgs/order.svg" alt="" class="max-w-6">
-                                Bestellungen
+                                Tische
                             </div>
                         </RouterLink>
 
@@ -98,16 +98,6 @@
                     <div
                         v-if="activeNavWindow === 'livedashboard'"
                         class="absolute left-0 z-50 top-full mt-2 w-48 bg-white text-black rounded-lg shadow-md p-3">
-                        
-                        <RouterLink
-                            :to="{ name: 'dashboardwelcomelive'}"
-                            class="block w-full px-3 py-2 hover:bg-main-100/50 rounded"
-                            @click="activeNavWindow = ''">
-                            <div class="flex gap-2 items-center">
-                                <img src="@/assets/svgs/waiter.svg" alt="" class="max-w-6">
-                                <span>Empfang</span>
-                            </div>
-                        </RouterLink>
 
                         <RouterLink
                             :to="{ name: 'dashboardkitchenlive'}"

@@ -1,12 +1,12 @@
-import { api } from "@/API/axios";
+import { api, apiNoJWT } from "@/API/axios";
 import type { ItemPreparationStatus, OrderItemResponse, OrderRequest, OrderResponse } from "@/Types/order.types";
 
 export const createOrder = async (
     orderData: OrderRequest
 ): Promise<OrderResponse> => {
 
-    const { data } = await api.post(
-        `orders`,
+    const { data } = await apiNoJWT.post(
+        `/public/orders`,
         orderData
     );
     return data;

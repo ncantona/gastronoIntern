@@ -59,7 +59,7 @@ import { usePopupStore } from '@/stores/General/usePopupStore';
                 code: itemCode.value,
                 itemType: itemType.value,
                 price: itemPrice.value,
-                isAvailable: false,
+                isAvailable: true,
                 restaurantId: restaurantStore.restaurant.id,
             } as ItemRequest;
 
