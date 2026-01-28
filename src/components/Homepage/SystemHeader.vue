@@ -1,6 +1,9 @@
 <script setup lang="ts">
+    import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
     import { computed, ref } from 'vue';
     import { useRoute } from 'vue-router';
+
+    const restaurantStore = useRestaurantStore();
 
     const now = ref(Date.now());
 
@@ -17,8 +20,7 @@
     <div class="text-white h-28 text-shadow-lg z-50 shadow-xl text-3xl flex justify-between p-5 bg-main-500">
         
         <div class="flex flex-col self-center">
-            <span>Grätzlgarten</span>
-            <span>#132</span>
+            <span>{{ restaurantStore.restaurant?.name }}</span>
         </div>
 
         <div class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center self-center">

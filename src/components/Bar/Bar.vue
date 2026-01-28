@@ -1,44 +1,20 @@
 <script setup lang="ts">
-    import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
     import OrderWindow from '@/components/Bar/OrderWindow.vue';
-    import { computed, ref } from 'vue';
-import Window from '../General/Window.vue';
-import CustomButton from '../General/CustomButton.vue';
-import { useAuthStore } from '@/stores/Auth/useAuthStore';
-import { log } from '@/utils/logger';
-import router from '@/router';
+    import { onMounted, onUnmounted, ref } from 'vue';
+    import Window from '../General/Window.vue';
+    import CustomButton from '../General/CustomButton.vue';
+    import { useAuthStore } from '@/stores/Auth/useAuthStore';
+    import { log } from '@/utils/logger';
+    import router from '@/router';
+    import type { OrderResponse } from '@/Types/order.types';
+    import { getActiveBarOrders, subscribeToBarOrders } from '@/Services/order.service';
+    import { useRestaurantStore } from '@/stores/Restaurant/useRestaurantStore';
 
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
-    interface Item {
-        id: number;
-        itemId: number;
-        name: string;
-        description: string;
-        type: ItemType;
-        //omits: string[];
-        //addOns: string[];
-        //customMsg: string;
-        //isDone: boolean;
-        //isPickedUp: boolean;
-        //prepTime: string;
-        amount?: number;
-    }
-
-    interface Order {
-        id: number;
-        tableId: number;
-        datetime: string;
-        items: Item[];
-    };
-
-    const activeOrdersStore = useRestaurantActiveOrdersStore();
-
-    const barOrders= computed(
-        () => activeOrdersStore.getOrdersByType('BEVERAGE') as Order[]
-    );
-
+    const restaurantStore = useRestaurantStore();
     const authStore = useAuthStore();
+
+    const activeBarOrders = ref<OrderResponse[]>([]);
+    let unsubscribe: (() => void) | null = null;
 
     const handleLogout = async () => {
         try {
@@ -51,12 +27,41 @@ import router from '@/router';
         }
     };
 
+    onMounted(async (): Promise<void> => {
+        const restaurantId = restaurantStore.restaurant?.id;
+        
+        if (!restaurantId) {
+            log.error('No restaurant ID available');
+            return;
+        }
+
+        // Load initial orders
+        activeBarOrders.value = await getActiveBarOrders(restaurantId);
+        log.info('Loaded initial bar orders:', activeBarOrders.value);
+
+        // Subscribe to real-time updates
+        unsubscribe = subscribeToBarOrders(
+            restaurantId,
+            (newOrder) => {
+                activeBarOrders.value.push(newOrder);
+            },
+            (error) => {
+                log.error('SSE error:', error);
+            }
+        );
+    });
+
+    onUnmounted(() => {
+        if (unsubscribe) {
+            unsubscribe();
+        }
+    });
+
 </script>
 
 <template>
     <div class="flex flex-col mt-5">
-        <OrderWindow :orders="barOrders"/>
-        <span v-if="!barOrders" class="flex items-center justify-center w-full h-full text-3xl text-gray-500">Derzeit keine Bestellungen</span>
+        <OrderWindow :orders="activeBarOrders"/>
         <Window class="w-95/100 self-center min-h-[180px]">
             <div class="flex justify-end items-end h-full">
                 <CustomButton variant="logout" @click="handleLogout">abmelden</CustomButton>

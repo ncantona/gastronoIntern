@@ -1,5 +1,4 @@
 <script setup lang="ts">
-    import BarNavbar from '@/components/Bar/BarNavbar.vue';
     import Bar from '@/components/Bar/Bar.vue';
 
 </script>

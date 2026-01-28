@@ -5,7 +5,7 @@ export type ItemPreparationStatus = 'PREPARING' | 'READY' | 'SERVED';
 export interface OrderResponse {
     id: number,
     userIds: number[],
-    orderTime: string,
+    orderedAt: string,
     totalAmount: number,
     tableId: number,
     waiterId: string,

@@ -78,14 +78,13 @@
             const orderData = {
                 userIds: [],
                 tableId: tableIdNum.value,
-                waiterId: authStore.user?.id || '',
+                waiterId: '65816d6d-d3f5-4305-8afb-5498110b09ac',
                 restaurantId: restaurantIdNum.value,
                 items: orderItems
             };
 
             await createOrder(orderData);
             popupStore.setSuccess('Bestellung erfolgreich aufgegeben');
-            router.push({ name: 'dashboardhost' });
         } catch (error) {
             popupStore.setError('Fehler beim Aufgeben der Bestellung');
         } finally {

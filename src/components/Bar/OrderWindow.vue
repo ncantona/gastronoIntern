@@ -1,33 +1,10 @@
 <script setup lang="ts">
     import DrinksWindow from '@/components/Bar/DrinksWindow.vue';
-import Window from '../General/Window.vue';
-
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
-    interface Item {
-        id: number;
-        itemId: number;
-        name: string;
-        description: string;
-        type: ItemType;
-        omits: string[];
-        addOns: string[];
-        customMsg: string;
-        isDone: boolean;
-        isPickedUp: boolean;
-        prepTime: string;
-        amount?: number;
-    }
-
-    interface Order {
-        id: number;
-        tableId: number;
-        datetime: string;
-        items: Item[];
-    };
+    import Window from '../General/Window.vue';
+    import type { OrderResponse } from '@/Types/order.types';
 
     const props = defineProps<{
-        orders: Order[];
+        orders: OrderResponse[];
     }>();
 
 </script>
@@ -35,8 +12,13 @@ import Window from '../General/Window.vue';
 <template>
     <Window class="self-center w-95/100 bg-white/80 gap-4 rounded-md flex min-h-[600px] overflow-y-hidden hover:overflow-y-auto">
         <div v-for="order in orders" :key="order.id">
-            <DrinksWindow :orderId="order.id"/>
+            <DrinksWindow :order="order"/>
         </div>
+        <h3
+            v-if="orders.length === 0"
+            class="flex items-center justify-center w-full h-full text-3xl text-gray-500">
+            Derzeit keine Bestellungen
+        </h3>
     </Window>
 </template>
 

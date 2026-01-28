@@ -1,38 +1,19 @@
 <script setup lang="ts">
-    import { useRestaurantActiveOrdersStore } from '@/stores/Restaurant/useRestaurantActiveOrdersStore';
+import type { OrderResponse } from '@/Types/order.types';
     import { ref, computed, onMounted, onUnmounted } from 'vue';
 
-    type ItemType = 'BEVERAGE' | 'MEAL';
-
-    interface Item {
-        id: number;
-        name: string;
-        description: string;
-        type: ItemType;
-        omits: string[];
-        addOns: string[];
-        customMsg: string;
-        isDone: boolean;
-    }
-
     const props = defineProps<{
-        orderId: number,
+        order: OrderResponse
     }>();
 
-    const activeOrdersStore = useRestaurantActiveOrdersStore();
-
-    const order = computed(
-        () => activeOrdersStore.getOrderWithItemsByType(props.orderId, 'BEVERAGE')
-    );
-
-    const isClicked = ref<boolean>(order.value?.items.some(item => item.isDone) ?? false);
+    const isClicked = ref<boolean>(props.order.items.some(item => item.prepStatus === 'READY') ?? false);
 
     const now = ref(Date.now());
-    const orderTime = order.value?.datetime.split('T')[1].substring(0, 5);
+    const orderTime = props.order.orderedAt.split('T')[1].substring(0, 5);
 
     let intervalID :number;
     let markAsReadyTimeout: ReturnType<typeof setTimeout> | null = null;
-    const isMarkedAsDone = ref<boolean>(order.value?.items.some(item => item.isDone) ?? false);
+    const isMarkedAsDone = ref<boolean>(props.order.items.some(item => item.prepStatus === 'READY') ?? false);
 
     const resetTimeout = () => {
         if (markAsReadyTimeout)
@@ -54,8 +35,6 @@
         isClicked.value = true;
 
         markAsReadyTimeout = setTimeout(() => {
-            activeOrdersStore.markAllItemsByTypeAsDone(props.orderId, 'BEVERAGE');
-            activeOrdersStore.setAllItemsByTypePrepTime(props.orderId, passedTime.value, 'BEVERAGE');
             isMarkedAsDone.value = true;
             if (intervalID)
                 clearInterval(intervalID);
@@ -63,10 +42,10 @@
     };
 
     const elapsedMinutes = computed(() => {
-        if (!order.value)
+        if (!props.order)
             return 0;
 
-        const orderDate = new Date(order.value.datetime);
+        const orderDate = new Date(props.order.orderedAt);
         const diffMs = now.value - orderDate.getTime();
         const diffSeconds = Math.floor(diffMs / 1000);
         return Math.floor(diffSeconds / 60);
@@ -83,10 +62,10 @@
     });
 
     const passedTime = computed(() => {
-        if (!order.value)
+        if (!props.order)
             return '';
 
-        const orderDate = new Date(order.value.datetime);
+        const orderDate = new Date(props.order.orderedAt);
         const diffMs = now.value - orderDate.getTime();
         const diffSeconds = Math.floor(diffMs / 1000);
 
@@ -117,7 +96,7 @@
 <template>
     <div class="flex h-full border-2 rounded-2xl w-full p-1.5 bg-main-500 border-main-500 shadow-lg min-h-55 overflow-y-hidden hover:overflow-y-auto">
     <div
-        @click="handleClick"
+        @click="handleClick()"
         :class="[
             'flex flex-col rounded-lg relative overflow-y-auto p-4 min-w-70 cursor-pointer max-w-55 shadow-xl',
             isClicked ? 'bg-green-100' : 'bg-white/90']">
@@ -147,20 +126,15 @@
             </div>
         </div>
 
-        <div v-for="item in order?.items" :key="item.id" class="mb-3 pb-2 border-b-2 border-main-500/20">
+        <div v-for="item in order.items" :key="item.id" class="mb-3 pb-2 border-b-2 border-main-500/20">
             <div class="flex gap-3 text-xl">
                 <span class="inline-flex items-center justify-center min-w-7 min-h-7 self-center rounded-full bg-gray-400/40 text-black">
-                    {{ item.amount }}
+                    {{ item.quantity }}
                 </span>
                 <div>
                     <span>
-                        {{ item.name }}
+                        {{ item.itemName }}
                     </span>
-                    <div v-if="item.customMsg" class="flex flex-col">
-                        <div class="text-gray-600 text-lg">
-                        {{ item.customMsg }}
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
